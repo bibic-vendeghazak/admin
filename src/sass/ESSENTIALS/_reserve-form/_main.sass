@@ -1,0 +1,154 @@
+// The message to be sent in the form is generated with JavaScript, so it is hidden from the user
+.form-message
+  display: none
+
+#reserve-form
+  background-color: $accent-color-dark
+  position: fixed
+  display: flex
+  flex-direction: column
+  width: 95vw
+  max-width: 480px
+  height: calc(100vh - 5vw)
+  max-height: 540px
+  z-index: 1200
+  top: 50%
+  left: 50%
+  padding: 2.5vw
+  transform: scale(0)
+  will-change: transform
+  h1
+    font-family: cursive
+    color: $light
+    padding: 0 .2em
+    font-size: 1.2em
+    font-weight: bold
+    text-align: left
+    max-width: calc(100% - 52px)
+
+fieldset
+  color: $light
+  &:last-of-type
+    flex-grow: 1
+    position: relative
+
+.field, .form-text
+  display: flex
+
+.field
+  align-items: baseline
+  background-color: $accent-color
+
+fieldset
+  margin-bottom: 2.5vw
+  &:first-of-type, &:nth-of-type(2)
+    &::after
+      content: 'Az összes mező kitöltése kötelező'
+      font-size: .7em
+      display: block
+      text-align: right
+
+  &:first-of-type
+    margin-top: 2.5vw
+  .field:last-of-type
+    input
+      border-bottom: none
+
+.form-text
+  flex-direction: column
+
+legend
+  margin-bottom: .2em
+  font-style: italic
+  text-align: center
+
+label
+  text-align: right
+  min-width: 20%
+  padding-right: 2.5vw
+
+input, textarea
+  padding: .7em
+  transition: .3s
+  &:focus
+    background-color: darken($light, 5)
+
+input
+  border-bottom: 1px dotted $accent-color-dark
+  flex-grow: 1
+
+
+textarea
+  position: absolute
+  width: calc(100% - 1.4em)
+  height: calc(100% - 7.5vw - .7em - 32px)
+
+
+.close-form-btn, .send-btn
+  transition: .3s
+  &:hover
+    color: $accent-color
+    background-color: $light
+
+.close-form-btn
+  position: absolute
+  top: 8px
+  right: 8px
+  color: $light
+  font-size: 1.5em
+  padding: 10px
+  border-radius: 50%
+  background-color: $accent-color
+  +circle(24px)
+  cursor: pointer
+  &::after
+    content: '✕'
+
+.send-btn
+  padding: 0
+  position: absolute
+  left: calc(50% - 32px)
+  bottom: 10px
+  +circle(64px)
+  font-family: BebasKai
+  font-size: 1.2em
+  background-color: $accent-color
+  color: $light
+  box-shadow: 0 0 10px black
+  cursor: pointer
+
+
+@media (orientation: landscape) and (max-width: 767px)
+  #reserve-form
+    overflow-y: scroll
+  textarea, .send-btn
+    position: static
+  .send-btn
+    margin-bottom: 2.5vw
+  legendgh
+    text-align: left
+@media (min-width: 640px)
+  #reserve-form
+    box-shadow: 0 0 50vw 10vw black
+    border: 1px solid $light
+
+@media (min-width: 768px)
+  #reserve-form
+    h1
+      text-align: center
+      max-width: none
+  .close-form-btn
+    top: -21px
+    right: -21px
+  label
+    padding-right: .7em
+  legend
+    text-align: left
+  textarea
+    height: calc(100% - 20px)
+  .send-btn
+    bottom: 0
+    width: 80px
+    height: 80px
+    font-size: 1.3em
+    margin-bottom: -41px

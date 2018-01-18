@@ -1,0 +1,20 @@
+{
+  "name": "bibic-vendeghazak-admin",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "firebase": "^4.8.1",
+    "material-ui": "^0.20.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.0.17",
+    "typeface-roboto": "0.0.45"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "npm run build && firebase deploy",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

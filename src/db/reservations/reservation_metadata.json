@@ -1,0 +1,602 @@
+{
+  "59afae2011f32b9a9c826058": {
+    "from": 1508112000000,
+    "to": 1508284800000,
+    "roomId": 6,
+    "handled": false
+  },
+  "59afae209fbfaedd2da8ead9": {
+    "from": 1506902400000,
+    "to": 1507852800000,
+    "roomId": 1,
+    "handled": true
+  },
+  "59afae2093536c2e51c687ae": {
+    "from": 1511827200000,
+    "to": 1514246400000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae202dd27704d1aa8b9f": {
+    "from": 1508371200000,
+    "to": 1509494400000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae2071b2f19dc1cf5208": {
+    "from": 1497657600000,
+    "to": 1498780800000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae204c151077062fccde": {
+    "from": 1503187200000,
+    "to": 1504483200000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae209305d49133a7fad2": {
+    "from": 1496880000000,
+    "to": 1499126400000,
+    "roomId": 3,
+    "handled": true
+  },
+  "59afae20c4b88f995abbf0a2": {
+    "from": 1498608000000,
+    "to": 1499817600000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae205db2155a8a010c3e": {
+    "from": 1504396800000,
+    "to": 1504656000000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae20f7905dad7322822f": {
+    "from": 1501372800000,
+    "to": 1501891200000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae2004aa74e2db3f250c": {
+    "from": 1502496000000,
+    "to": 1502841600000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae207c7d55eee6ebc0c2": {
+    "from": 1513814400000,
+    "to": 1514246400000,
+    "roomId": 3,
+    "handled": true
+  },
+  "59afae206497c48b4ec7aac6": {
+    "from": 1506643200000,
+    "to": 1508544000000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae20a4abe86978221333": {
+    "from": 1503273600000,
+    "to": 1505347200000,
+    "roomId": 6,
+    "handled": false
+  },
+  "59afae20c551313532c436a0": {
+    "from": 1499731200000,
+    "to": 1501372800000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae2002aeb8a53ad55e4d": {
+    "from": 1498521600000,
+    "to": 1499817600000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae20a87e721704a371e9": {
+    "from": 1499472000000,
+    "to": 1501027200000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae20aca0fd3cbd6c701c": {
+    "from": 1510185600000,
+    "to": 1512086400000,
+    "roomId": 3,
+    "handled": true
+  },
+  "59afae20546344e0a6645dd9": {
+    "from": 1507852800000,
+    "to": 1507939200000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae20c946cb8d8c2108c0": {
+    "from": 1505001600000,
+    "to": 1506988800000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae20eb70790214dd6f1c": {
+    "from": 1505952000000,
+    "to": 1508544000000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae20ddf6c01ddbbd3c4b": {
+    "from": 1502150400000,
+    "to": 1503964800000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae2095f96733735cdb35": {
+    "from": 1509926400000,
+    "to": 1512086400000,
+    "roomId": 2,
+    "handled": true
+  },
+  "59afae20d667dc2fa7c94072": {
+    "from": 1499558400000,
+    "to": 1500163200000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae20137eadbb67c9adcd": {
+    "from": 1500163200000,
+    "to": 1500336000000,
+    "roomId": 1,
+    "handled": true
+  },
+  "59afae203646d8c1d0aa1a23": {
+    "from": 1498089600000,
+    "to": 1498176000000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae20a1fb9d0a31717c0b": {
+    "from": 1503100800000,
+    "to": 1504742400000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae20d34759bc60bbce93": {
+    "from": 1512691200000,
+    "to": 1513987200000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae20d1dbd697c0b0b64b": {
+    "from": 1498867200000,
+    "to": 1500508800000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae201092f94279c6469b": {
+    "from": 1496361600000,
+    "to": 1498608000000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae20714f8f2d20647653": {
+    "from": 1511222400000,
+    "to": 1513555200000,
+    "roomId": 2,
+    "handled": true
+  },
+  "59afae2050c69392b6fab8cc": {
+    "from": 1502928000000,
+    "to": 1503619200000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae206122d603ca8e032f": {
+    "from": 1512259200000,
+    "to": 1514505600000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae20b56581a2e413efb9": {
+    "from": 1506556800000,
+    "to": 1508889600000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae201244eb7d8bbd2761": {
+    "from": 1499385600000,
+    "to": 1499904000000,
+    "roomId": 2,
+    "handled": true
+  },
+  "59afae205d13e69d222443eb": {
+    "from": 1503619200000,
+    "to": 1506211200000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae20f2187adcd91abaac": {
+    "from": 1496448000000,
+    "to": 1496534400000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae2072e42585706f414b": {
+    "from": 1499040000000,
+    "to": 1500854400000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae203a957b0d2ca4e59b": {
+    "from": 1506902400000,
+    "to": 1509408000000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae20425d301fbb1d49f9": {
+    "from": 1502582400000,
+    "to": 1504396800000,
+    "roomId": 3,
+    "handled": true
+  },
+  "59afae20ba13a3c8f3aa8323": {
+    "from": 1506816000000,
+    "to": 1507075200000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae205356d63a77154843": {
+    "from": 1505692800000,
+    "to": 1507420800000,
+    "roomId": 1,
+    "handled": true
+  },
+  "59afae20872ddf0764d0d327": {
+    "from": 1496707200000,
+    "to": 1497830400000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae20dffad0ac3d072b24": {
+    "from": 1497225600000,
+    "to": 1498262400000,
+    "roomId": 3,
+    "handled": true
+  },
+  "59afae20f8f18a312c489664": {
+    "from": 1508889600000,
+    "to": 1510444800000,
+    "roomId": 1,
+    "handled": true
+  },
+  "59afae203bdf828373660379": {
+    "from": 1507852800000,
+    "to": 1507939200000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae20235ec68e48c34edc": {
+    "from": 1512259200000,
+    "to": 1513036800000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae20647edba9c11bd6c3": {
+    "from": 1496620800000,
+    "to": 1498521600000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae20f6b243cbedb6df2a": {
+    "from": 1497830400000,
+    "to": 1498953600000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae20931b962a7f5381f6": {
+    "from": 1510963200000,
+    "to": 1511827200000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae203690360143645f65": {
+    "from": 1501718400000,
+    "to": 1502841600000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae20bd052c2b85c87354": {
+    "from": 1503100800000,
+    "to": 1504656000000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae207b81b6eeab7934f9": {
+    "from": 1496361600000,
+    "to": 1497744000000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae202a4b11affe554e7e": {
+    "from": 1509753600000,
+    "to": 1510272000000,
+    "roomId": 6,
+    "handled": false
+  },
+  "59afae2004612dc8d16db170": {
+    "from": 1498694400000,
+    "to": 1501286400000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae2095bff708c68bffc4": {
+    "from": 1501027200000,
+    "to": 1502409600000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae2060264cfaf38bf3b0": {
+    "from": 1497657600000,
+    "to": 1498435200000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae20489533e3f888b692": {
+    "from": 1514419200000,
+    "to": 1516060800000,
+    "roomId": 1,
+    "handled": true
+  },
+  "59afae20789c2b43f92a4a90": {
+    "from": 1500163200000,
+    "to": 1500681600000,
+    "roomId": 6,
+    "handled": false
+  },
+  "59afae206a3c344dc65a64a6": {
+    "from": 1499299200000,
+    "to": 1499817600000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae207bc22c13af084ed0": {
+    "from": 1507248000000,
+    "to": 1509840000000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae20bd41bdf01aa83b2c": {
+    "from": 1497744000000,
+    "to": 1498435200000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae20d8e7cb135b7d032c": {
+    "from": 1504656000000,
+    "to": 1504828800000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae20e1427e0c29a31378": {
+    "from": 1514678400000,
+    "to": 1516233600000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae20db17586a03acb409": {
+    "from": 1503273600000,
+    "to": 1504656000000,
+    "roomId": 6,
+    "handled": false
+  },
+  "59afae20d4b80b472aecf185": {
+    "from": 1513900800000,
+    "to": 1513987200000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae2097380c901dd54c35": {
+    "from": 1498867200000,
+    "to": 1500422400000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae2085ec5f04665a0d33": {
+    "from": 1502409600000,
+    "to": 1502668800000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae201efcd8555ff58e09": {
+    "from": 1502841600000,
+    "to": 1504396800000,
+    "roomId": 1,
+    "handled": true
+  },
+  "59afae20e66ee0d1376197e2": {
+    "from": 1497830400000,
+    "to": 1499040000000,
+    "roomId": 2,
+    "handled": true
+  },
+  "59afae20831d8b4f92ba7418": {
+    "from": 1502409600000,
+    "to": 1502496000000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae208eabdf72fb1b9bbb": {
+    "from": 1501804800000,
+    "to": 1503100800000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae20c0bddf4876f92482": {
+    "from": 1505606400000,
+    "to": 1506902400000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae2090993d6ac9a7351a": {
+    "from": 1506816000000,
+    "to": 1507593600000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae2049763e5751af1472": {
+    "from": 1512950400000,
+    "to": 1514246400000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae20d158bfa9b807e582": {
+    "from": 1502668800000,
+    "to": 1504915200000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae20d79a41a65ba913e3": {
+    "from": 1505347200000,
+    "to": 1507939200000,
+    "roomId": 5,
+    "handled": true
+  },
+  "59afae20660369497dd51d5a": {
+    "from": 1504051200000,
+    "to": 1504224000000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae2085437dfc5b088803": {
+    "from": 1506211200000,
+    "to": 1506643200000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae2053315f8c0905ff8b": {
+    "from": 1501545600000,
+    "to": 1502755200000,
+    "roomId": 6,
+    "handled": false
+  },
+  "59afae2075d274970e09ff2f": {
+    "from": 1499299200000,
+    "to": 1501459200000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae200501acdbd77cbf9e": {
+    "from": 1507939200000,
+    "to": 1508889600000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae208dfc835556496894": {
+    "from": 1506902400000,
+    "to": 1509235200000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae20401f94c8795377b9": {
+    "from": 1507766400000,
+    "to": 1508716800000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae208aff1d1e35bf8344": {
+    "from": 1503878400000,
+    "to": 1504396800000,
+    "roomId": 1,
+    "handled": true
+  },
+  "59afae209735455e6a4a6e89": {
+    "from": 1513900800000,
+    "to": 1514160000000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae203f34170b358966da": {
+    "from": 1508976000000,
+    "to": 1510099200000,
+    "roomId": 3,
+    "handled": false
+  },
+  "59afae20f0256aa49ef989b7": {
+    "from": 1506211200000,
+    "to": 1507939200000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae207bb440e5987182d2": {
+    "from": 1496620800000,
+    "to": 1497657600000,
+    "roomId": 4,
+    "handled": true
+  },
+  "59afae20b7683ea04d48503d": {
+    "from": 1498608000000,
+    "to": 1499385600000,
+    "roomId": 6,
+    "handled": false
+  },
+  "59afae200cbcbaca4b815961": {
+    "from": 1498521600000,
+    "to": 1500940800000,
+    "roomId": 2,
+    "handled": true
+  },
+  "59afae209068be15b498e1ec": {
+    "from": 1509235200000,
+    "to": 1510358400000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae200a121d43258e84ed": {
+    "from": 1506038400000,
+    "to": 1506556800000,
+    "roomId": 4,
+    "handled": false
+  },
+  "59afae20b141581214c290e1": {
+    "from": 1511913600000,
+    "to": 1514505600000,
+    "roomId": 5,
+    "handled": false
+  },
+  "59afae205f7d7210295cd40a": {
+    "from": 1506816000000,
+    "to": 1508284800000,
+    "roomId": 2,
+    "handled": false
+  },
+  "59afae2021ad13cda6fe1d27": {
+    "from": 1502150400000,
+    "to": 1502841600000,
+    "roomId": 1,
+    "handled": false
+  },
+  "59afae20b2cc873c3a59017d": {
+    "from": 1497312000000,
+    "to": 1497398400000,
+    "roomId": 6,
+    "handled": true
+  },
+  "59afae20c4029775df92590a": {
+    "from": 1507334400000,
+    "to": 1507680000000,
+    "roomId": 2,
+    "handled": true
+  },
+  "59afae2076c722e2787fad89": {
+    "from": 1510617600000,
+    "to": 1512518400000,
+    "roomId": 2,
+    "handled": true
+  },
+  "59afae20c84bc61c86285cb9": {
+    "from": 1511136000000,
+    "to": 1512950400000,
+    "roomId": 5,
+    "handled": false
+  }
+}

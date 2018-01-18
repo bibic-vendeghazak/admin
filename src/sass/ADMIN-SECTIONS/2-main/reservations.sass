@@ -1,0 +1,54 @@
+.reservation-email h4
+  +icon-name("email")
+.reservation-tel h4
+  +icon-name("phone")
+.reservation-room h5
+  +icon-name("info")
+.reservation-person h5
+  +icon-name("person")
+.reservation-date h5
+  +icon-name("calendar")
+.reservation-message
+  h4
+    +icon-name("message")
+  p
+    padding: 1em
+    background-color: transparentize($dark, .9)
+    margin-bottom: .5em
+
+.reservation-room h5
+    +icon()
+    &::before
+      filter: invert(1)
+
+.reservation-handled-btn
+  background-color: $price-1
+  display: flex
+  align-items: center
+  li
+    flex-grow: 1
+    display: flex
+    justify-content: center
+    align-items: center
+    cursor: pointer
+    padding: 1em
+    transition: .3s
+    &:hover
+      background-color: $room-1
+  p, h3
+    color: $light
+
+.active-handle-filter
+  background-color: $room-1
+
+.posts-header
+  color: $light !important
+
+.reservation-room
+  flex-direction: column
+  align-self: stretch
+  >div
+    align-self: stretch
+    display: flex
+    justify-content: space-between
+    align-items: center

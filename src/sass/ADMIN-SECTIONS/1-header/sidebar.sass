@@ -1,0 +1,184 @@
+#sidebar
+  position: fixed
+  background: $price-1
+  height: 100vh
+  width: calc(100% - 64px)
+  max-width: 480px
+  top: 0
+  left: 0
+  display: flex
+  flex-direction: column
+
+  @media(max-width: 768px)
+    animation: slideInLeft 0.3s
+
+  z-index: 1000
+  box-shadow: 0 0 5px $dark
+
+  &::after
+    position: absolute
+    content: ""
+    background-color: rgba(0, 0, 0, 0.3)
+    right: -100%
+    top: 0
+    height: 100%
+    width: 100%
+
+  h3
+    color: $light
+
+.menu-item
+  border-bottom: 1px solid $dark
+  padding: 0.75em 1em
+  display: flex
+  align-items: center
+  transition: 0.3s
+
+  &:hover
+    @extend .active-menu-item
+
+  h3
+    +icon(6px)
+
+  &:nth-child(1)
+    h3
+      align-items: flex-start
+
+      &::before
+        display: none
+
+    &:hover h3
+      color: $light !important
+
+  &:nth-child(2) h3
+    +icon-name("house")
+
+  &:nth-child(3) h3
+    +icon-name("reservation")
+
+  &:nth-child(4) h3
+    +icon-name("calendar")
+
+  &:nth-child(5) h3
+    +icon-name("stats")
+
+  &:nth-child(6) h3
+    +icon-name("star")
+
+  &:nth-child(7) h3
+    +icon-name("settings")
+
+#profile
+  display: flex
+  padding: 1.5em 2em !important
+  justify-content: space-between
+
+  h3
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+
+    &::after
+      line-height: 0.5
+      font-size: 90%
+      opacity: 0.8
+      content: "admin"
+
+  img
+    +circle(58px)
+
+    padding: 0
+    background-color: $price-2
+    font-size: 0.5em
+    text-align: center
+    color: $light
+
+#logout-btn
+  border: none
+  color: $light
+  padding: 1.25em 0
+  position: absolute
+  width: 100%
+  bottom: 0
+  background-color: $room-3
+  align-self: stretch
+  font-weight: bold
+  font-size: 1.1em
+
+@media (orientation: landscape) and (max-width: 767px)
+  #sidebar
+    position: relative
+
+    > div
+      padding: 0.5em 1em
+
+  #profile
+    padding: 0.5em 1em !important
+    justify-content: flex-end
+    flex-direction: row-reverse
+
+    img
+      +circle(36px)
+
+      margin-right: 6px
+
+    h3
+      flex-direction: row
+      align-items: center !important
+
+      &::after
+        margin-left: 6px
+
+  #logout-btn
+    position: absolute
+
+    +circle(80px)
+
+    right: -40px
+    bottom: 10px
+    font-size: 0.75em
+    z-index: 1
+
+@media (min-width: 768px)
+  .app
+    main
+      max-width: 62.5vw
+      margin-left: 37.5vw
+
+    .hamburger
+      display: none
+
+  #sidebar
+    max-width: 35vw
+
+    > div
+      cursor: pointer
+      transition: 0.3s
+
+      h3
+        font-size: 1.1em
+
+      &:first-of-type
+        cursor: auto
+
+        &:hover
+          background-color: transparent
+
+    &::after
+      display: none
+
+  #logout-btn
+    font-size: 1em
+    transition: 0.3s
+
+    &:hover
+      background-color: darken($room-3, 10)
+
+@media (min-width: 1024px)
+  .app
+    main
+      max-width: 80vw
+      margin-left: 20vw
+
+  #sidebar
+    max-width: 20vw

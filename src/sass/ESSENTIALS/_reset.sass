@@ -1,0 +1,28 @@
+body, ul, h1, h2, h3, h4, h5, p, textarea, input, fieldset
+  margin: 0
+  padding: 0
+a
+  text-decoration: none
+li
+  list-style-type: none
+img
+  display: block
+  color: black
+
+section
+  background-color: $accent-color
+
+textarea, input, fieldset
+  border: none
+
+textarea, input, button
+  &:focus
+    outline: none
+
+button
+  cursor: pointer
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+  -webkit-appearance: none
+  margin: 0

@@ -1,0 +1,54 @@
+@mixin import-font($font-name)
+  @font-face
+    font-family: #{$font-name}
+    src:  url(#{$fonts}#{$font-name}.woff)
+
+@mixin import-img($img-name, $url:#{$bg},$img-ext:jpg)
+  background:
+    image: url(#{$url}#{$img-name}.#{$img-ext})
+
+@mixin rect($size)
+  width: $size
+  height: $size
+  display: flex
+  justify-content: center
+  align-items: center
+
+@mixin circle($size)
+  border-radius: $size
+  padding: 6px
+  +rect($size)
+
+
+
+
+@mixin icon($margin-right:2px)
+  display: flex
+  align-items: center
+  justify-content: center
+  &::before
+    content: ''
+    +rect(1em)
+    background-size: cover
+    margin-right: $margin-right
+
+@mixin icon-name($name)
+  &::before
+    background-image: url(#{$icons}#{$name}.svg)
+
+
+@mixin btn($icon-name:"done", $background-color: $room-3, $size: auto, $border-radius:24px, $color: $light)
+  border: none
+  color: $color
+  background-color: $background-color
+  border-radius: $border-radius
+  padding: .5em
+  min-height: 36px
+  height: $size
+  min-width: 36px
+  text-align: center
+  +icon(0)
+  @if $icon-name != ""
+    +icon-name($icon-name)
+
+  font-size: 1.1em

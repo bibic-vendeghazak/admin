@@ -1,0 +1,211 @@
+[ {
+  "available" : false,
+"id" : 1,
+"maxAdults" : 2,
+"maxChildren" : 1,
+"prices" : {
+    "allInclusive" : {
+    "1_0": {
+        "adults": 1,
+      "chlidren": 0,
+        "price": 0
+      }
+    },
+    "breakfast" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "fullBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "halfBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    }
+  }
+}, {
+  "available" : true,
+  "id" : 2,
+  "maxAdults" : 3,
+  "maxChildren" : 2,
+  "prices" : {
+    "allInclusive" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "breakfast" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "fullBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "halfBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    }
+  }
+}, {
+  "available" : true,
+  "id" : 3,
+  "maxAdults" : 4,
+  "maxChildren" : 4,
+  "prices" : {
+    "allInclusive" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "breakfast" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "fullBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "halfBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    }
+  }
+}, {
+  "available" : false,
+  "id" : 4,
+  "maxAdults" : 4,
+  "maxChildren" : 3,
+  "prices" : {
+    "allInclusive" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "breakfast" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "fullBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "halfBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    }
+  }
+}, {
+  "available" : true,
+  "id" : 5,
+  "maxAdults" : 4,
+  "maxChildren" : 3,
+  "prices" : {
+    "allInclusive" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "breakfast" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "fullBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "halfBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    }
+  }
+}, {
+  "available" : true,
+  "id" : 6,
+  "maxAdults" : 3,
+  "maxChildren" : 2,
+  "prices" : {
+    "allInclusive" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "breakfast" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "fullBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    },
+    "halfBoard" : {
+      "1_0": {
+        "adults": 1,
+        "chlidren": 0,
+        "price": 0
+      }
+    }
+  }
+} ]

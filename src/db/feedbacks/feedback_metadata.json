@@ -1,0 +1,502 @@
+{
+  "59b00e7f4df4dbddafe18d49": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 5
+  },
+  "59b00e7f202f51013c0d2628": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 1
+  },
+  "59b00e7f6709acf3ec68e5a8": {
+      "handled": true,
+      "roomId": 4,
+      "rating": 4
+  },
+  "59b00e7f3d3c866d6bcf2498": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 2
+  },
+  "59b00e7f37d1d7b6731e7bb4": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 1
+  },
+  "59b00e7fdbf39bdc92d09c08": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 1
+  },
+  "59b00e7f5a0f6f552ed67d28": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 2
+  },
+  "59b00e7f41d298f406e8b5c7": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 5
+  },
+  "59b00e7f2dde6930dbeb3ce7": {
+      "handled": true,
+      "roomId": 1,
+      "rating": 2
+  },
+  "59b00e7f825d53f480e78f9f": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 5
+  },
+  "59b00e7f434fdca80df7cbfc": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 2
+  },
+  "59b00e7f27366b43cbd62b4b": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 2
+  },
+  "59b00e7f91a0c9ccca2e857f": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 4
+  },
+  "59b00e7fe9c8bb2cd7dced09": {
+      "handled": false,
+      "roomId": 6,
+      "rating": 2
+  },
+  "59b00e7ff6d14723a9143198": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 1
+  },
+  "59b00e7f497d9c8c238f37c7": {
+      "handled": true,
+      "roomId": 4,
+      "rating": 2
+  },
+  "59b00e7faac8e6dd9ae6df88": {
+      "handled": false,
+      "roomId": 1,
+      "rating": 5
+  },
+  "59b00e7fd7a7058833505a9f": {
+      "handled": false,
+      "roomId": 6,
+      "rating": 1
+  },
+  "59b00e7f91467cdf3547be70": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 1
+  },
+  "59b00e7f309c087ad55352bf": {
+      "handled": false,
+      "roomId": 5,
+      "rating": 1
+  },
+  "59b00e7f72929558fba02835": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 4
+  },
+  "59b00e7fc8c5abcb1a408064": {
+      "handled": true,
+      "roomId": 1,
+      "rating": 1
+  },
+  "59b00e7fb5c0627b641ebaa3": {
+      "handled": true,
+      "roomId": 4,
+      "rating": 5
+  },
+  "59b00e7f435114fadb927c81": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 2
+  },
+  "59b00e7fe35d0a8ead027ed9": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 4
+  },
+  "59b00e7ff49d878f3f84ff3e": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 2
+  },
+  "59b00e7fb199582002146910": {
+      "handled": false,
+      "roomId": 6,
+      "rating": 5
+  },
+  "59b00e7fe1a8898459ec71df": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 1
+  },
+  "59b00e7f1f79db7239a145fb": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 3
+  },
+  "59b00e7f2f7aa65d608db777": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 1
+  },
+  "59b00e7fb62fa4e44dce9e30": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 5
+  },
+  "59b00e7f8a0bc457184a5879": {
+      "handled": false,
+      "roomId": 1,
+      "rating": 1
+  },
+  "59b00e7f8cd26af8faf699e4": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 4
+  },
+  "59b00e7f406004e5ec579d93": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 1
+  },
+  "59b00e7f49d6ac7a80a5dd58": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 5
+  },
+  "59b00e7f4edd52711404083e": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 5
+  },
+  "59b00e7f44f3f0eddc694c63": {
+      "handled": false,
+      "roomId": 1,
+      "rating": 2
+  },
+  "59b00e7f8d6166b248b1f700": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 5
+  },
+  "59b00e7f9f93dfc0c89e758e": {
+      "handled": false,
+      "roomId": 1,
+      "rating": 1
+  },
+  "59b00e7f27ace37235770830": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 3
+  },
+  "59b00e7fb68e9d30e4d58907": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 3
+  },
+  "59b00e7feae7a779be369de8": {
+      "handled": true,
+      "roomId": 3,
+      "rating": 2
+  },
+  "59b00e7f0d92842d7cb90f2b": {
+      "handled": true,
+      "roomId": 4,
+      "rating": 2
+  },
+  "59b00e7f1212e47ba991be98": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 1
+  },
+  "59b00e7ff8c57b6412e3c52c": {
+      "handled": false,
+      "roomId": 1,
+      "rating": 3
+  },
+  "59b00e7f267a5154351a6da5": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 2
+  },
+  "59b00e7f6a26559f8f764f5a": {
+      "handled": true,
+      "roomId": 1,
+      "rating": 3
+  },
+  "59b00e7f30db15d34e5e7004": {
+      "handled": false,
+      "roomId": 6,
+      "rating": 3
+  },
+  "59b00e7fab7d3a999c1cdf19": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 5
+  },
+  "59b00e7fdf8225440cba726d": {
+      "handled": true,
+      "roomId": 1,
+      "rating": 1
+  },
+  "59b00e7f40bf91a08dda0656": {
+      "handled": true,
+      "roomId": 4,
+      "rating": 3
+  },
+  "59b00e7fa64e3d268de92a6e": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 4
+  },
+  "59b00e7f2655f1fd57c84317": {
+      "handled": false,
+      "roomId": 5,
+      "rating": 3
+  },
+  "59b00e7f0f82d024eebc2ac7": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 2
+  },
+  "59b00e7fd09ebcba141e29a4": {
+      "handled": false,
+      "roomId": 5,
+      "rating": 5
+  },
+  "59b00e7f76d75ecdd4d57077": {
+      "handled": true,
+      "roomId": 1,
+      "rating": 2
+  },
+  "59b00e7f4479dc21c22772eb": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 3
+  },
+  "59b00e7f9df1b320bbaeceab": {
+      "handled": false,
+      "roomId": 5,
+      "rating": 5
+  },
+  "59b00e7f3d5d52efff7b2663": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 4
+  },
+  "59b00e7fad760e6ec555b541": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 3
+  },
+  "59b00e7f57f8f6dd0ca7d4a7": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 4
+  },
+  "59b00e7f3c4e18ae3c79d718": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 4
+  },
+  "59b00e7fd49604acbe829f19": {
+      "handled": true,
+      "roomId": 3,
+      "rating": 2
+  },
+  "59b00e7f7f7428790bde9357": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 1
+  },
+  "59b00e7fd0f7d3e9f2a2ee25": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 2
+  },
+  "59b00e7f1a230f38df7141ba": {
+      "handled": false,
+      "roomId": 6,
+      "rating": 5
+  },
+  "59b00e7f2185b79f8f0fe314": {
+      "handled": false,
+      "roomId": 5,
+      "rating": 2
+  },
+  "59b00e7f7816b2b85dd9426f": {
+      "handled": true,
+      "roomId": 3,
+      "rating": 3
+  },
+  "59b00e7fff9db65f03f6a9fa": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 5
+  },
+  "59b00e7f610eb65664633519": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 5
+  },
+  "59b00e7f05a8b72ff25c1e59": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 3
+  },
+  "59b00e7f1b4464afe9fcf1b3": {
+      "handled": true,
+      "roomId": 3,
+      "rating": 4
+  },
+  "59b00e7f839968b8b49ba6e3": {
+      "handled": true,
+      "roomId": 1,
+      "rating": 2
+  },
+  "59b00e7f31d888b8caf55b64": {
+      "handled": true,
+      "roomId": 3,
+      "rating": 1
+  },
+  "59b00e7fb8db8b135b1b7712": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 5
+  },
+  "59b00e7f8b8c82be3dae3dcb": {
+      "handled": true,
+      "roomId": 1,
+      "rating": 1
+  },
+  "59b00e7fbde1dca16c7fa7ef": {
+      "handled": false,
+      "roomId": 5,
+      "rating": 1
+  },
+  "59b00e7f3c70efe2ea7042cf": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 4
+  },
+  "59b00e7f169f5bddededa00b": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 4
+  },
+  "59b00e7fecc0ec13cca7390c": {
+      "handled": true,
+      "roomId": 4,
+      "rating": 5
+  },
+  "59b00e7f4106f54dd498664c": {
+      "handled": false,
+      "roomId": 4,
+      "rating": 2
+  },
+  "59b00e7f71e469c313107606": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 2
+  },
+  "59b00e7f1ecd27cae322ddc3": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 1
+  },
+  "59b00e7fb76664ab3184ab35": {
+      "handled": false,
+      "roomId": 3,
+      "rating": 3
+  },
+  "59b00e7ff4f55179f14fa298": {
+      "handled": false,
+      "roomId": 5,
+      "rating": 2
+  },
+  "59b00e7f1baba0bd168401e3": {
+      "handled": false,
+      "roomId": 6,
+      "rating": 1
+  },
+  "59b00e7ff06fb7baa76daaa7": {
+      "handled": false,
+      "roomId": 1,
+      "rating": 4
+  },
+  "59b00e7fd1a86cc497300945": {
+      "handled": true,
+      "roomId": 5,
+      "rating": 1
+  },
+  "59b00e7f94ed152afcb52ea0": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 1
+  },
+  "59b00e7f56c8f5228df123a0": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 1
+  },
+  "59b00e7f46c67744ebe280a8": {
+      "handled": true,
+      "roomId": 3,
+      "rating": 5
+  },
+  "59b00e7f6282cc08582fcb1c": {
+      "handled": true,
+      "roomId": 3,
+      "rating": 3
+  },
+  "59b00e7f2d4ad0431113f154": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 4
+  },
+  "59b00e7fdcba488774ee68b3": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 3
+  },
+  "59b00e7f04d6912f2aba100d": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 1
+  },
+  "59b00e7f5ad67da1b17d3048": {
+      "handled": false,
+      "roomId": 6,
+      "rating": 4
+  },
+  "59b00e7fe43f48eec0a8a87a": {
+      "handled": true,
+      "roomId": 6,
+      "rating": 5
+  },
+  "59b00e7f970813eff76a1362": {
+      "handled": true,
+      "roomId": 2,
+      "rating": 4
+  },
+  "59b00e7fbf66de1a56b86395": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 4
+  },
+  "59b00e7f969f4bb3d4007f7a": {
+      "handled": false,
+      "roomId": 2,
+      "rating": 4
+  }
+}

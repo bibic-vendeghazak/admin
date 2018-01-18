@@ -1,0 +1,80 @@
+.app
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+  background-color: darken($light, 10)
+  h2, h3
+    color: $accent-color
+  .hamburger
+    background-color: darken($light, 10)
+    border-radius: 50%
+    span, span::before, span::after
+      background-color: $accent-color
+
+  header
+    position: relative
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    justify-content: center
+
+  h2
+    font-size: 1.2em
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-direction: column
+    padding: 0
+    img
+      margin: .5em
+      +rect(64px)
+#login-wrapper
+  flex-direction: column
+  display: flex
+  align-items: center
+  margin-bottom: 15%
+  >div
+    display: flex
+    flex-direction: column
+  input
+    flex-grow: 1
+    padding: 1em
+    margin: 2.5%
+    transition: background-color .3s
+    &:focus
+      background-color: darken($light, 20)
+  a
+    align-self: center
+  button
+    +circle(102px)
+    margin-top: .5em
+    border: none
+    background-color: $room-3
+    color: $light
+    font-weight: bold
+    font-size: .9em
+    transition: background-color .3s
+    margin-bottom: calc(-68px)
+    &:hover, &:focus
+      background-color: darken($room-3, 10)
+
+#login-title
+  img
+    width: 64px
+@media(orientation: landscape)
+  #login-wrapper
+    >div
+      flex-direction: row
+    button
+      width: auto
+      height: auto
+      border-radius: 0
+      padding: 1em 2em
+
+@media(min-width: 768px)
+  #login-wrapper
+    margin-bottom: 0
+  #login-title
+    flex-direction: column !important
+  #login-form
+    justify-content: center

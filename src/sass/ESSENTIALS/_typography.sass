@@ -1,0 +1,118 @@
+// ------------------------------ TYPOGRAPHY ------------------------------ //
+
+@include import-font(ConeriaScript)
+@include import-font(Coolvetica)
+@include import-font(TheanoDidot)
+@include import-font(BebasKai)
+
+nav
+  text-transform: uppercase
+  font-weight: bold
+  a
+    font-family: sans-serif
+    padding: 1rem
+
+
+h2, #jump-to-gallery, #szobak h4, .price, .food-title, a, label
+    color: white
+#bemutatkozas h2
+  color: $accent-color-2
+#specialitasok h2 ,h3, h4, p
+  color: $grey
+
+#szobak
+  h5
+    color: $light
+#arak
+  h5
+    color: $price-4
+
+h1, h2, h4, p
+  font-weight: lighter
+
+h2, h3, h4, p
+  font-family: TheanoDidot
+
+#szobak, #arak
+  h4
+    font-family: BebasKai
+
+h1, #bemutatkozas h2
+  font-family: ConeriaScript
+
+h2, h3, h4, h5
+  text-align: center
+
+h2
+  text-transform: uppercase
+  line-height: 1.5
+  padding: 1.5em 0
+h1
+  padding: .5em .2em
+  text-align: center
+  span
+    font-size: .8em
+h3
+  font-size: 1.3em
+
+h4
+  font-size: 2em
+
+h1 span:last-of-type
+  font-size: .35em
+h5, p
+  font-size: 1.2em
+
+#szobak
+  p
+    font-style: italic
+    text-align: center
+    line-height: 1
+    padding: 1em 1.5em 0
+  h5
+    padding-bottom: 1em
+
+@media (min-width: 768px)
+  #menu
+    font-size: 1.2em
+    >li a
+      position: relative
+      transition: .3s
+      &::after
+        content: ''
+        position: absolute
+        left: 50%
+        transform: translateX(-50%) scaleX(0)
+        bottom: 8px
+        width: 100%
+        height: 1px
+        background: $accent-color-2
+        transition: .3s transform ease-out
+        transform-origin: center
+      &:hover
+        color: $accent-color-2
+        &::after
+          transform: translateX(-50%) scaleX(1)
+
+@media (min-width: 1024px)
+  h2
+    font-size: 2em
+  h3
+    font-size: 1.4em
+
+  h4
+    font-size: 1.3em
+  #szobak
+    h4
+      font-size: 2em
+    h5, p
+      line-height: 1.2
+      font-size: 1.5em
+@media (min-width: 1440px)
+  h2
+    font-size: 3em
+  h3
+    font-size: 1.5em
+  p
+    font-size: 1.4em
+// ------------------------------ MISC ------------------------------ //

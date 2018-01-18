@@ -1,0 +1,347 @@
+{
+  "admins" : {
+    "Ejv1vnmLodfvj6uCdCA2cNBkEUL2" : {
+      "name" : "Hegedűs Péter",
+      "src" : "hegedus"
+    },
+    "T1ImfVXdJsXmAURR8STxIDpbkSm2" : {
+      "name" : "Boós Gergő",
+      "src" : "gombkoto"
+    }
+  },
+  "calendar" : [ {
+    "adults" : 1,
+    "children" : 0,
+    "from" : "2017-08-24",
+    "roomId" : 0,
+    "to" : "2017-08-30"
+  }, {
+    "adults" : 1,
+    "children" : 0,
+    "from" : "2017-08-31",
+    "roomId" : 0,
+    "to" : "2017-09-04"
+  }, {
+    "adults" : 2,
+    "children" : 1,
+    "from" : "2017-09-21",
+    "roomId" : 0,
+    "to" : "2017-10-01"
+  } ],
+  "feedbacks" : [ {
+    "handled" : true,
+    "message" : "A szoba jó volt, egyedül ez és ez nem tetszett.",
+    "rating" : 4,
+    "roomId" : 1
+  }, {
+    "handled" : false,
+    "message" : "A szoba perfekt volt.",
+    "rating" : 5,
+    "roomId" : 1
+  }, {
+    "handled" : true,
+    "message" : "Hát...",
+    "rating" : 2,
+    "roomId" : 3
+  }, {
+    "handled" : true,
+    "message" : "Nem szórakoztunk jól.",
+    "rating" : 2,
+    "roomId" : 6
+  } ],
+  "reservations" : {
+    "-KsTgUYeq6C7idzDWJZP" : {
+      "email" : "ffh@b.hu",
+      "handled" : true,
+      "name" : "Tamás Orbán",
+      "other" : "",
+      "room" : {
+        "adults" : 2,
+        "children" : 1,
+        "from" : "2017-09-26",
+        "id" : 4,
+        "to" : "2017-10-28"
+      },
+      "tel" : "34"
+    },
+    "-KsTiA_ixH8cGJkUDDWc" : {
+      "email" : "camilla@gmail.com",
+      "handled" : false,
+      "name" : "Camilla",
+      "other" : "Teszt",
+      "room" : {
+        "adults" : 2,
+        "children" : 0,
+        "from" : "2017-09-26",
+        "id" : 4,
+        "to" : "2017-10-31"
+      },
+      "tel" : "1234567"
+    },
+    "-KsTrTXU700q12Y2BV_i" : {
+      "email" : "44bazsi44@gmail.com",
+      "handled" : true,
+      "name" : "Ferenc Kovács",
+      "other" : "Jó",
+      "room" : {
+        "adults" : 1,
+        "children" : 2,
+        "from" : "2017-09-26",
+        "id" : 6,
+        "to" : "2017-09-27"
+      },
+      "tel" : "+36301234567"
+    },
+    "-KsTrigimw-NeTrmSuA6" : {
+      "email" : "44bazsi44@gmail.com",
+      "handled" : true,
+      "name" : "István Horváth",
+      "other" : "",
+      "room" : {
+        "adults" : 1,
+        "children" : 0,
+        "from" : "2017-09-22",
+        "id" : 2,
+        "to" : "2017-09-31"
+      },
+      "tel" : "565686"
+    },
+    "-KsTskiQxrc3UiXolm6Z" : {
+      "email" : "fdj@fiu.hu",
+      "handled" : true,
+      "name" : "Balázs Imre",
+      "other" : "",
+      "room" : {
+        "adults" : 1,
+        "children" : 0,
+        "from" : "2017-01-01",
+        "id" : 2,
+        "to" : "2017-01-02"
+      },
+      "tel" : "837"
+    },
+    "-KsTvXynRnOEDXaJsB1X" : {
+      "email" : "kj@hotmail.com",
+      "handled" : true,
+      "name" : "Ödön Kis",
+      "other" : "",
+      "room" : {
+        "adults" : 1,
+        "children" : 0,
+        "from" : "2017-09-26",
+        "id" : 3,
+        "to" : "2017-09-26"
+      },
+      "tel" : "k324432"
+    },
+    "-KsTwuYqjz1ypAO1ljlH" : {
+      "email" : "ds@gotmail.om",
+      "handled" : false,
+      "name" : "Emil Kovács",
+      "other" : "",
+      "room" : {
+        "adults" : 1,
+        "children" : 0,
+        "from" : "2017-09-17",
+        "id" : 3,
+        "to" : "2017-09-31"
+      },
+      "tel" : "43432"
+    },
+    "-KsTxaRiHQMpNfXHrqcs" : {
+      "email" : "gergo@boos.hu",
+      "handled" : true,
+      "name" : "Gergő Boós",
+      "other" : "Még mindig teszt",
+      "room" : {
+        "adults" : 4,
+        "children" : 0,
+        "from" : "2018-02-02",
+        "id" : 3,
+        "to" : "2018-03-02"
+      },
+      "tel" : "123987"
+    },
+    "-KstzJvbQBSGS63WwrfQ" : {
+      "email" : "kis.ferenc@email.hu",
+      "handled" : true,
+      "name" : "Ferenc Kis",
+      "other" : "",
+      "room" : {
+        "adults" : 1,
+        "children" : 0,
+        "from" : "2017-08-24",
+        "id" : 1,
+        "to" : "2017-08-26"
+      },
+      "tel" : "+36801234567"
+    },
+    "-Ksu-Kle7f4DYf7zv_ar" : {
+      "email" : "4432@gmil.hu",
+      "handled" : true,
+      "name" : "Józseg Fan",
+      "other" : "",
+      "room" : {
+        "adults" : 1,
+        "children" : 0,
+        "from" : "2017-08-22",
+        "id" : 5,
+        "to" : "2017-08-31"
+      },
+      "tel" : "+58947831"
+    }
+  },
+  "roomServices" : {
+    "65m2" : {
+      "inRoom" : [ 1 ],
+      "name" : "Szoba mérete"
+    },
+    "airconditioner" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Légkondi"
+    },
+    "balcony" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Erkély"
+    },
+    "bathtub" : {
+      "inRoom" : [ 1 ],
+      "name" : "Fürdőkád"
+    },
+    "beertap" : {
+      "inRoom" : [ 1 ],
+      "name" : "Sörcsap"
+    },
+    "calendar" : {
+      "inRoom" : [ 1 ],
+      "name" : "Dátum"
+    },
+    "crib" : {
+      "inRoom" : [ 1 ],
+      "name" : "Babaágy"
+    },
+    "doublebed" : {
+      "inRoom" : [ 2, 3, 4, 5, 6 ],
+      "name" : "Dupla ágy"
+    },
+    "hairdryer" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Hajszárító"
+    },
+    "pooltable" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Biliárd asztal"
+    },
+    "projector" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Projektor"
+    },
+    "services" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Egyéb szolgáltatások"
+    },
+    "shower" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Zuhanyzó"
+    },
+    "singlebed" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Egyes ágy"
+    },
+    "sofa" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Kanapé"
+    },
+    "staff" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Személyzet"
+    },
+    "toilet" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "WC"
+    },
+    "tv" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "TV"
+    },
+    "wardrobe" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Ruhás szekrény"
+    },
+    "wifi" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "WIFI"
+    },
+    "winery" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Borozó"
+    }
+  },
+  "rooms" : [ {
+    "available" : false,
+    "id" : 1,
+    "maxAdults" : 2,
+    "maxChildren" : 1,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : true,
+    "id" : 2,
+    "maxAdults" : 3,
+    "maxChildren" : 2,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : true,
+    "id" : 3,
+    "maxAdults" : 4,
+    "maxChildren" : 4,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : false,
+    "id" : 4,
+    "maxAdults" : 4,
+    "maxChildren" : 3,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : true,
+    "id" : 5,
+    "maxAdults" : 4,
+    "maxChildren" : 3,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : false,
+    "id" : 6,
+    "maxAdults" : 3,
+    "maxChildren" : 2,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  } ]
+}

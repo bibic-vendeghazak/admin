@@ -1,0 +1,115 @@
+@import month
+@import day
+
+#calendar-wrapper
+  position: relative
+
+.step-month-btn
+  +icon()
+  margin: 0
+
+.today-month
+  grid-area: today
+  justify-self: start
+.prev-month
+  grid-area: prev
+  justify-self: end
+.next-month
+  grid-area: next
+  justify-self: start
+.calendar-header
+  margin: 8px 16px 16px
+  display: grid
+  align-items: center
+  h4
+    grid-area: year
+    justify-self: center
+    color: darken($grey, 10)
+  h3
+    grid-area: month
+    justify-self: center
+
+  grid-template-areas: ". . year . ." "today prev month next ."
+
+  .step-month-btn
+    +icon-name("arrow")
+    &:first-of-type
+      &::before
+        transform: rotate(180deg)
+    &:nth-of-type(2)
+      width: 64px
+      border-radius: 32px
+      color: $light
+      +icon-name("today")
+    &:last-of-type
+      &::before
+        margin-right: 0
+        margin-left: 2px
+
+
+.weekend-title
+  background-color: darken($lightred, 5) !important
+
+.room-legend
+  margin-bottom: 5%
+  display: flex
+  align-items: center
+  flex-direction: column
+  ul
+    display: flex
+    max-width: 640px
+    background-color: transparent !important
+    li
+      margin: 6px
+      box-sizing: border-box
+      cursor: pointer
+    p
+      border: 1px solid $light
+      color: $light
+      +circle(36px)
+      margin-top: 0
+
+.unchecked
+  background: transparent !important
+  color: $dark !important
+  border: 1px solid $dark !important
+  p
+
+.room-1
+  background-color: $room-1
+.room-2
+  margin-top: 8px
+  background-color: $room-2
+.room-3
+  margin-top: 16px
+  background-color: $room-3
+.room-4
+  margin-top: 24px
+  background-color: $room-4
+.room-5
+  margin-top: 32px
+  background-color: $room-5
+.room-6
+  margin-top: 40px
+  background-color: $room-6
+
+
+@media(orientation: landscape)
+  .calendar-header
+    margin-right: 4em
+    margin-bottom: 8px
+    grid-template-areas: "year month . . . . . prev today next"
+  .today-month,
+  .prev-month,
+  .next-month
+    justify-self: end
+  .room-legend
+    margin: 1em 0
+
+
+@media(min-width: 768px)
+  .calendar-header
+    margin: 2.5%
+    grid-template-areas: "year month . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . prev today next "
+    h4
+      font-size: 2em

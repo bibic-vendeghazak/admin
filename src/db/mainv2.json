@@ -1,0 +1,223 @@
+{
+  "admins" : {
+    "Ejv1vnmLodfvj6uCdCA2cNBkEUL2" : {
+      "name" : "Hegedűs Péter",
+      "src" : "hegedus"
+    },
+    "T1ImfVXdJsXmAURR8STxIDpbkSm2" : {
+      "name" : "Boós Gergő",
+      "src" : "gombkoto"
+    }
+  },
+  "calendar" : [ {
+    "adults" : 1,
+    "children" : 0,
+    "from" : "2017-08-24",
+    "roomId" : 0,
+    "to" : "2017-08-30"
+  }, {
+    "adults" : 1,
+    "children" : 0,
+    "from" : "2017-08-31",
+    "roomId" : 0,
+    "to" : "2017-09-04"
+  }, {
+    "adults" : 2,
+    "children" : 1,
+    "from" : "2017-09-21",
+    "roomId" : 0,
+    "to" : "2017-10-01"
+  } ],
+  "feedbacks" : [ {
+    "handled" : true,
+    "message" : "A szoba jó volt, egyedül ez és ez nem tetszett.",
+    "rating" : 4,
+    "roomId" : 1
+  }, {
+    "handled" : false,
+    "message" : "A szoba perfekt volt.",
+    "rating" : 5,
+    "roomId" : 1
+  }, {
+    "handled" : true,
+    "message" : "Hát...",
+    "rating" : 2,
+    "roomId" : 3
+  }, {
+    "handled" : true,
+    "message" : "Nem szórakoztunk jól.",
+    "rating" : 2,
+    "roomId" : 6
+  } ],
+  "reservations" : {
+    "i32lkj4k3": {
+      "details": {
+        "message": "et ullamco nostrud enim in.",
+        "children": 3,
+        "adults": 6,
+        "tel": "+36-88-451-6346",
+        "email": "voluptate@consequat.com",
+        "name": "Ross Chan"
+      },
+      "publicDetails": {
+        "handled": true,
+        "to": "2018-12-18",
+        "from": "2017-12-14",
+        "roomId": 6
+      }
+    }
+  },
+  "roomServices" : {
+    "65m2" : {
+      "inRoom" : [ 1 ],
+      "name" : "Szoba mérete"
+    },
+    "airconditioner" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Légkondi"
+    },
+    "balcony" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Erkély"
+    },
+    "bathtub" : {
+      "inRoom" : [ 1 ],
+      "name" : "Fürdőkád"
+    },
+    "beertap" : {
+      "inRoom" : [ 1 ],
+      "name" : "Sörcsap"
+    },
+    "calendar" : {
+      "inRoom" : [ 1 ],
+      "name" : "Dátum"
+    },
+    "crib" : {
+      "inRoom" : [ 1 ],
+      "name" : "Babaágy"
+    },
+    "doublebed" : {
+      "inRoom" : [ 2, 3, 4, 5, 6 ],
+      "name" : "Dupla ágy"
+    },
+    "hairdryer" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Hajszárító"
+    },
+    "pooltable" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Biliárd asztal"
+    },
+    "projector" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Projektor"
+    },
+    "services" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Egyéb szolgáltatások"
+    },
+    "shower" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Zuhanyzó"
+    },
+    "singlebed" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Egyes ágy"
+    },
+    "sofa" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Kanapé"
+    },
+    "staff" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Személyzet"
+    },
+    "toilet" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "WC"
+    },
+    "tv" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "TV"
+    },
+    "wardrobe" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Ruhás szekrény"
+    },
+    "wifi" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "WIFI"
+    },
+    "winery" : {
+      "inRoom" : [ 1, 2, 3, 4, 5, 6 ],
+      "name" : "Borozó"
+    }
+  },
+  "rooms" : [ {
+    "available" : false,
+    "id" : 1,
+    "maxAdults" : 2,
+    "maxChildren" : 1,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : true,
+    "id" : 2,
+    "maxAdults" : 3,
+    "maxChildren" : 2,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : true,
+    "id" : 3,
+    "maxAdults" : 4,
+    "maxChildren" : 4,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : false,
+    "id" : 4,
+    "maxAdults" : 4,
+    "maxChildren" : 3,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : true,
+    "id" : 5,
+    "maxAdults" : 4,
+    "maxChildren" : 3,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  }, {
+    "available" : false,
+    "id" : 6,
+    "maxAdults" : 3,
+    "maxChildren" : 2,
+    "prices" : {
+      "allInclusive" : [ 0 ],
+      "breakfast" : [ 0 ],
+      "fullBoard" : [ 0 ],
+      "halfBoard" : [ 0 ]
+    }
+  } ]
+}

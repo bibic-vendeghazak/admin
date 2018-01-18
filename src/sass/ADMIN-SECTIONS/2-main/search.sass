@@ -1,0 +1,133 @@
+.search-bar
+  display: flex
+  flex-direction: column
+  position: relative
+  h4
+    padding: .5em
+    align-self: stretch
+    font-size: 1em
+
+  p
+    text-align: center
+    padding: 1.5em
+    color: darken($grey,20)
+
+.filters, .omnibar, .toggle-filter-btn
+  background-color: $price-1
+.toggle-filter-btn
+  border: none
+  box-shadow: 0 0 10px rgba(0,0,0,.5)
+  +circle(48px)
+  +icon()
+  +icon-name("filter")
+  font-size: 1.5em
+  position: absolute
+  right: 8px
+  bottom: -116px
+  z-index: 1000
+
+.filters
+  display: flex
+  flex-direction: column
+  justify-content: center
+  padding: 3em
+
+.omnibar
+  display: flex
+  position: relative
+  align-items: center
+  padding: 12px .1em
+  input
+    position: relative
+    left: 18px
+    width: 60%
+    border-radius: 1em
+    padding: .5em 3em .5em .5em
+  button
+    right: 18px
+    position: relative
+    z-index: 1
+    border: none
+    color: $light
+    box-shadow: 0 0 10px rgba(0,0,0,.5)
+    background-color: $room-1
+    +icon(0)
+    +icon-name("search")
+    font-size: 1.5em
+
+.filter-search
+  display: flex
+  align-items: center
+  flex-direction: column
+
+  input
+    min-width: 1.4em
+    min-height: 1.4em
+    padding: .25em
+    margin: .25em .5em
+  >div, >ul
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: center
+    margin: 0 1em
+
+    label
+      margin: 0 .2em 0 1em
+    span
+      margin: 0 .5em
+      color: $light
+    li
+      margin: .8em .3em
+  h5
+    margin-top: .5em
+    color: $light
+.filter-checkbox
+  background-color: $light
+  color: $dark
+  padding: .3em .5em
+  border-radius: 1em
+  cursor: pointer
+
+.checked
+  padding: .3em
+  color: $light
+  background-color: $price-1
+  +icon()
+  +icon-name("done")
+
+.toggle-all
+  cursor: pointer
+  font-size: .8em
+  margin-left: .5em
+  border-bottom: 1px solid $light
+  color: $light
+  transition: .3s
+  &:hover
+    color: $room-3
+    border-bottom-color: $room-3
+.filter-date
+  div
+    +icon(-12px)
+    +icon-name("calendar")
+
+@media(orientation: landscape)
+  .search-bar
+    position: relative
+  .filters
+    height: auto
+    padding: 1em
+    position: static
+  .toggle-filter-btn
+    bottom: -122px
+  .omnibar
+    padding: .5em
+    input
+      padding: .75em
+      border-radius: 2em
+      width: 100%
+    button
+      +circle(48px)
+      transition: .3s
+      &:hover
+        background-color: darken($room-1,5)
