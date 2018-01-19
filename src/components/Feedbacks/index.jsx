@@ -1,14 +1,11 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Feedback from './Feedback'
+import {Tabs, Tab} from 'material-ui/Tabs'
+import {TabLabel} from '../../utils'
 
-const Feedbacks = ({feedbacks}) => {
-
-  const unreadFeedbacks = []
-  const readFeedbacks = []
-const FeedbackList = ({type, styleId, feedbacks}) => {
+const FeedbackList = ({styleId, feedbacks}) => {
   return(
     <div className={`posts-${styleId}`}>
-      <h3 className="posts-header">{type} visszajelzések<span className="notification-counter">{feedbacks.length}</span></h3>
       {feedbacks.length !== 0 ?
         <ul id={`${styleId}-feedbacks`}>
           {feedbacks}
@@ -16,18 +13,37 @@ const FeedbackList = ({type, styleId, feedbacks}) => {
     </div>
   )
 }
-  for (let key in feedbacks) {
-    const feedback = feedbacks[key]
-    const feedbackComponent = <Feedback key={key} id={key} feedback={feedback}/>
-    !feedback.metadata.handled ? unreadFeedbacks.push(feedbackComponent) : readFeedbacks.push(feedbackComponent)
-  }
 
+
+export default class Feedbacks extends Component {
+  state = {
+    read: false
+  }
+  
+  handleChange = (read) => {
+    this.setState({read})
+  }
+  render() {
+    const {feedbacks} = this.props
+    const unreadFeedbacks = []
+    const readFeedbacks = []
+    for (let key in feedbacks) {
+      const feedback = feedbacks[key]
+      const feedbackComponent = <Feedback key={key} id={key} feedback={feedback}/>
+      !feedback.metadata.handled ? unreadFeedbacks.push(feedbackComponent) : readFeedbacks.push(feedbackComponent)
+    }
   return (
-    <div id="feedback-wrapper" className="posts-wrapper">
-      <FeedbackList type="Új" styleId="unread" feedbacks={unreadFeedbacks}/>
-      <FeedbackList type="Régi" styleId="read" feedbacks={readFeedbacks}/>
-    </div>
+    <Tabs
+      value={this.state.read}
+      onChange={this.handleChange}
+    >
+      <Tab value={false} label={<TabLabel title="Új visszajelzések" count={unreadFeedbacks.length}/>}>
+        <FeedbackList styleId="unread" feedbacks={unreadFeedbacks}/>
+      </Tab>
+      <Tab value={true} label={<TabLabel title="Olvasott visszajelzések" count={readFeedbacks.length}/>}>
+        <FeedbackList styleId="read" feedbacks={readFeedbacks}/>
+      </Tab>
+    </Tabs>
   )
 }
-
-export default Feedbacks
+}

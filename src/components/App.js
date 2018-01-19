@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import '../admin.css'
 import firebase from 'firebase/app'
 import Login from './Auth/Login'
-import Menu from './Menu'
+import Sidebar from './Sidebar'
 import Rooms from './Rooms'
 import Reservations from './Reservations'
 import Calendar from './Calendar'
 import Stats from './Stats'
 import Feedbacks from './Feedbacks'
+import AppBar from 'material-ui/AppBar'
+
 
 const initialState = {
   isLoggedIn: false,
@@ -19,7 +20,16 @@ const initialState = {
   roomServices: {},
   unreadReservationCount: 0,
   unreadFeedbackCount: 0,
-  openedMenuItem: "calendar"
+  openedMenuItem: "calendar",
+  openedMenuTitle: {
+    welcome: "Admin kezelőfelület",
+    rooms: "Szobák",
+    reservations: "Foglalások",
+    calendar: "Dátumok",
+    stats: "Statisztikák",
+    feedbacks: "Visszajelzések",
+    settings: "Beállítások"
+  }
 }
 
 const Welcome = () => (
@@ -112,7 +122,7 @@ export default class App extends Component {
       profile, unreadReservationCount, unreadFeedbackCount,
       isMenuActive, rooms, roomServices,
       reservations, feedbacks, name,
-      openedMenuItem
+      openedMenuItem, openedMenuTitle
     } = this.state
     const isLoggedIn = profile !== undefined
     const handledReservations = {}
@@ -125,7 +135,12 @@ export default class App extends Component {
           })
     return (
         <div className="app">
-          <Menu
+        <AppBar
+          style={{position: "fixed"}}
+          title={openedMenuTitle[openedMenuItem]}
+          iconClassNameRight="muidocs-icon-navigation-expand-more"
+        />
+          <Sidebar
             {...{profile, isMenuActive, unreadReservationCount, unreadFeedbackCount}}
             reset={() => this.reset()}
             changeOpenedMenuItem={(openedMenuItem) => this.changeOpenedMenuItem(openedMenuItem)}
@@ -156,7 +171,7 @@ export default class App extends Component {
             </main>}
 
           {!isLoggedIn && <Login name={name}/>}
-          <Footer/>
+          {/* <Footer/> */}
         </div>
     )
   }

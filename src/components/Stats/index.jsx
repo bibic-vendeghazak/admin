@@ -71,7 +71,6 @@ export default class Stats extends Component {
     }
     return (
       <div id="stats-wrapper" className="posts-wrapper">
-        <h3 className="posts-header">Statisztikák</h3>
         <ul id="stats">
           <li className="stat post">
             <div className="post-header">

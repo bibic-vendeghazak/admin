@@ -1,6 +1,7 @@
 import React from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import RaisedButton from 'material-ui/RaisedButton'
 
 const Logout = ({reset}) => {
   const logout = () => {
@@ -11,12 +12,9 @@ const Logout = ({reset}) => {
     console.log('Kijelentkezve.')
   }
   return (
-    <button
-      id="logout-btn"
+    <RaisedButton style={{position: "absolute", bottom: 0}} fullWidth secondary label="Kijelentkezés"
       onClick={() => logout()}
-    >
-      Kijelentkezés
-    </button>
+   />
   )
 }
 

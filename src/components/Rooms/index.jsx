@@ -11,7 +11,6 @@ const Rooms = (props) => {
   }
   return (
     <div className="rooms posts-wrapper">
-      <h3>Szobák</h3>
       <ul>
         {roomsList}
       </ul>

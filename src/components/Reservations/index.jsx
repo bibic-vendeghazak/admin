@@ -1,20 +1,23 @@
 import React, { Component } from 'react'
 import FilteredReservations from './FilteredReservations'
 import SearchBar from './SearchBar'
+import {Tabs, Tab} from 'material-ui/Tabs'
+import {TabLabel} from '../../utils'
 
 export default class Reservations extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      query: "",
-      // HACK: Get the rooms dynamically
-      rooms: Array(6).fill().map((x,i) => true),
-      shouldToggleAll: true,
-      // HACK: Find a better solution
-      from: new Date(1970,1,1).getTime(),
-      to: new Date(2100,12,31).getTime(),
-      handled: false
-    }
+  state = {
+    query: "",
+    // HACK: Get the rooms dynamically
+    rooms: Array(6).fill().map((x,i) => true),
+    shouldToggleAll: true,
+    // HACK: Find a better solution
+    from: new Date(1970,1,1).getTime(),
+    to: new Date(2100,12,31).getTime(),
+    handled: false
+  }
+
+  handleChange = (handled) => {
+    this.setState({handled})
   }
 
   handleOmniBar(query){
@@ -27,43 +30,42 @@ export default class Reservations extends Component {
     this.setState({rooms})
   }
 
-
-  showHandled(handled){
-    this.setState({handled})
-  }
-
   render() {
     const {query, rooms, from, to, handled} = this.state
     const {reservations} = this.props
     return (
-      <div id="reservations-wrapper" className="posts-wrapper">
+      <div>
         <SearchBar
           rooms={rooms}
           handleOmniBar={query => this.handleOmniBar(query)}
           handleRoomToggle={id => this.handleRoomToggle(id)}
           showHandled={handled => this.showHandled(handled)}
         />
-        <ul className="reservation-handled-btn">
-          <li
-            className={`${!handled ? "active-handle-filter" : ""}`}
-            onClick={() => this.showHandled(false)}
+        <Tabs
+          value={handled}
+          onChange={this.handleChange}
+        >
+          <Tab 
+            //FIXME: Add dynamic counter
+            label={<TabLabel title="Új foglalások" count={0}/>}
+            value={false}
           >
-            <p>
-              Új foglalások
-            </p>
-          </li>
-          <li
-            className={`${handled ? "active-handle-filter" : ""}`}
-            onClick={() => this.showHandled(true)}
-          >
-            <p>
-              Kezelt foglalások
-            </p>
-          </li>
-        </ul>
-        <FilteredReservations
-          {...{query, rooms, from, to, handled, reservations}}
+          <FilteredReservations
+          handled={false}
+          {...{query, rooms, from, to, reservations}}
         />
+          </Tab>
+          <Tab 
+            //FIXME: Add dynamic counter
+            label={<TabLabel title="Kezelt foglalások" count={0}/>}
+            value={true}
+          >
+          <FilteredReservations
+            handled={true}
+            {...{query, rooms, from, to, reservations}}
+          />
+          </Tab>
+        </Tabs>
       </div>
     )
   }

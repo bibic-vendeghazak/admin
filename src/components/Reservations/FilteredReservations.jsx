@@ -71,7 +71,6 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
   })
   return (
    <div>
-     <h3 className="posts-header">Foglalások  <span className="notification-counter">{filteredReservations.length} </span> találat</h3>
      {filteredReservations.length !== 0 ?
        <ul id="filtered-reservations">
          {unread}

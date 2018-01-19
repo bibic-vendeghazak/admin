@@ -4,7 +4,7 @@ export default class SearchBar extends Component {
   constructor(){
     super()
     this.state = {
-      showFilters: true
+      showFilters: false
     }
   }
 
