@@ -1,5 +1,6 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
-src/db
+src/db/
+main.css
 # dependencies
 /node_modules
 
