@@ -25,7 +25,7 @@ const Feedback = ({id, feedback}) => {
   }
 
   return (
-    <ListItem disabled style={{padding: 0}}>
+    <ListItem disabled style={{padding: ".5em 4em"}}>
       <ExpandableCard
         title={`Szoba ${roomId}`}
         subtitle={<div style={{display: "flex"}}>{stars}</div>}

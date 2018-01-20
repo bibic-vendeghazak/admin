@@ -32,11 +32,11 @@ export default class Reservations extends Component {
 
   render() {
     const {query, rooms, from, to, handled} = this.state
-    const {reservations} = this.props
+    const {reservations, appBarRightAction} = this.props
     return (
       <div>
         <SearchBar
-          rooms={rooms}
+          {...{appBarRightAction, rooms}}
           handleOmniBar={query => this.handleOmniBar(query)}
           handleRoomToggle={id => this.handleRoomToggle(id)}
           showHandled={handled => this.showHandled(handled)}

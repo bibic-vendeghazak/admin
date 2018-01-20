@@ -8,7 +8,7 @@ import {TabLabel} from '../../utils'
 const FeedbackList = ({styleId, feedbacks}) => {
   return(
       feedbacks.length !== 0 ?
-        <List style={{padding: 0}}>{feedbacks}</List> : 
+        <List>{feedbacks}</List> : 
         <p>Nincs olvasatlan visszajelzés</p>
   )
 }

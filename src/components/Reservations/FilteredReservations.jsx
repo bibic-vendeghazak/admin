@@ -1,5 +1,7 @@
 import React from 'react'
 import Reservation from './Reservation'
+import {List} from 'material-ui/List'
+
 
 const FilteredReservations = ({reservations, query, rooms, from, to, handled}) => {
 
@@ -72,10 +74,10 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
   return (
    <div>
      {filteredReservations.length !== 0 ?
-       <ul id="filtered-reservations">
+       <List>
          {unread}
          {read}
-       </ul> : <p>Nincs egyezés</p>
+       </List> : <p>Nincs egyezés</p>
      }
    </div>
   )

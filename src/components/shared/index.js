@@ -9,6 +9,7 @@ export const ExpandableCard = ({title, subtitle, primaryButtonLabel, primaryButt
       subtitle={subtitle}
       actAsExpander showExpandableButton
     />
+    {(primaryButtonLabel || secondaryButtonLabel) &&
     <CardActions>
         {primaryButtonLabel &&
         <RaisedButton 
@@ -27,6 +28,7 @@ export const ExpandableCard = ({title, subtitle, primaryButtonLabel, primaryButt
         />
       }
     </CardActions>
+    }
     <CardText expandable>{content ? content : children}</CardText>
   </Card>
 )
