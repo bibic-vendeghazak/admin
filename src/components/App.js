@@ -8,9 +8,11 @@ import Calendar from './Calendar'
 import Stats from './Stats'
 import Feedbacks from './Feedbacks'
 import AppBar from 'material-ui/AppBar'
-
+import IconButton from 'material-ui/IconButton'
+import FontIcon from 'material-ui/FontIcon'
 
 const initialState = {
+  isDrawerOpened: true,
   isLoggedIn: false,
   rooms: {},
   calendar: {},
@@ -20,7 +22,7 @@ const initialState = {
   roomServices: {},
   unreadReservationCount: 0,
   unreadFeedbackCount: 0,
-  openedMenuItem: "reservations",
+  openedMenuItem: "welcome",
   openedMenuTitle: {
     welcome: "Admin kezelőfelület",
     rooms: "Szobák",
@@ -29,38 +31,15 @@ const initialState = {
     stats: "Statisztikák",
     feedbacks: "Visszajelzések",
     settings: "Beállítások"
-  }
+  },
+  appBarRightIcon: "",
+  appBarRightAction: null
 }
 
-const Welcome = () => (
-  <h2 style={{
-    marginTop: "30%"
-  }}>Admin kezelőfelület</h2>
-)
-
-const Footer = () => {
-
-  return (
-    <footer>
-      <a
-        href="https://balazsorban44.github.io/bibic-vendeghazak"
-        target="_blank"
-        rel="noopener noreferrer"
-      >Bíbic vendégházak</a>
-      <a
-        href="https://balazsorban.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >Orbán Balázs</a>
-      <a href="mailto:info@balazsorban.com">info@balazsorban.com</a>
-    </footer>
-)}
 
 export default class App extends Component {
-  constructor() {
-    super()
-    this.state = initialState
-  }
+  
+  state = initialState
 
   reset() {
     this.setState(initialState)
@@ -68,13 +47,17 @@ export default class App extends Component {
   }
 
   toggleSidebar() {
-    this.setState(prevState => (
-      {isMenuActive: !prevState.isMenuActive})
+    this.setState(({isDrawerOpened}) => (
+      {isDrawerOpened: !isDrawerOpened})
     )
   }
 
-  changeOpenedMenuItem(openedMenuItem) {
-    this.setState({openedMenuItem})
+  handleAppBarRightButtonClick = (appBarRightAction) => {
+    this.setState({appBarRightAction})
+  }
+
+  changeOpenedMenuItem(openedMenuItem, appBarRightIcon) {
+    this.setState({openedMenuItem, appBarRightIcon})
   } 
 
   fetchPosts(posts){
@@ -123,9 +106,10 @@ export default class App extends Component {
       profile, unreadReservationCount, unreadFeedbackCount,
       isMenuActive, rooms, roomServices,
       reservations, feedbacks, name,
-      openedMenuItem, openedMenuTitle
+      openedMenuItem, openedMenuTitle,
+      isDrawerOpened, appBarRightIcon
     } = this.state
-    const {isLoggedIn} = this.state
+    const {isLoggedIn, appBarRightAction} = this.state
     const handledReservations = {}
   	Object.entries(reservations)
   		    .forEach(reservation => {
@@ -139,17 +123,27 @@ export default class App extends Component {
       {isLoggedIn &&
       <div>
         <AppBar
+          onLeftIconButtonClick={() => this.toggleSidebar()}
           style={{position: "fixed"}}
           title={openedMenuTitle[openedMenuItem]}
-          iconClassNameRight="muidocs-icon-navigation-expand-more"
+          iconElementRight={
+            <IconButton>
+              <FontIcon className="material-icons">{appBarRightIcon}</FontIcon>
+            </IconButton>
+          }
+          onRightIconButtonClick={() => this.handleAppBarRightButtonClick(openedMenuItem)}
         />
         <Sidebar
           {...{profile, isMenuActive, unreadReservationCount, unreadFeedbackCount}}
           reset={() => this.reset()}
-          changeOpenedMenuItem={(openedMenuItem) => this.changeOpenedMenuItem(openedMenuItem)}
-          toggleSidebar={() => this.toggleSidebar()}
+          changeOpenedMenuItem={(openedMenuItem, appBarRightIcon) => this.changeOpenedMenuItem(openedMenuItem, appBarRightIcon, )}
+          {...{isDrawerOpened}}
         />
-            <main>
+            <main style={{
+              marginLeft: isDrawerOpened && 256,
+              transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'
+
+            }}>
               {{
                 welcome: (
                   <Welcome {...{profile}}/>
@@ -158,7 +152,7 @@ export default class App extends Component {
                   <Rooms {...{rooms, roomServices}}/>
                 ),
                 reservations: (
-                  <Reservations {...{reservations}}/>
+                  <Reservations {...{reservations, appBarRightAction}}/>
                 ),
                 calendar: (
                   <Calendar {...{appBarRightAction}} reservations={handledReservations}/>
@@ -180,3 +174,29 @@ export default class App extends Component {
     )
   }
 }
+
+
+
+const Welcome = () => (
+  <h2 style={{
+    marginTop: "30%"
+  }}>Admin kezelőfelület</h2>
+)
+
+const Footer = () => {
+
+  return (
+    <footer>
+      <a
+        href="https://balazsorban44.github.io/bibic-vendeghazak"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Bíbic vendégházak</a>
+      <a
+        href="https://balazsorban.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Orbán Balázs</a>
+      <a href="mailto:info@balazsorban.com">info@balazsorban.com</a>
+    </footer>
+)}

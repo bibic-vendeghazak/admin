@@ -8,9 +8,12 @@ export default class SearchBar extends Component {
     }
   }
 
+  componentWillReceiveProps({appBarRightAction}) {
+    appBarRightAction === "reservations" && this.toggleFilters()
+  }
+
   toggleFilters() {
-    const showFilters = !this.state.showFilters
-    this.setState({showFilters})
+    this.setState(({showFilters}) => ({showFilters: !showFilters}))
   }
 
   handleOmniBar(e) {
@@ -52,10 +55,6 @@ export default class SearchBar extends Component {
     }
     return(
       <div id="reservations-search" className="search-bar">
-        <button
-          className={`toggle-filter-btn ${showFilters && "checked"}`}
-          onClick={() => this.toggleFilters()}
-        />
         <div className="omnibar">
           <input
             placeholder="Keresés a foglalások között"
