@@ -13,8 +13,7 @@ const muiTheme = getMuiTheme({
   palette: {
     primary1Color: darkBrown,
     primary2Color: lightBrown,
-    accent1Color: orange,
-    borderColor: orange,
+    accent1Color: orange
   },
   badge: {
     primaryColor: orange
