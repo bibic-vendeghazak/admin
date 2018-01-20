@@ -1,8 +1,21 @@
 import React from 'react'
+import {Card, CardHeader} from 'material-ui/Card'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table'
+import {List, ListItem} from 'material-ui/List'
+import Close from 'material-ui/svg-icons/navigation/close'
 
 // NOTE: DELETE THIS WHEN Room numbers are fixed
 import firebase from 'firebase'
 import 'firebase/database'
+import moment from 'moment'
 
 const months = [
   "Január", "Február", "Március",
@@ -38,68 +51,51 @@ const DayBig = (props) => {
   const {month, day} = props.date
   const reservationsData = Object.entries(props.reservations)
   reservationsData.sort((a,b) => a[1].metadata.roomId - b[1].metadata.roomId)
-  let reservations = []
-  reservationsData.forEach(reservation => {
-    const [key,value] = reservation
-    const {roomId, from, to} = value.metadata
-    const {name, email, tel} = value.details
 
-    reservations.push(
-      <li key={key}>
-        <input
-          data-id={key}
-          defaultValue={roomId}
-          // NOTE: DELETE THIS WHEN Room numbers are fixed
-          onChange={e => changeRoom(e)}
-          className={`room-${roomId}`}
-        />
-        <div className="post-body day-big-wrapper">
-          <div className="reservation-name">
-            <p>
-              Szoba {roomId}
-            </p>
-            <p>{name}</p>
-          </div>
-          <div className="reservation-email">
-            <h4>E-mail: </h4>
-            <a href={`mailto:${email}`}>{email}</a>
-          </div>
-          <div className="reservation-tel">
-            <h4>Telefonszám: </h4>
-            <a href={`tel:${tel}`}>{tel}</a>
-          </div>
-          <div className="reservation-room">
-            <div className="reservation-date">
-              <h5>Érkezés:</h5>
-              <date>{new Date(from).toISOString().slice(0,10)}</date>
-            </div>
-            <div className="reservation-date">
-              <h5>Távozás:</h5>
-              <date>{new Date(to).toISOString().slice(0,10)}</date>
-            </div>
-          </div>
-          <span
-            data-id={key}
-            onClick={e => deleteReservation(e)}
-            className="red-btn"
-            style={{position: "static"}}
-          >✗</span>
-        </div>
-      </li>
-    )
-  })
 
   return (
-    <div className="day-big">
-      <div className="post-header">
-        <p>{months[month]}</p>
-        <p>{day}</p>
-      </div>
-      <ul>
-        {reservations}
-      </ul>
-      <span className="red-btn" onClick={() => handleClick()}>✗</span>
-    </div>
+    <Card className="day-big">
+      <FloatingActionButton className="day-big-close-btn" mini secondary onClick={() => handleClick()}>
+        <Close/>
+      </FloatingActionButton>
+      <CardHeader title={`${months[month]} ${day}.`}/>
+      <Table
+      >
+          <TableHeader
+          displaySelectAll={false}
+          adjustForCheckbox={false}
+          >
+            <TableRow>
+              <TableHeaderColumn>Szoba</TableHeaderColumn>
+              <TableHeaderColumn>Név</TableHeaderColumn>
+              <TableHeaderColumn>E-mail</TableHeaderColumn>
+              <TableHeaderColumn>Telefon</TableHeaderColumn>
+              <TableHeaderColumn>Érkezés/Távozás</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            { reservationsData.map(reservation => {
+            const [key,value] = reservation
+            const {roomId, from, to} = value.metadata
+            const {name, email, tel} = value.details
+            return(
+              <TableRow key={reservation}>
+                <TableRowColumn className={`room-day-big room-${roomId}`}>Szoba {roomId}</TableRowColumn>
+                <TableRowColumn>{name}</TableRowColumn>
+                <TableRowColumn><a tooltip={email} href={`mailto:${email}`}>{email}</a></TableRowColumn>
+                <TableRowColumn><a tooltip={tel} href={`tel:${tel}`}>{tel}</a></TableRowColumn>
+                <TableRowColumn style={{textAlign: "right"}}>
+                  <div>
+                    <div>{moment(from).format('YYYY. MMMM DD.')}</div>
+                    <div>{moment(to).format('YYYY. MMMM DD.')}</div>
+                  </div>
+                </TableRowColumn>
+              </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+    </Card>
   )
 }
 
