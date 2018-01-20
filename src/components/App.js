@@ -20,7 +20,7 @@ const initialState = {
   roomServices: {},
   unreadReservationCount: 0,
   unreadFeedbackCount: 0,
-  openedMenuItem: "calendar",
+  openedMenuItem: "reservations",
   openedMenuTitle: {
     welcome: "Admin kezelőfelület",
     rooms: "Szobák",
@@ -35,7 +35,7 @@ const initialState = {
 const Welcome = () => (
   <h2 style={{
     marginTop: "30%"
-  }}>Köszöntjük az admin kezelőfelületen!</h2>
+  }}>Admin kezelőfelület</h2>
 )
 
 const Footer = () => {
@@ -111,6 +111,7 @@ export default class App extends Component {
               unreadFeedbackCount
             }
             this.setState(data)
+            this.setState({isLoggedIn: true})
             localStorage.setItem("data", JSON.stringify(data));
           })
         }
@@ -124,7 +125,7 @@ export default class App extends Component {
       reservations, feedbacks, name,
       openedMenuItem, openedMenuTitle
     } = this.state
-    const isLoggedIn = profile !== undefined
+    const {isLoggedIn} = this.state
     const handledReservations = {}
   	Object.entries(reservations)
   		    .forEach(reservation => {
@@ -134,19 +135,20 @@ export default class App extends Component {
             }
           })
     return (
-        <div className="app">
+      <div className="app">
+      {isLoggedIn &&
+      <div>
         <AppBar
           style={{position: "fixed"}}
           title={openedMenuTitle[openedMenuItem]}
           iconClassNameRight="muidocs-icon-navigation-expand-more"
         />
-          <Sidebar
-            {...{profile, isMenuActive, unreadReservationCount, unreadFeedbackCount}}
-            reset={() => this.reset()}
-            changeOpenedMenuItem={(openedMenuItem) => this.changeOpenedMenuItem(openedMenuItem)}
-            toggleSidebar={() => this.toggleSidebar()}
-          />
-          {isLoggedIn &&
+        <Sidebar
+          {...{profile, isMenuActive, unreadReservationCount, unreadFeedbackCount}}
+          reset={() => this.reset()}
+          changeOpenedMenuItem={(openedMenuItem) => this.changeOpenedMenuItem(openedMenuItem)}
+          toggleSidebar={() => this.toggleSidebar()}
+        />
             <main>
               {{
                 welcome: (
@@ -168,7 +170,9 @@ export default class App extends Component {
                   <Feedbacks {...{feedbacks}}/>
                 )
               }[openedMenuItem]}
-            </main>}
+            </main>      
+            </div>
+}
 
           {!isLoggedIn && <Login name={name}/>}
           {/* <Footer/> */}

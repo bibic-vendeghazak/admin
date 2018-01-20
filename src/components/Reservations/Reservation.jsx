@@ -1,6 +1,18 @@
 import React from 'react'
 import firebase from 'firebase'
 import 'firebase/database'
+import {ListItem} from 'material-ui/List'
+import {ExpandableCard} from '../shared'
+import RaisedButton from 'material-ui/RaisedButton'
+import {
+  Table,
+  TableBody,
+  TableFooter,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table'
 
 const Reservation = ({id, reservation}) => {
 
@@ -17,22 +29,22 @@ const Reservation = ({id, reservation}) => {
     return new Date(date).toISOString().slice(0,10)
   }
 
+  const dayDiff = (timestamp1, timestamp2) => {
+    var difference = timestamp1 - timestamp2
+    var daysDifference = Math.floor(difference/1000/60/60/24)
+    return daysDifference
+  }
+
   const {metadata, details} = reservation
   const {roomId, from, to, handled} = metadata
   const {name, email, tel, message, adults, children} = details
   return (
-    <li className="reservation post">
-      <div className={`post-header ${handled && "post-handled"}`}>
-        <div className="reservation-name">
-          <p>{name}</p>
-          <span> - Szoba {roomId}</span>
-        </div>
-        <span
-          className="post-toggle"
-          onClick={e => handleClick(e)}
-        >▼</span>
-      </div>
-      <div className="post-body hidden">
+    <ListItem disabled style={{padding: 0}}>
+    <ExpandableCard
+      title={`${name} - ${dayDiff(to, from)} nap`}
+      subtitle={`Szoba ${roomId}`}
+    > 
+    <div>
         <div className="reservation-email">
           <h4>E-mail: </h4>
           <a href={`mailto:${email}`}>{email}</a>
@@ -45,42 +57,56 @@ const Reservation = ({id, reservation}) => {
           <h4>Üzenet: </h4>
           <p>{message ? message : "Nincs üzenet"}</p>
         </div>
-        <div className="reservation-room">
-          <h4>Szoba adatok:</h4>
-          <div className="reservation-room-number">
-            <h5>Szobaszám: </h5>
-            <p>{roomId}. szoba</p>
-          </div>
-          <div className="reservation-person">
-            <h5>Felnőtt: </h5>
-            <p>{adults} személy</p>
-          </div>
-          <div className="reservation-person">
-            <h5>Gyerek: </h5>
-            <p>{children ? `${children} személy` : "0"}</p>
-          </div>
-          <div className="reservation-date">
-            <h5>Érkezés:</h5>
-            <date>{toDate(from)}</date>
-          </div>
-          <div className="reservation-date">
-            <h5>Távozás:</h5>
-            <date>{toDate(to)}</date>
-          </div>
-        </div>
-        <div className="reservation-handled post-handle">
-          <span
-            className="accept-reservation green-btn"
-            onClick={() => handleReservation(true)}
-          >✓</span>
-          <span
-            className="reject-reservation red-btn"
-            onClick={() => handleReservation(false)}
-          >✗</span>
-        </div>
+        
 
-      </div>
-    </li>
+    <Table selectable={false}>
+          <TableHeader 
+            displaySelectAll={false}
+            adjustForCheckbox={false}
+            >
+            <TableRow>
+              <TableHeaderColumn colSpan="5" style={{textAlign: 'center'}}>
+              <h4>A foglalás részletei</h4>
+              </TableHeaderColumn>
+            </TableRow>
+            <TableRow>
+              <TableHeaderColumn>Szobaszám</TableHeaderColumn>
+              <TableHeaderColumn>Felnőtt</TableHeaderColumn>
+              <TableHeaderColumn>Gyerek</TableHeaderColumn>
+              <TableHeaderColumn>Érkezés</TableHeaderColumn>
+              <TableHeaderColumn>Távozás</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            <TableRow>
+              <TableRowColumn>{roomId}. szoba</TableRowColumn>
+              <TableRowColumn>{adults} személy</TableRowColumn>
+              <TableRowColumn>{children} személy</TableRowColumn>
+              <TableRowColumn>{toDate(from)}</TableRowColumn>
+              <TableRowColumn>{toDate(to)}</TableRowColumn>
+            </TableRow>
+          </TableBody>
+    </Table>
+    <div>
+          {!handled &&
+          <RaisedButton
+            primary
+            label="Elfogadás"
+            onClick={() => handleReservation(true)}
+            
+          />
+          }
+          <RaisedButton
+            secondary
+            label={handled ? "Visszavon" :"Elutasítás"}
+            onClick={() => handleReservation(false)}
+          />
+        </div>
+    </div>
+   
+    </ExpandableCard>
+  </ListItem>
+    
   )
 }
 

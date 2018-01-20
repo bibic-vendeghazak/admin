@@ -102,7 +102,7 @@ export default class Room extends Component {
       <li className="room" key={id}>
         <div className="room-header">
           <h4>Szoba {id}</h4>
-          <img src={`https://balazsorban44.github.io/bibic-vendeghazak/assets/images/rooms/${id}_0.jpg`} alt={`Szoba ${id}`}/>
+          <img src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/images/rooms/${id}_0.jpg`} alt={`Szoba ${id}`}/>
           <span/>
         </div>
         <button className={`edit-room-btn ${isEditOpen && "edit-room-btn-active"}`} onClick={() => this.editRoomToggle()}>{isEditOpen ? "✗" : "Szerkesztés"}</button>

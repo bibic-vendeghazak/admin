@@ -1,6 +1,8 @@
 import React from 'react'
 import firebase from 'firebase/app'
 import 'firebase/database'
+import {ExpandableCard} from '../shared'
+import {ListItem} from 'material-ui/List'
 
 const Feedback = ({id, feedback}) => {
 
@@ -15,7 +17,7 @@ const Feedback = ({id, feedback}) => {
   }
 
   const {metadata, details} = feedback
-  const {rating, roomId} = metadata
+  const {rating, roomId, handled} = metadata
   const {message} = details
   const stars = []
   for (let i = 0; i < 5; i++){
@@ -23,33 +25,19 @@ const Feedback = ({id, feedback}) => {
   }
 
   return (
-      <li className="feedback post">
-        <div className="post-header">
-          <div>
-            <p>Szoba {roomId}</p>
-            {stars}
-          </div>
-          <span
-            className="post-toggle"
-            onClick={(e) => handleClick(e)}
-          >▼</span>
-        </div>
-        <div className="post-body hidden">
-          <div className="feedback-message">
-            <p>{message}</p>
-          </div>
-          <div className="feedback-read post-handle">
-            <span
-              className="read-feedback green-btn"
-              onClick={() => markRead(true)}
-            >✓</span>
-            <span
-              className="unread-feedback red-btn"
-              onClick={() => markRead(false)}
-            >✗</span>
-          </div>
-        </div>
-      </li>
+    <ListItem disabled style={{padding: 0}}>
+      <ExpandableCard
+        title={`Szoba ${roomId}`}
+        subtitle={<div style={{display: "flex"}}>{stars}</div>}
+        primaryButtonLabel="Olvasott"
+        primaryButtonClick={() => markRead(true)}
+        primaryButtonDisabled={handled}
+        secondaryButtonLabel="Olvasatlan"
+        secondaryButtonClick={() => markRead(false)}
+        secondaryButtonDisabled={!handled}
+        content={message}
+      />
+    </ListItem>
   )
 }
 

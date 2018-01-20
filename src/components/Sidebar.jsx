@@ -13,7 +13,7 @@ const menuItemStyle = {
 }
 
 const dividerStyle = {
-	backgroundColor: "rgba(255,255,255,.8)"
+	backgroundColor: "rgba(255,255,255,.5)"
 }
 
 export default class Sidebar extends Component {
@@ -44,13 +44,26 @@ export default class Sidebar extends Component {
 						<Drawer  containerStyle={{height: 'calc(100% - 64px)', top: 64}}>
 						<Profile {...{profile}}/>
 						<Divider style={dividerStyle}/>
-
 							<MenuItem
-								focusState="focused"
+								style={menuItemStyle}
+								onClick={() => this.changeOpenedMenuItem("welcome")}
+								primaryText="Kezdőlap"
+								leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">home</FontIcon>}
+							/>
+							<MenuItem
+							style={menuItemStyle} 
+							href="https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/"
+							target="_blank"
+							rel="noopener noreferrer"
+							primaryText="Irány a weblap"
+							leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">language</FontIcon>}
+						/>
+							<Divider style={dividerStyle}/>
+							<MenuItem
 								style={menuItemStyle}
 								onClick={() => this.changeOpenedMenuItem("rooms")}
 								primaryText="Szobák"
-								leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">home</FontIcon>}
+								leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">business</FontIcon>}
 								/>
 							<MenuItem
 								style={menuItemStyle} 
@@ -80,11 +93,12 @@ export default class Sidebar extends Component {
 								/>
 						<Divider style={dividerStyle}/>
 						<MenuItem
-								style={menuItemStyle} 
-								onClick={() => this.changeOpenedMenuItem("settings")}
-								primaryText="Beállítások"
-								leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">settings</FontIcon>}
-								/>
+							style={menuItemStyle} 
+							onClick={() => this.changeOpenedMenuItem("settings")}
+							primaryText="Beállítások"
+							leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">settings</FontIcon>}
+						/>
+						
 						<Logout reset={reset}/>
 						</Drawer>
 					</aside>}
@@ -100,7 +114,7 @@ const Profile = ({profile}) => (
 		<h4>{profile.role}admin</h4>
 	</div>
 		<Avatar className="avatar"
-			src={`https://balazsorban44.github.io/bibic-vendeghazak/assets/images/other/${profile.src}.jpg`}
+			src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/images/other/${profile.src}.jpg`}
 			size={64}
 		/>
 	</div>

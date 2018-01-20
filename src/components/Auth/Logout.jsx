@@ -12,7 +12,10 @@ const Logout = ({reset}) => {
     console.log('Kijelentkezve.')
   }
   return (
-    <RaisedButton style={{position: "absolute", bottom: 0}} fullWidth secondary label="Kijelentkezés"
+    <RaisedButton 
+      style={{position: "absolute", bottom: 0}}
+      fullWidth secondary 
+      label="Kijelentkezés"
       onClick={() => logout()}
    />
   )

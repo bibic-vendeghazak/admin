@@ -1,16 +1,15 @@
 import React, {Component} from 'react'
 import Feedback from './Feedback'
 import {Tabs, Tab} from 'material-ui/Tabs'
+import {List} from 'material-ui/List'
+
 import {TabLabel} from '../../utils'
 
 const FeedbackList = ({styleId, feedbacks}) => {
   return(
-    <div className={`posts-${styleId}`}>
-      {feedbacks.length !== 0 ?
-        <ul id={`${styleId}-feedbacks`}>
-          {feedbacks}
-        </ul> : <p>Nincs olvasatlan visszajelzés</p>}
-    </div>
+      feedbacks.length !== 0 ?
+        <List style={{padding: 0}}>{feedbacks}</List> : 
+        <p>Nincs olvasatlan visszajelzés</p>
   )
 }
 

@@ -34,7 +34,7 @@ export default class EditRoom extends Component {
         <li key={key} className="room-service">
           <div className="room-service-label">
             <p className={`${!inRoom.includes(id) && "not-available"}`}>{name}</p>
-            <img src={`https://balazsorban44.github.io/bibic-vendeghazak/assets/icons/services/${key}.svg`} alt={name}/>
+            <img src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/icons/services/${key}.svg`} alt={name}/>
           </div>
           <input
             data-type={`room-service ${key}`}
