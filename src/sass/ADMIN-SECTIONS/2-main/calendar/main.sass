@@ -96,20 +96,17 @@
 
 @media(orientation: landscape)
   .calendar-header
+    display: flex
+    justify-content: center
+    align-items: baseline
     margin-right: 4em
     margin-bottom: 8px
-    grid-template-areas: "year month . . . . . prev today next"
-  .today-month,
-  .prev-month,
-  .next-month
-    justify-self: end
   .room-legend
     margin: 1em 0
 
 
 @media(min-width: 768px)
   .calendar-header
-    margin: 2.5%
-    grid-template-areas: "year month . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . prev today next "
     h4
       font-size: 2em
+      margin: 0 1em
