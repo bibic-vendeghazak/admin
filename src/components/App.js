@@ -161,7 +161,7 @@ export default class App extends Component {
                   <Reservations {...{reservations}}/>
                 ),
                 calendar: (
-                  <Calendar reservations={handledReservations}/>
+                  <Calendar {...{appBarRightAction}} reservations={handledReservations}/>
                 ),
                 stats: (
                   <Stats {...{rooms, feedbacks}} reservations={handledReservations}/>

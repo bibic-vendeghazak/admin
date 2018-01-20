@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import Day from './Day'
 import Header from './Header'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
 
 const fullDate = new Date()
 const year = fullDate.getFullYear()
@@ -91,6 +94,10 @@ export default class Month extends Component {
     document.removeEventListener("keydown", e => this.handleKeyUp(e), true)
   }
 
+  componentWillReceiveProps({appBarRightAction}) {
+    appBarRightAction === "calendar" && this.changeDate(0)
+  }
+
   render() {
     let days = []
     const {handleDayClick} = this.props
@@ -157,15 +164,17 @@ export default class Month extends Component {
 
     return (
       <div id="month-wrapper">
-        <Header
-          {...{
-            year,month
-          }}
-          changeDate={direction => this.changeDate(direction)}
-        />
-        <Weekdays days={["H","K","Sze","C","P","Szo","V"]}/>
+        <Weekdays days={["H","K","Sze","Cs","P","Szo","V"]}/>
         <Days days={days}/>
+        <FloatingActionButton secondary className="prev-month-btn month-btn" onClick={() => this.changeDate(-1)}>
+          <ArrowLeft/>
+        </FloatingActionButton>
+        <FloatingActionButton secondary className="next-month-btn month-btn" onClick={() => this.changeDate(1)}>
+          <ArrowRight/>
+        </FloatingActionButton>
+        <Header {...{year,month}}/>
       </div>
     )
   }
 }
+

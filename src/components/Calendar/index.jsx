@@ -53,9 +53,10 @@ export default class Calendar extends Component {
       reservations[key] = {roomId, from, to}
     })
 
+
     return (
       <div id="calendar-wrapper">
-        <Month handleDayClick={day => this.handleDayClick(day)} reservations={reservations}/>
+        <Month appBarRightAction={this.props.appBarRightAction} handleDayClick={day => this.handleDayClick(day)} reservations={reservations}/>
 
         {isDayBig &&
           <DayBig
