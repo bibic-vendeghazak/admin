@@ -2,10 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import firebase from 'firebase/app'
 import {colors} from './utils'
 import './main.css'
+import './utils/moment'
+
 
 const {orange, lightBrown, darkBrown} = colors
 
