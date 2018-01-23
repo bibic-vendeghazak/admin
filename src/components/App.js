@@ -1,5 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import firebase from 'firebase/app'
+
+import {initialAppState, formatData} from '../utils'
+import {Welcome} from './static'
+
 import Login from './Auth/Login'
 import Sidebar from './Sidebar'
 import Rooms from './Rooms'
@@ -7,196 +11,102 @@ import Reservations from './Reservations'
 import Calendar from './Calendar'
 import Stats from './Stats'
 import Feedbacks from './Feedbacks'
+import Snackbar from 'material-ui/Snackbar'
+
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import FontIcon from 'material-ui/FontIcon'
 
-const initialState = {
-  isDrawerOpened: true,
-  isLoggedIn: false,
-  rooms: {},
-  calendar: {},
-  stats: {},
-  feedbacks: {},
-  reservations: {},
-  roomServices: {},
-  unreadReservationCount: 0,
-  unreadFeedbackCount: 0,
-  openedMenuItem: "welcome",
-  openedMenuTitle: {
-    welcome: "Admin kezelőfelület",
-    rooms: "Szobák",
-    reservations: "Foglalások",
-    calendar: "Dátumok",
-    stats: "Statisztikák",
-    feedbacks: "Visszajelzések",
-    settings: "Beállítások"
-  },
-  appBarRightIcon: "",
-  appBarRightAction: null
-}
-
-
 export default class App extends Component {
   
-  state = initialState
+  state = initialAppState
 
-  reset() {
-    this.setState(initialState)
-    localStorage.removeItem("data")
-  }
+  reset = () => this.setState(initialAppState)
 
-  toggleSidebar() {
+  toggleSidebar = () => {
     this.setState(({isDrawerOpened}) => (
       {isDrawerOpened: !isDrawerOpened})
     )
   }
 
-  handleAppBarRightButtonClick = (appBarRightAction) => {
+  loginAttempt = message => this.setState({isLoginAttempt: true, message})
+  
+  handleSnackbarClose = () => {this.setState({isLoginAttempt: false})}
+
+  handleAppBarRightButtonClick = appBarRightAction => {
     this.setState({appBarRightAction})
   }
-
-  changeOpenedMenuItem(openedMenuItem, appBarRightIcon) {
+  
+  changeOpenedMenuItem = (openedMenuItem, appBarRightIcon) => {
     this.setState({openedMenuItem, appBarRightIcon})
-  } 
-
-  fetchPosts(posts){
-    let unreadPostCount = 0
-    let merged = {}
-    const {metadata, details} = posts
-    for (let post in metadata) {
-      !metadata[post].handled && unreadPostCount++
-      merged[post] = {
-        metadata: metadata[post],
-        details: details[post]
-      }
-    }
-    return [merged, unreadPostCount]
   }
 
-  componentDidMount() {
-    firebase.auth()
-      .onAuthStateChanged(user => {
-        if (user) {
-          firebase.database().ref("/").on('value', snap => {
-            const v = snap.val()
-            const {admins, rooms, roomServices} = v
-            const [reservations, unreadReservationCount] = this.fetchPosts(v.reservations)
-            const [feedbacks, unreadFeedbackCount] = this.fetchPosts(v.feedbacks)
-            const {name, src} = admins[user.uid]
-            const data = {
-              profile: {name, src},
-              rooms,
-              roomServices,
-              reservations,
-              unreadReservationCount,
-              feedbacks,
-              unreadFeedbackCount
-            }
-            this.setState(data)
-            this.setState({isLoggedIn: true})
-            localStorage.setItem("data", JSON.stringify(data));
-          })
-        }
+  componentDidMount = () => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        firebase.database().ref("/").on('value', snap => {
+          const data = formatData(user, snap.val())
+          this.setState({...data, isLoggedIn: true})
+          localStorage.setItem("data", JSON.stringify(data));
+        })
+      }
     })
   }
 
   render() {
-    let {
+    const {
       profile, unreadReservationCount, unreadFeedbackCount,
       isMenuActive, rooms, roomServices,
-      reservations, feedbacks, name,
+      reservations, handledReservations,feedbacks,
       openedMenuItem, openedMenuTitle,
-      isDrawerOpened, appBarRightIcon
+      isDrawerOpened, isLoggedIn,
+      appBarRightIcon, appBarRightAction, message, isLoginAttempt
     } = this.state
-    const {isLoggedIn, appBarRightAction} = this.state
-    const handledReservations = {}
-  	Object.entries(reservations)
-  		    .forEach(reservation => {
-            const {handled} = reservation[1].metadata
-            if (handled) {
-              handledReservations[reservation[0]] = reservation[1]
-            }
-          })
+
     return (
       <div className="app">
-      {isLoggedIn &&
-      <div>
-        <AppBar
-          onLeftIconButtonClick={() => this.toggleSidebar()}
-          style={{position: "fixed"}}
-          title={openedMenuTitle[openedMenuItem]}
-          iconElementRight={
-            <IconButton>
-              <FontIcon className="material-icons">{appBarRightIcon}</FontIcon>
-            </IconButton>
-          }
-          onRightIconButtonClick={() => this.handleAppBarRightButtonClick(openedMenuItem)}
+        <Snackbar 
+          autoHideDuration={4000} 
+          open={isLoginAttempt}
+          onRequestClose={this.handleSnackbarClose}
+          {...{message}}
         />
-        <Sidebar
-          {...{profile, isMenuActive, unreadReservationCount, unreadFeedbackCount}}
-          reset={() => this.reset()}
-          changeOpenedMenuItem={(openedMenuItem, appBarRightIcon) => this.changeOpenedMenuItem(openedMenuItem, appBarRightIcon, )}
-          {...{isDrawerOpened}}
-        />
+        {isLoggedIn ?
+          <div>
+            <AppBar
+              onLeftIconButtonClick={() => this.toggleSidebar()}
+              style={{position: "fixed"}}
+              title={openedMenuTitle[openedMenuItem]}
+              iconElementRight={
+                <IconButton>
+                  <FontIcon className="material-icons">{appBarRightIcon}</FontIcon>
+                </IconButton>
+              }
+              onRightIconButtonClick={() => this.handleAppBarRightButtonClick(openedMenuItem)}
+            />
+            <Sidebar
+              {...{profile, isMenuActive, unreadReservationCount, unreadFeedbackCount}}
+              reset={this.reset}
+              changeOpenedMenuItem={this.changeOpenedMenuItem}
+              {...{isDrawerOpened}}
+            />
             <main style={{
               marginLeft: isDrawerOpened && 256,
               transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'
-
             }}>
               {{
-                welcome: (
-                  <Welcome {...{profile}}/>
-                ),
-                rooms: (
-                  <Rooms {...{rooms, roomServices}}/>
-                ),
-                reservations: (
-                  <Reservations {...{reservations, appBarRightAction}}/>
-                ),
-                calendar: (
-                  <Calendar {...{appBarRightAction}} reservations={handledReservations}/>
-                ),
-                stats: (
-                  <Stats {...{rooms, feedbacks}} reservations={handledReservations}/>
-                ),
-                feedbacks: (
-                  <Feedbacks {...{feedbacks}}/>
-                )
+                welcome: <Welcome {...{profile}}/>,
+                rooms: <Rooms {...{rooms, roomServices}}/>,
+                reservations: <Reservations {...{reservations, appBarRightAction}}/>,
+                calendar: <Calendar {...{appBarRightAction}} reservations={handledReservations}/>,
+                stats: <Stats {...{rooms, feedbacks}} reservations={handledReservations}/>,
+                feedbacks: <Feedbacks {...{feedbacks}}/>  
               }[openedMenuItem]}
             </main>      
-            </div>
-}
-
-          {!isLoggedIn && <Login name={name}/>}
-          {/* <Footer/> */}
-        </div>
+          </div> :
+          <Login loginAttempt={this.loginAttempt}/>
+        }
+      </div>
     )
   }
 }
-
-
-
-const Welcome = () => (
-  <h2 style={{
-    marginTop: "30%"
-  }}>Admin kezelőfelület</h2>
-)
-
-const Footer = () => {
-
-  return (
-    <footer>
-      <a
-        href="https://balazsorban44.github.io/bibic-vendeghazak"
-        target="_blank"
-        rel="noopener noreferrer"
-      >Bíbic vendégházak</a>
-      <a
-        href="https://balazsorban.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >Orbán Balázs</a>
-      <a href="mailto:info@balazsorban.com">info@balazsorban.com</a>
-    </footer>
-)}
