@@ -39,7 +39,7 @@ export default class DayBig extends Component {
     
     return (
       <Card className="day-big">
-        <CardHeader style={{margin: 16, textTransform: "capitalize"}} title={`${month} ${day}.`}/>
+        <CardHeader style={{margin: 16, textTransform: "capitalize"}} title={`${month} ${day}`}/>
         <Table>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
