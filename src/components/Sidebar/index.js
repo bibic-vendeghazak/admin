@@ -51,7 +51,7 @@ export default class Sidebar extends Component {
 								count={unreadReservationCount}
 								/>
 							<SidebarMenuItem
-								primaryText="Dátumok"
+								primaryText="Naptár"
 								leftIcon="event"
 								onClick={() => this.changeOpenedMenuItem("calendar", "event")}
 								/>
@@ -73,7 +73,7 @@ export default class Sidebar extends Component {
 							onClick={() => this.changeOpenedMenuItem("settings")}
 						/>
 						
-						<Logout reset={reset}/>
+						<Logout {...{reset}}/>
 						</Drawer>
 					</aside>}
 			</div>

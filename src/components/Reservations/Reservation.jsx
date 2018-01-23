@@ -7,7 +7,6 @@
   import {
     Table,
     TableBody,
-    TableFooter,
     TableHeader,
     TableHeaderColumn,
     TableRow,
@@ -24,11 +23,6 @@
       firebase.database().ref(`reservations/metadata/${id}`).update({"handled": isAccepted})
     }
 
-    const handleClick = event => {
-      const e = event.target
-      e.parentNode.parentNode.children[1].classList.toggle("hidden")
-      e.classList.toggle("rotated")
-    }
     const toDate = date => {
       return new Date(date).toISOString().slice(0,10)
     }

@@ -6,12 +6,6 @@ import {ListItem} from 'material-ui/List'
 
 const Feedback = ({id, feedback}) => {
 
-  const handleClick = event => {
-    const e = event.target
-    e.parentNode.parentNode.children[1].classList.toggle("hidden")
-    e.classList.toggle("rotated")
-  }
-
   const markRead = isRead => {
     firebase.database().ref(`feedbacks/metadata/${id}`).update({"handled": isRead})
   }

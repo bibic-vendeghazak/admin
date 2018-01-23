@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import logo from '../../media/images/other/logo-brown.png'
+import RaisedButton from 'material-ui/RaisedButton'
 
 const initialState = {
   email: "",
@@ -9,23 +10,17 @@ const initialState = {
 }
 
 export default class Login extends Component {
-  constructor() {
-    super()
-    this.state = initialState
-  }
-
-  componentWillReceiveProps() {
-    const {name} = this.props
-    this.setState({name})
-  }
-
-  handleLogin() {
-    if (this.state.email !== "" && this.state.password !== "") {
-      firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      // TODO: Notification toast for successful login.
-      .catch(e => console.log(e.message))
+  state = initialState
+  handleLogin = () => {
+    const {email, password} = this.state
+    if (email !== "" && password !== "") {
+      firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
+        this.props.loginAttempt("Sikeres bejelentkezés.")
+        this.setState(initialState)
+      })
+      .catch(({message}) => this.props.loginAttempt(message))
     }
-    this.setState(initialState)
   }
 
   handleEnterPress(e) {
@@ -60,7 +55,7 @@ export default class Login extends Component {
                 placeholder="Jelszó"
               />
             </div>
-            <button onClick={() => this.handleLogin()}>Bejelentkezés</button>
+            <RaisedButton secondary label="Bejelentkezés" onClick={this.handleLogin}/> 
           </div>
         </header>
         )
