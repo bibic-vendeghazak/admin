@@ -14,12 +14,18 @@ const RoomLegend = ({id}) => {
    <li >
      <p
        className={`room-${id}`}
-       onClick={e => handleClick(e)}
-     >
-       {id}
-     </p>
+       onClick={handleClick}
+     >{id}</p>
    </li>
   )
 }
 
-export default RoomLegend
+const RoomLegends = () => {
+  return(
+    <ul className="room-legend">
+      {Array(6).fill().map((x,i) => <RoomLegend key={i} id={i+1}/>)}
+    </ul>
+  )
+}
+
+export default RoomLegends

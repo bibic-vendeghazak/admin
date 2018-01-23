@@ -1,6 +1,5 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {Card, CardHeader} from 'material-ui/Card'
-import FloatingActionButton from 'material-ui/FloatingActionButton'
 import {
   Table,
   TableBody,
@@ -9,94 +8,69 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table'
-import {List, ListItem} from 'material-ui/List'
-import Close from 'material-ui/svg-icons/navigation/close'
-
-// NOTE: DELETE THIS WHEN Room numbers are fixed
-import firebase from 'firebase'
-import 'firebase/database'
 import moment from 'moment'
 
-const months = [
-  "Január", "Február", "Március",
-  "Április", "Május", "Június",
-  "Július", "Augusztus", "Szeptember",
-  "Október", "November", "December"
-]
-const DayBig = (props) => {
+export default class DayBig extends Component {
 
-  const handleClick = () => {
-    props.closeBigDay()
+  constructor(props){
+    super(props);
+    this.handleKeyUp = this.handleKeyUp.bind(this)
   }
 
-  document.addEventListener("keydown", (e)=> {
-      e.keyCode === 27 && props.closeBigDay()
-  })
+  handleClick = () => this.props.closeBigDay()
 
 
-
-  // NOTE: DELETE THIS WHEN Room numbers are fixed
-  const changeRoom = e => {
-    const event = e.target
-    const roomId = event.value
-    const id = event.getAttribute('data-id')
-    firebase.database().ref(`/reservations/metadata/${id}/roomId`).set(parseInt(roomId,10))
+  handleKeyUp = ({keyCode}) => {
+    keyCode === 27 && this.handleClick()
   }
 
-  const deleteReservation = e => {
-    const id = e.target.getAttribute('data-id')
-    firebase.database().ref(`/reservations/metadata/${id}`).update({handled: false})
+  componentDidMount(){
+    window.addEventListener("keyup", this.handleKeyUp, false)
   }
 
-  const {month, day} = props.date
-  const reservationsData = Object.entries(props.reservations)
-  reservationsData.sort((a,b) => a[1].metadata.roomId - b[1].metadata.roomId)
-
-
-  return (
-    <Card className="day-big">
-      <FloatingActionButton className="day-big-close-btn" mini secondary onClick={() => handleClick()}>
-        <Close/>
-      </FloatingActionButton>
-      <CardHeader title={`${months[month]} ${day}.`}/>
-      <Table
-      >
-          <TableHeader
-          displaySelectAll={false}
-          adjustForCheckbox={false}
-          >
+  componentWillUnmount() {
+    window.removeEventListener("keyup", this.handleKeyUp, false)
+  }
+  
+  render() {
+    const {date: {month, day}} = this.props
+    let {reservations} = this.props
+    reservations = Object.entries(reservations).sort((a,b) => a[1].metadata.roomId - b[1].metadata.roomId)
+    
+    return (
+      <Card className="day-big">
+        <CardHeader style={{margin: 16, textTransform: "capitalize"}} title={`${month} ${day}.`}/>
+        <Table>
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
               <TableHeaderColumn>Szoba</TableHeaderColumn>
-              <TableHeaderColumn>Név</TableHeaderColumn>
+              <TableHeaderColumn>Foglaló neve</TableHeaderColumn>
               <TableHeaderColumn>E-mail</TableHeaderColumn>
               <TableHeaderColumn>Telefon</TableHeaderColumn>
-              <TableHeaderColumn>Érkezés/Távozás</TableHeaderColumn>
+              <TableHeaderColumn>Érkezés</TableHeaderColumn>
+              <TableHeaderColumn>Távozás</TableHeaderColumn>
+
             </TableRow>
           </TableHeader>
-          <TableBody displayRowCheckbox={false}>
-            { reservationsData.map(reservation => {
-            const [key,value] = reservation
-            const {roomId, from, to} = value.metadata
-            const {name, email, tel} = value.details
-            return(
-              <TableRow key={reservation}>
+          <TableBody showRowHover displayRowCheckbox={false}>
+            {reservations.map(([key, {
+              metadata: {roomId, from, to},
+              details: {name, email, tel}
+            }]) => (
+              <TableRow {...{key}}>
                 <TableRowColumn className={`room-day-big room-${roomId}`}>Szoba {roomId}</TableRowColumn>
                 <TableRowColumn>{name}</TableRowColumn>
-                <TableRowColumn><a tooltip={email} href={`mailto:${email}`}>{email}</a></TableRowColumn>
-                <TableRowColumn><a tooltip={tel} href={`tel:${tel}`}>{tel}</a></TableRowColumn>
-                <TableRowColumn style={{textAlign: "right"}}>
-                  <div>
-                    <div>{moment(from).format('YYYY. MMMM DD.')}</div>
-                    <div>{moment(to).format('YYYY. MMMM DD.')}</div>
-                  </div>
-                </TableRowColumn>
+                <TableRowColumn><a href={`mailto:${email}`}>{email}</a></TableRowColumn>
+                <TableRowColumn><a href={`tel:${tel}`}>{tel}</a></TableRowColumn>
+                <TableRowColumn>{moment(from).format('MMM. DD')}</TableRowColumn>
+                <TableRowColumn>{moment(to).format('MMM. DD')}</TableRowColumn>
               </TableRow>
               )
-            })}
+            )}
           </TableBody>
         </Table>
-    </Card>
-  )
+      </Card>
+    )
+  }
 }
 
-export default DayBig

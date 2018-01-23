@@ -19,9 +19,9 @@
 
 .month-btn
   position: absolute
-  transform: translateY(-50%)
+  transform: translateY(-100%)
   top: 50%
-  margin: 0 1em
+  margin: 0 2em
 .next-month-btn
   right: 0
   
@@ -31,12 +31,13 @@
   li
     background-color: $accent-color-dark
     width: percentage(1/7)
-    height: 64px
+    padding: 1.2em 0
     display: flex
     justify-content: center
     align-items: center
     span
       color: $light
+      text-transform: capitalize
 
 .days
   flex-grow: 1
@@ -89,39 +90,12 @@
   margin-left: 25% !important
 
 @media(orientation: landscape)
-  .days-title
-    li
-      &::after
-        color: $light
-      &:first-child
-        &::after
-          content: "étfő"
-      &:nth-child(2)
-        &::after
-          content: "edd"
-      &:nth-child(3)
-        &::after
-          content: "rda"
-      &:nth-child(4)
-        &::after
-          content: "ütörtök"
-      &:nth-child(5)
-        &::after
-          content: "éntek"
-      &:nth-child(6)
-        &::after
-          content: "mbat"
-      &:last-child
-        &::after
-          content: "asárnap"
+
   @media (max-width: 767px)
     #month-wrapper
       height: auto
     .day, .day-placeholder
       height: 64px
-    .days-title
-      li
-        height: 48px
 @media(min-width: 768px)
 
   .step-month
@@ -131,4 +105,3 @@
   .room-legend
     flex-direction: row
     justify-content: flex-end
-    margin-bottom: 1.5% !important

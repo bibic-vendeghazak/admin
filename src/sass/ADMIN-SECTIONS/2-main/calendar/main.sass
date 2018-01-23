@@ -1,5 +1,4 @@
 @import month
-@import day
 
 #calendar-wrapper
   position: relative
@@ -17,63 +16,35 @@
 .next-month
   grid-area: next
   justify-self: start
-.calendar-header
-  margin: 8px 16px 16px
-  display: grid
+.calendar-footer
+  display: flex
   align-items: center
+  justify-content: space-between
+  >div
+    display: flex
   h4
-    grid-area: year
-    justify-self: center
-    color: darken($grey, 10)
-  h3
-    grid-area: month
-    justify-self: center
-
-  grid-template-areas: ". . year . ." "today prev month next ."
-
-  .step-month-btn
-    +icon-name("arrow")
-    &:first-of-type
-      &::before
-        transform: rotate(180deg)
-    &:nth-of-type(2)
-      width: 64px
-      border-radius: 32px
-      color: $light
-      +icon-name("today")
-    &:last-of-type
-      &::before
-        margin-right: 0
-        margin-left: 2px
-
+    text-transform: capitalize
+    color: darken($grey, 50)
 
 .weekend-title
   background-color: darken($lightred, 5) !important
 
 .room-legend
-  margin-bottom: 5%
   display: flex
-  align-items: center
-  flex-direction: column
-  ul
-    display: flex
-    max-width: 640px
-    background-color: transparent !important
-    li
-      margin: 6px
-      box-sizing: border-box
-      cursor: pointer
-    p
-      border: 1px solid $light
-      color: $light
-      +circle(36px)
-      margin-top: 0
+  li
+    margin: 6px
+    box-sizing: border-box
+    cursor: pointer
+  p
+    border: 1px solid $light
+    color: $light
+    +circle(24px)
+    margin-top: 0
 
 .unchecked
   background: transparent !important
   color: $dark !important
   border: 1px solid $dark !important
-  p
 
 .room-day-big
   color: white
@@ -96,19 +67,8 @@
   background-color: $room-6 !important
 
 
-@media(orientation: landscape)
-  .calendar-header
-    display: flex
-    justify-content: center
-    align-items: baseline
-    margin-right: 4em
-    margin-bottom: 8px
-  .room-legend
-    margin: 1em 0
-
-
 @media(min-width: 768px)
-  .calendar-header
+  .calendar-footer
     h4
-      font-size: 2em
+      font-size: 1.2em
       margin: 0 1em
