@@ -2,7 +2,7 @@
 src/db/
 main.css
 # dependencies
-/node_modules
+node_modules
 
 # testing
 /coverage
