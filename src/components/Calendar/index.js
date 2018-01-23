@@ -35,7 +35,7 @@ export default class Calendar extends Component {
 
   closeBigDay = () => {
     this.props.changeAppBarRightIcon(["event", "Ugrás erre: Ma"])
-    this.setState(({isDayBig}) => ({isDayBig: !isDayBig}))
+    this.setState({isDayBig: false})
   }
 
   // FIXME: Clicking on hamburger menu triggers closeBigDay()
