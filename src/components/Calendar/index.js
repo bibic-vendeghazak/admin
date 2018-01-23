@@ -20,6 +20,7 @@ export default class Calendar extends Component {
   }
 
   handleDayClick = day => {
+    this.props.changeAppBarRightIcon(["close", "Bezárás"])
     const {date, dayReservations} = day
     const reservations = Object.assign({}, this.props.reservations)
     Object.keys(reservations).forEach( key => {
@@ -32,7 +33,10 @@ export default class Calendar extends Component {
     })
   }
 
-  closeBigDay = () => this.setState(({isDayBig}) => ({isDayBig: !isDayBig}))
+  closeBigDay = () => {
+    this.props.changeAppBarRightIcon(["event", "Ugrás erre: Ma"])
+    this.setState(({isDayBig}) => ({isDayBig: !isDayBig}))
+  }
 
   // FIXME: Clicking on hamburger menu triggers closeBigDay()
   componentWillReceiveProps ({appBarRightAction}) {

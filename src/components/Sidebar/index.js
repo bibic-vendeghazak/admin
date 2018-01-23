@@ -13,13 +13,9 @@ const dividerStyle = {
 
 export default class Sidebar extends Component {
 
-	changeOpenedMenuItem(openedMenuItem, appBarRightIcon) {
-		this.props.changeOpenedMenuItem(openedMenuItem, appBarRightIcon)
-	}
-
 	render() {
 		const {profile, unreadReservationCount,
-			unreadFeedbackCount, reset, isDrawerOpened} = this.props
+			unreadFeedbackCount, reset, isDrawerOpened, changeOpenedMenuItem} = this.props
 		return (
 			<div id="menu" >
 				
@@ -31,7 +27,7 @@ export default class Sidebar extends Component {
 							<SidebarMenuItem
 								primaryText="Kezdőlap"
 								leftIcon="home"
-								onClick={() => this.changeOpenedMenuItem("welcome")}
+								onClick={() => changeOpenedMenuItem("welcome", ["bug_report","Hiba jelentése"])}
 							/>
 							<SidebarMenuItem
 								primaryText="Irány a weblap"
@@ -42,35 +38,35 @@ export default class Sidebar extends Component {
 							<SidebarMenuItem
 								primaryText="Szobák"
 								leftIcon="business"
-								onClick={() => this.changeOpenedMenuItem("rooms")}
+								onClick={() => changeOpenedMenuItem("rooms")}
 								/>
 							<SidebarMenuItem
 								primaryText="Foglalások"
 								leftIcon="bookmark_border"
-								onClick={() => this.changeOpenedMenuItem("reservations", "filter_list")}
+								onClick={() => changeOpenedMenuItem("reservations", ["filter_list", "Szűrő mutatása/elrejtése"])}
 								count={unreadReservationCount}
 								/>
 							<SidebarMenuItem
 								primaryText="Naptár"
 								leftIcon="event"
-								onClick={() => this.changeOpenedMenuItem("calendar", "event")}
+								onClick={() => changeOpenedMenuItem("calendar", ["event", "Ugrás erre: Ma"])}
 								/>
 							<SidebarMenuItem
 								primaryText="Statisztikák"
 								leftIcon="trending_up"
-								onClick={() => this.changeOpenedMenuItem("stats")}
+								onClick={() => changeOpenedMenuItem("stats")}
 								/>
 							<SidebarMenuItem
 								primaryText="Visszajelzések"
 								leftIcon="feedback"
-								onClick={() => this.changeOpenedMenuItem("feedbacks")}
+								onClick={() => changeOpenedMenuItem("feedbacks")}
 								count={unreadFeedbackCount}
 								/>
 						<Divider style={dividerStyle}/>
 						<SidebarMenuItem
 							primaryText="Beállítások"
 							leftIcon="settings"
-							onClick={() => this.changeOpenedMenuItem("settings")}
+							onClick={() => changeOpenedMenuItem("settings")}
 						/>
 						
 						<Logout {...{reset}}/>

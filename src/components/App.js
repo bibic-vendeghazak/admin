@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import firebase from 'firebase/app'
 
 import {initialAppState, formatData} from '../utils'
-import {Welcome} from './static'
 
+import Welcome from './Welcome'
 import Login from './Auth/Login'
 import Sidebar from './Sidebar'
 import Rooms from './Rooms'
@@ -37,8 +37,14 @@ export default class App extends Component {
     this.setState({appBarRightAction})
   }
   
+  changeAppBarRightIcon = (appBarRightIcon=["",""]) => {
+    this.setState({appBarRightIcon})
+  }
+
+
   changeOpenedMenuItem = (openedMenuItem, appBarRightIcon) => {
-    this.setState({openedMenuItem, appBarRightIcon})
+    this.changeAppBarRightIcon(appBarRightIcon)
+    this.setState({openedMenuItem})
   }
 
   componentDidMount = () => {
@@ -47,7 +53,6 @@ export default class App extends Component {
         firebase.database().ref("/").on('value', snap => {
           const data = formatData(user, snap.val())
           this.setState({...data, isLoggedIn: true})
-          localStorage.setItem("data", JSON.stringify(data));
         })
       }
     })
@@ -60,7 +65,7 @@ export default class App extends Component {
       reservations, handledReservations,feedbacks,
       openedMenuItem, openedMenuTitle,
       isDrawerOpened, isLoggedIn,
-      appBarRightIcon, appBarRightAction, message, isLoginAttempt
+      appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction, message, isLoginAttempt
     } = this.state
 
     return (
@@ -78,9 +83,18 @@ export default class App extends Component {
               style={{position: "fixed"}}
               title={openedMenuTitle[openedMenuItem]}
               iconElementRight={
-                <IconButton>
-                  <FontIcon className="material-icons">{appBarRightIcon}</FontIcon>
-                </IconButton>
+                appBarRightIconName &&
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    color: "#fff"
+                  }}>
+                  <p>{appBarRightIconText}</p>
+                  <IconButton>
+                    <FontIcon color="#fff" className="material-icons">{appBarRightIconName}</FontIcon>
+                  </IconButton>
+                </div>
               }
               onRightIconButtonClick={() => this.handleAppBarRightButtonClick(openedMenuItem)}
             />
@@ -95,10 +109,15 @@ export default class App extends Component {
               transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'
             }}>
               {{
-                welcome: <Welcome {...{profile}}/>,
+                welcome: <Welcome {...{profile, appBarRightAction}}/>,
                 rooms: <Rooms {...{rooms, roomServices}}/>,
                 reservations: <Reservations {...{reservations, appBarRightAction}}/>,
-                calendar: <Calendar {...{appBarRightAction}} reservations={handledReservations}/>,
+                calendar: 
+                  <Calendar 
+                    changeAppBarRightIcon={this.changeAppBarRightIcon}
+                    {...{appBarRightAction}}
+                    reservations={handledReservations}
+                  />,
                 stats: <Stats {...{rooms, feedbacks}} reservations={handledReservations}/>,
                 feedbacks: <Feedbacks {...{feedbacks}}/>  
               }[openedMenuItem]}

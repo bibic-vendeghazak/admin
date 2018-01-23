@@ -12,7 +12,8 @@ export const initialAppState = {
     roomServices: {},
     unreadReservationCount: 0,
     unreadFeedbackCount: 0,
-    openedMenuItem: "calendar",
+    openedMenuItem: "welcome",
+    appBarRightIcon: ["bug_report","Hiba jelentése"],
     openedMenuTitle: {
         welcome: "Admin kezelőfelület",
         rooms: "Szobák",
@@ -22,8 +23,6 @@ export const initialAppState = {
         feedbacks: "Visszajelzések",
         settings: "Beállítások"
     },
-    appBarRightIcon: "",
-    appBarRightAction: null,
     message: "",
     isLoginAttempt: false
 }

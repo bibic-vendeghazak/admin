@@ -7,7 +7,6 @@ const Logout = ({reset}) => {
   const logout = () => {
     reset()
     firebase.auth().signOut()
-    localStorage.removeItem("profile")
     // TODO: Notification toast for successful logout.
     console.log('Kijelentkezve.')
   }
