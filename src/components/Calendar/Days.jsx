@@ -27,11 +27,11 @@ const Days = ({isPlaceholder = false, from = 0, to, currentDate, reservations, h
 
     days.push(
       <Day
-        month={currentDate.format("MMMM")}
+        date={currentDate.clone().date(day)}
         {...{
           key: day, isPlaceholder,
           reservations: dayReservations,
-          day, isToday, handleDayClick, 
+          isToday, handleDayClick, 
         }}
       />
     )
@@ -39,7 +39,7 @@ const Days = ({isPlaceholder = false, from = 0, to, currentDate, reservations, h
   return days
 }
 
-const Day = ({reservations, day, month, isPlaceholder, isToday, handleDayClick}) => {
+const Day = ({reservations, date, isPlaceholder, isToday, handleDayClick}) => {
   let rooms = []  
   
   Object.entries(reservations).forEach(reservation => {
@@ -52,8 +52,7 @@ const Day = ({reservations, day, month, isPlaceholder, isToday, handleDayClick})
 
   const handleClick = () => {
     handleDayClick({
-      date: {day, month},
-      dayReservations: Object.keys(reservations)
+      date, dayReservations: Object.keys(reservations)
     })
   }
 
@@ -62,7 +61,7 @@ const Day = ({reservations, day, month, isPlaceholder, isToday, handleDayClick})
       className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
       onClick={handleClick}
     >
-      <p>{day}</p>
+      <p>{date.format('D')}</p>
       <ul className="reserved-list">
         {rooms}
       </ul>

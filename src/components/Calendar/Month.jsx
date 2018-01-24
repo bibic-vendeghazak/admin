@@ -45,7 +45,7 @@ export default class Month extends Component {
     return (
       <div id="month-wrapper">
 
-        <MonthHeader/>
+        <DayNames/>
 
         <ul className="days">
 
@@ -78,7 +78,7 @@ export default class Month extends Component {
   }
 }
 
-const MonthHeader = () => (
+const DayNames = () => (
   <ul className="days-title">
     {Array(7).fill().map((x,key) => (
         <li {...{key}} className={`day-title ${(key > 4) && "weekend-title"}`}>

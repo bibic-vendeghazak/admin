@@ -8,7 +8,7 @@ export default class Calendar extends Component {
 
   state = {
     isDayBig: false,
-    date: {},
+    date: null,
     reservations: {},
     currentDate: moment()
   }

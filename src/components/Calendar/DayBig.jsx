@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
+
+import FontIcon from 'material-ui/FontIcon'
+import Edit from 'material-ui/svg-icons/image/edit'
+
 import {Card, CardHeader} from 'material-ui/Card'
 import {
   Table,
   TableBody,
-  TableHeader,
   TableHeaderColumn,
   TableRow,
   TableRowColumn,
@@ -33,37 +36,40 @@ export default class DayBig extends Component {
   }
   
   render() {
-    const {date: {month, day}} = this.props
+    const {date} = this.props
     let {reservations} = this.props
     reservations = Object.entries(reservations).sort((a,b) => a[1].metadata.roomId - b[1].metadata.roomId)
     
     return (
       <Card className="day-big">
-        <CardHeader style={{margin: 16, textTransform: "capitalize"}} title={`${month} ${day}`}/>
-        <Table>
-          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn>Szoba</TableHeaderColumn>
-              <TableHeaderColumn>Foglaló neve</TableHeaderColumn>
-              <TableHeaderColumn>E-mail</TableHeaderColumn>
-              <TableHeaderColumn>Telefon</TableHeaderColumn>
-              <TableHeaderColumn>Érkezés</TableHeaderColumn>
-              <TableHeaderColumn>Távozás</TableHeaderColumn>
-
-            </TableRow>
-          </TableHeader>
+        <CardHeader style={{margin: 16, textTransform: "capitalize"}} title={date.format('MMMM DD, dddd')}/>
+        <Table style={{tableLayout: "auto"}}>
           <TableBody showRowHover displayRowCheckbox={false}>
+          <TableRow>
+            <TableHeaderColumn colSpan={1} style={{textAlign: "center"}}>Szoba</TableHeaderColumn>
+            <TableHeaderColumn colSpan={4} style={{textAlign: "center"}}>Foglaló neve</TableHeaderColumn>
+            <TableHeaderColumn colSpan={3} style={{textAlign: "center"}}>E-mail</TableHeaderColumn>
+            <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Telefon</TableHeaderColumn>
+            <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Érkezés</TableHeaderColumn>
+            <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Távozás</TableHeaderColumn>
+            <TableHeaderColumn colSpan={1} style={{textAlign: "center"}}>Szerkeszt</TableHeaderColumn>
+          </TableRow>
             {reservations.map(([key, {
               metadata: {roomId, from, to},
               details: {name, email, tel}
             }]) => (
               <TableRow {...{key}}>
-                <TableRowColumn className={`room-day-big room-${roomId}`}>Szoba {roomId}</TableRowColumn>
-                <TableRowColumn>{name}</TableRowColumn>
-                <TableRowColumn><a href={`mailto:${email}`}>{email}</a></TableRowColumn>
-                <TableRowColumn><a href={`tel:${tel}`}>{tel}</a></TableRowColumn>
-                <TableRowColumn>{moment(from).format('MMM. DD')}</TableRowColumn>
-                <TableRowColumn>{moment(to).format('MMM. DD')}</TableRowColumn>
+                <TableRowColumn colSpan={1} style={{textAlign: "center"}} className={`room-day-big room-${roomId}`}>{roomId}</TableRowColumn>
+                <TableRowColumn colSpan={4} style={{textAlign: "center"}}>{name}</TableRowColumn>
+                <TableRowColumn colSpan={3} style={{textAlign: "center"}}><a href={`mailto:${email}`}>{email}</a></TableRowColumn>
+                <TableRowColumn colSpan={2} style={{textAlign: "center"}}><a href={`tel:${tel}`}>{tel}</a></TableRowColumn>
+                <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(from).format('MMMM D.')}</TableRowColumn>
+                <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(to).format('MMMM D.')}</TableRowColumn>
+                <TableRowColumn colSpan={1} style={{textAlign: "center"}}>
+                  <FontIcon>
+                    <Edit/>
+                  </FontIcon>
+                </TableRowColumn>
               </TableRow>
               )
             )}
