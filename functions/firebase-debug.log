@@ -1,0 +1,34 @@
+[debug] [2018-01-24T00:41:58.278Z] ----------------------------------------------------------------------
+[debug] [2018-01-24T00:41:58.280Z] Command:       /home/balazs/.nvm/versions/node/v6.11.5/bin/node /home/balazs/.nvm/versions/node/v6.11.5/bin/firebase serve --only functions
+[debug] [2018-01-24T00:41:58.281Z] CLI Version:   3.17.3
+[debug] [2018-01-24T00:41:58.281Z] Platform:      linux
+[debug] [2018-01-24T00:41:58.281Z] Node Version:  v6.11.5
+[debug] [2018-01-24T00:41:58.281Z] Time:          Wed Jan 24 2018 01:41:58 GMT+0100 (CET)
+[debug] [2018-01-24T00:41:58.281Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-01-24T00:41:58.289Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-01-24T00:41:58.289Z] > authorizing via signed-in user
+[debug] [2018-01-24T00:41:58.291Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/bibic-vendeghazak-api  
+  
+ Wed Jan 24 2018 01:41:58 GMT+0100 (CET)
+[debug] [2018-01-24T00:41:59.122Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-24T00:41:59.126Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/bibic-vendeghazak-api/tokens  
+  
+ Wed Jan 24 2018 01:41:59 GMT+0100 (CET)
+[debug] [2018-01-24T00:41:59.892Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/balazs/projects/bibic-vendeghazak-admin'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-01-24T00:42:00.117Z] Fetching environment
+[debug] [2018-01-24T00:42:00.120Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/bibic-vendeghazak-api  
+  
+ Wed Jan 24 2018 01:42:00 GMT+0100 (CET)
+[debug] [2018-01-24T00:42:00.121Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/bibic-vendeghazak-api/apiKeys  
+  
+ Wed Jan 24 2018 01:42:00 GMT+0100 (CET)
+[debug] [2018-01-24T00:42:01.211Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-24T00:42:01.277Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-24T00:42:01.280Z] Starting @google-cloud/functions-emulator
+[debug] [2018-01-24T00:42:02.344Z] Parsing function triggers
+[info] ✔  functions: helloWoridskjld: http://localhost:5000/bibic-vendeghazak-api/us-central1/helloWoridskjld
