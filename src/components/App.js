@@ -9,10 +9,10 @@ import Sidebar from './Sidebar'
 import Rooms from './Rooms'
 import Reservations from './Reservations'
 import Calendar from './Calendar'
+
 import Stats from './Stats'
 import Feedbacks from './Feedbacks'
 import Snackbar from 'material-ui/Snackbar'
-
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import FontIcon from 'material-ui/FontIcon'
@@ -37,7 +37,7 @@ export default class App extends Component {
     this.setState({appBarRightAction})
   }
   
-  changeAppBarRightIcon = (appBarRightIcon=["",""]) => {
+  changeAppBarRightIcon = (appBarRightIcon=[null,null]) => {
     this.setState({appBarRightIcon})
   }
 
@@ -61,13 +61,13 @@ export default class App extends Component {
   render() {
     const {
       profile, unreadReservationCount, unreadFeedbackCount,
-      isMenuActive, rooms, roomServices,
+      isMenuActive, rooms,
       reservations, handledReservations,feedbacks,
-      openedMenuItem, openedMenuTitle,
+      openedMenuItem, openedMenuTitle, roomsBooked,
       isDrawerOpened, isLoggedIn,
       appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction, message, isLoginAttempt
     } = this.state
-
+    
     return (
       <div className="app">
         <Snackbar 
@@ -110,7 +110,11 @@ export default class App extends Component {
             }}>
               {{
                 welcome: <Welcome {...{profile, appBarRightAction}}/>,
-                rooms: <Rooms {...{rooms, roomServices}}/>,
+                rooms: 
+                  <Rooms
+                    changeAppBarRightIcon={this.changeAppBarRightIcon}
+                    {...{roomsBooked, appBarRightAction}}
+                  />,
                 reservations: <Reservations {...{reservations, appBarRightAction}}/>,
                 calendar: 
                   <Calendar 

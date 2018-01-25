@@ -1,5 +1,6 @@
 import React from 'react'
 import Badge from 'material-ui/Badge'
+import moment from 'moment'
 
 export const initialAppState = {
     isDrawerOpened: true,
@@ -12,8 +13,8 @@ export const initialAppState = {
     roomServices: {},
     unreadReservationCount: 0,
     unreadFeedbackCount: 0,
-    openedMenuItem: "welcome",
-    appBarRightIcon: ["bug_report","Hiba jelentése"],
+    openedMenuItem: "rooms",
+    appBarRightIcon: [null, null],
     openedMenuTitle: {
         welcome: "Admin kezelőfelület",
         rooms: "Szobák",
@@ -28,19 +29,33 @@ export const initialAppState = {
 }
 
 export const formatData = (user, data) => {
-    const {admins, rooms, roomServices} = data
+    const {admins, rooms} = data
     const [reservations, unreadReservationCount] = fetchPosts(data.reservations)
     const [feedbacks, unreadFeedbackCount] = fetchPosts(data.feedbacks)
     const {name, src} = admins[user.uid]
     const handledReservations = {}
+    const roomsBooked = Array(Object.keys(data.rooms).length)
+
+    const todayInterval = moment.range(moment().startOf("day"), moment().endOf("day"))
+    
+
     Object.entries(reservations).forEach(reservation => {
-      if (reservation[1].metadata.handled) {
-        handledReservations[reservation[0]] = reservation[1]
-      }
+        const {from, to, handled, roomId} = reservation[1].metadata
+
+
+        // Check if the room is available today
+        if (todayInterval.overlaps(moment.range(moment(from), moment(to)))) {
+            roomsBooked[roomId-1] = true
+        }
+        
+        if (handled) {
+            handledReservations[reservation[0]] = reservation[1]
+        }
     })
+    
     return {
         profile: {name, src},
-        rooms, roomServices,
+        roomsBooked, rooms,
         reservations, unreadReservationCount, handledReservations,
         feedbacks, unreadFeedbackCount
     }

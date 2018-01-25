@@ -3,14 +3,14 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 
 
-const PriceType = ({priceType, id, name}) => {
+const PriceType = ({priceType, roomId, name}) => {
 
   const handlePriceChange = event => {
     const e = event.target
     const {value} = e
     const people = e.getAttribute("data-people")
     const priceType = e.getAttribute("data-price-type")
-    firebase.database().ref(`/rooms/${id-1}/prices/${priceType}/${people}/price`).set(parseInt(value,10) || 0)
+    firebase.database().ref(`/rooms/${roomId-1}/prices/${priceType}/${people}/price`).set(parseInt(value,10) || 0)
   }
 
   const priceTypeList = []
@@ -44,7 +44,7 @@ const PriceType = ({priceType, id, name}) => {
 }
 
 
-const Prices = ({prices, id}) => {
+const Prices = ({prices, roomId}) => {
 //
   const handlePriceMenuClick = event => {
     const e = event.target
@@ -69,7 +69,7 @@ const Prices = ({prices, id}) => {
   const pricesListMenu = []
   Object.keys(prices).forEach(priceType => {
     pricesList.push(
-      <PriceType key={priceType} name={priceType} id={id} priceType={prices[priceType]}/>
+      <PriceType key={priceType} name={priceType} id={roomId} priceType={prices[priceType]}/>
     )
     let priceTypeListName = ""
     switch (priceType) {
