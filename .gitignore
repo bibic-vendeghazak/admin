@@ -3,7 +3,7 @@ src/db/
 main.css
 # dependencies
 node_modules
-
+firebase-debug.log
 # testing
 /coverage
 
