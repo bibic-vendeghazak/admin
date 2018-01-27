@@ -16,7 +16,7 @@ export const initialAppState = {
     openedMenuItem: "reservations",
     appBarRightIcon: [null, null],
     openedMenuTitle: {
-        welcome: "Admin kezelőfelület",
+        welcome: "Kezdőlap",
         rooms: "Szobák",
         reservations: "Foglalások",
         calendar: "Dátumok",

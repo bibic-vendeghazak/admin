@@ -41,8 +41,8 @@ export default class Reservations extends Component {
 
   render() {
     const {query, rooms, from, to, handled, isDialogOpen} = this.state
-    const {reservations, appBarRightAction} = this.props
-    
+    const {reservations, appBarRightAction, unreadReservationCount} = this.props
+    const readReservationCount = Object.keys(reservations).length - unreadReservationCount
     return (
       <div>
         <SearchBar
@@ -66,8 +66,7 @@ export default class Reservations extends Component {
           onChange={this.handleChange}
         >
           <Tab 
-            //FIXME: Add dynamic counter
-            label={<TabLabel title="Új foglalások" count={0}/>}
+            label={<TabLabel title="Új" count={unreadReservationCount}/>}
             value={false}
           >
           <FilteredReservations
@@ -76,9 +75,8 @@ export default class Reservations extends Component {
         />
           </Tab>
           <Tab 
-            //FIXME: Add dynamic counter
-            label={<TabLabel title="Kezelt foglalások" count={0}/>}
-            value={true}
+            label={<TabLabel title="Elfogadott" count={readReservationCount}/>}
+            value
           >
           <FilteredReservations
             handled={true}

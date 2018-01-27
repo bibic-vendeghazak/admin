@@ -57,7 +57,10 @@ export default class App extends Component {
   }
 
 
+
+
   componentDidMount = () => {
+    window.innerWidth <=768 && this.setState({isDrawerOpened: false})
     const db = firebase.database()
     const reservationsRef = db.ref("reservations")
     const feedbacksRef = db.ref("feedbacks")
@@ -121,6 +124,7 @@ export default class App extends Component {
       isMenuActive, rooms,
       reservations, handledReservations,feedbacks,
       openedMenuItem, openedMenuTitle, roomsBooked,
+      isDrawerOpened, isLoggedIn, 
       gotServerMessage, serverMessage, type,
       appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction, message, isLoginAttempt
     } = this.state
@@ -176,10 +180,11 @@ export default class App extends Component {
               loginAttempt={this.loginAttempt}
               {...{profile, isMenuActive, isDrawerOpened,unreadReservationCount, unreadFeedbackCount}}
               reset={this.reset}
+              toggleSidebar={this.toggleSidebar}
               changeOpenedMenuItem={this.changeOpenedMenuItem}
             />
             <main style={{
-              marginLeft: isDrawerOpened && 256,
+              marginLeft: isDrawerOpened && window.innerWidth >= 768 && 256,
               transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'
             }}>
               {{
@@ -189,7 +194,7 @@ export default class App extends Component {
                     changeAppBarRightIcon={this.changeAppBarRightIcon}
                     {...{roomsBooked, appBarRightAction}}
                   />,
-                reservations: <Reservations {...{reservations, appBarRightAction}}/>,
+                reservations: <Reservations {...{unreadReservationCount, reservations, appBarRightAction}}/>,
                 calendar: 
                   <Calendar 
                     changeAppBarRightIcon={this.changeAppBarRightIcon}
