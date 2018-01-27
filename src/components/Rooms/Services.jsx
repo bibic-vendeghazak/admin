@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
-import Toggle from 'material-ui/Toggle'
 import Chip from 'material-ui/Chip'
 import Avatar from 'material-ui/Avatar'
 import Card from 'material-ui/Card'
-import {colors} from '../../utils'
 import firebase from 'firebase'
 
 class Service extends Component {

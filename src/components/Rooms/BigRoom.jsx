@@ -81,7 +81,7 @@ export default class BigRoom extends Component {
   }
 
   render(){
-    const {services, id: roomId, populatePrices, maxAdults, maxChildren, prices, closeBigRoom} = this.props
+    const {services, id: roomId, populatePrices, maxAdults, maxChildren, prices} = this.props
     return(
       <ul className="edit-room">
         <Services {...{services, roomId}}/>

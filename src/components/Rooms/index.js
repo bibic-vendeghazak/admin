@@ -57,7 +57,7 @@ export default class Rooms extends Component {
 
   render() {
     const {roomsBooked} = this.props
-    const {rooms, roomServices, isBigRoom, bigRoom} = this.state
+    const {rooms, isBigRoom, bigRoom} = this.state
     
     return (
       isBigRoom ? 
