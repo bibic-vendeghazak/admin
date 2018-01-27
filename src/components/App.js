@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import firebase from 'firebase/app'
-
+import moment from 'moment'
 import {initialAppState} from '../utils'
 
 import Welcome from './Welcome'
@@ -16,6 +16,10 @@ import Snackbar from 'material-ui/Snackbar'
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import FontIcon from 'material-ui/FontIcon'
+import Error from 'material-ui/svg-icons/alert/error'
+import Warning from 'material-ui/svg-icons/alert/warning'
+
+
 
 export default class App extends Component {
   
@@ -33,10 +37,8 @@ export default class App extends Component {
   
   handleSnackbarClose = snackbarType => {
     this.setState({[snackbarType]: false})
-    snackbarType === "gotError" && firebase.database().ref("error").set({
-      message: "",
-      newReservationId: "",
-      oldReservationId: ""
+    snackbarType === "gotServerMessage" && firebase.database().ref("serverMessage").set({
+      message: "", type: "", newId: "", oldId: ""
     })
   }
 
@@ -61,16 +63,17 @@ export default class App extends Component {
     const feedbacksRef = db.ref("feedbacks")
     const roomsRef = db.ref("rooms")
     const roomServicesRef = db.ref("roomServices")
-    const errorRef = db.ref("error")
+    const serverMessageRef = db.ref("serverMessage")
     firebase.auth().onAuthStateChanged(user => {
       if(user){
         db.ref(`admins/${user.uid}`).once("value", snap =>{
           this.setState({profile: snap.val()})
         })
-        errorRef.on("value", snap => {
+        serverMessageRef.on("value", snap => {
+          const {message: serverMessage, type} = snap.val()
           this.setState({
-            dbMessage: snap.val().message,
-            gotError: true
+            serverMessage, type,
+            gotServerMessage: true
           })
         })
         reservationsRef.on("value", snap => {
@@ -118,7 +121,7 @@ export default class App extends Component {
       isMenuActive, rooms,
       reservations, handledReservations,feedbacks,
       openedMenuItem, openedMenuTitle, roomsBooked,
-      isDrawerOpened, isLoggedIn, gotError, dbMessage,
+      gotServerMessage, serverMessage, type,
       appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction, message, isLoginAttempt
     } = this.state
     
@@ -131,13 +134,21 @@ export default class App extends Component {
           onRequestClose={() => this.handleSnackbarClose("isLoginAttempt")}
           {...{message}}
         />
-        {dbMessage !== "" ?
+        {serverMessage !== "" &&
           <Snackbar
-          autoHideDuration={4000} 
-          open={gotError}
-          onRequestClose={() => this.handleSnackbarClose("gotError")}
-          message={dbMessage}
-          /> : null
+          autoHideDuration={8000} 
+          open={gotServerMessage}
+          onRequestClose={() => this.handleSnackbarClose("gotServerMessage")}
+          message={
+            <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", margin: "0 6px"}}>
+              {serverMessage} 
+              {{
+                error: <Error color="#f44242"/>,
+                warning: <Warning color="#ce3737"/>
+              }[type]}
+            </div>
+            }
+          />
         }
         {isLoggedIn ?
           <div>

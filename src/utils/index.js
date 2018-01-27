@@ -24,10 +24,10 @@ export const initialAppState = {
         feedbacks: "Visszajelzések",
         settings: "Beállítások"
     },
-    gotError: false,
-    dbMessage: "",
-    message: "",
-    isLoginAttempt: false
+    gotServerMessage: false,
+    serverMessage: "",
+    isLoginAttempt: false,
+    message: ""
 }
 
 
