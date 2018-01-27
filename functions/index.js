@@ -8,25 +8,25 @@ admin.initializeApp(functions.config().firebase)
 const todayInterval = moment.range(moment().startOf("day"), moment().endOf("day"))
 const reservationsRef = admin.database().ref("reservations")
 
-
-exports.isOverlap = functions.database
-    .ref("reservations/{reservationId}")
-    .onUpdate(event => {
-        const {from, to, roomId} = event.data.val().metadata
-        const {reservationId} = event.params
-        const newReservationInterval = moment.range(moment(from),moment(to))
-        return reservationsRef.once("value", snap => {
+exports.isOverlapError = functions.database
+    .ref("reservations/{newId}")
+    .onUpdate(({data, params: {newId}}) => {
+        const {from, to, roomId: newRoom} = data.val().metadata
+        const newInterval = moment.range(moment(from),moment(to))
+        return reservationsRef.once("value", (snap) => {
             const reservations = snap.val()
-            Object.keys(reservations).forEach(reservation => {
-                const {from, to, handled, roomId} = reservations[reservation].metadata
-                if (handled && moment.range(moment(from), moment(to)).overlaps(newReservationInterval)) {
-                    return admin.database().ref("error").set({
-                        message: `Szoba ${roomId} foglalt ebben az időintervallumban!`,
-                        newReservation: reservationId,
-                        oldReservation: reservation
-                    }).then(() => {
-                        return reservationsRef.child(`${reservationId}/metadata/handled`).set(false)
-                    })
+            Object.keys(reservations).forEach(oldId => {
+                const {metadata: {from, to, handled, roomId: oldRoom}} = reservations[oldId]
+                const oldInterval = moment.range(moment(from), moment(to))
+                if (handled && newInterval.overlaps(oldInterval) && newId !== oldId && newRoom === oldRoom) {
+                    return Promise.all([
+                                admin.database().ref("serverMessage").set({
+                                    type: "error",
+                                    message: `Szoba ${oldRoom} foglalt ebben az időintervallumban!`,
+                                    newId, oldId
+                                }),
+                                reservationsRef.child(`${newId}/metadata/handled`).set(false)
+                            ])
                 }
                 return null
             })
@@ -34,29 +34,27 @@ exports.isOverlap = functions.database
         })
     })
 
-// exports.isRoomAvailable = functions.database
-//     .ref("reservations/{reservationId}")
-//     .onCreate(event => {
-//         const {from, to, roomId} = event.data.val().metadata
-//         const newReservationInterval = moment.range(moment(from), moment(to))
-//         return checkRoomAvailability(reservationId, newReservationInterval, roomId)
-//     })
 
-// const checkRoomAvailability = (reservationId, newReservationInterval, newRoomId) => {
-//     return reservationsRef.once("value", snap => {
-//         const reservations = snap.val()
-//         Object.keys(reservations).forEach(reservation => {
-//             const {from, to, roomId, handled} = reservations[reservation].metadata
-//             if (handled && reservation !== reservationId && roomId === newRoomId) {
-//                 if (todayInterval.overlaps(newReservationInterval)) {
-//                     console.log(`New reservation ${reservationId} 
-// overlaps with ${reservation}! Removing...`)
-//                     return reservationsRef.child(reservationId).remove()
-//                 }
-//             }
-//             return null
-//         })
-//         return null
-//         // return console.log(`New reservation ${reservationId} added to database!`)
-//     })
-// }
+exports.isOverlapWarning = functions.database
+    .ref("reservations/{newId}")
+    .onCreate(({data, params: {newId}}) => {
+        const {from, to, roomId: newRoom} = data.val().metadata
+        const newInterval = moment.range(moment(from),moment(to))
+        return reservationsRef.once("value", (snap) => {
+            const reservations = snap.val()
+            Object.keys(reservations).forEach(oldId => {
+                const {metadata: {from, to, handled, roomId: oldRoom}} = reservations[oldId]
+                const oldInterval = moment.range(moment(from), moment(to))
+                if (handled && newInterval.overlaps(oldInterval) && newId !== oldId && newRoom === oldRoom) {
+                    return admin.database()
+                            .ref("serverMessage").set({
+                                type: "warning",
+                                message: `Szoba ${oldRoom} foglalt ebben az időintervallumban!`,
+                                newId, oldId
+                            })
+                }
+                return null
+            })
+            return null
+        })
+    })
