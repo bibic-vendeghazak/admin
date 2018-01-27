@@ -9,7 +9,7 @@ const FeedbackList = ({styleId, feedbacks}) => {
   return(
       feedbacks.length !== 0 ?
         <List>{feedbacks}</List> : 
-        <p>Nincs olvasatlan visszajelzés</p>
+        <p>Nincs {styleId==="read" ? "olvasott" : "olvasatlan"} visszajelzés</p>
   )
 }
 
@@ -28,18 +28,18 @@ export default class Feedbacks extends Component {
     const readFeedbacks = []
     for (let key in feedbacks) {
       const feedback = feedbacks[key]
-      const feedbackComponent = <Feedback key={key} id={key} feedback={feedback}/>
-      !feedback.metadata.handled ? unreadFeedbacks.push(feedbackComponent) : readFeedbacks.push(feedbackComponent)
+      const feedbackComponent = <Feedback key={key} feedbackId={key} feedback={feedback}/>
+      !feedback.handled ? unreadFeedbacks.push(feedbackComponent) : readFeedbacks.push(feedbackComponent)
     }
   return (
     <Tabs
       value={this.state.read}
       onChange={this.handleChange}
     >
-      <Tab value={false} label={<TabLabel title="Új visszajelzések" count={unreadFeedbacks.length}/>}>
+      <Tab value={false} label={<TabLabel title="Olvasatlan" count={unreadFeedbacks.length}/>}>
         <FeedbackList styleId="unread" feedbacks={unreadFeedbacks}/>
       </Tab>
-      <Tab value={true} label={<TabLabel title="Olvasott visszajelzések" count={readFeedbacks.length}/>}>
+      <Tab value={true} label={<TabLabel title="Olvasott" count={readFeedbacks.length}/>}>
         <FeedbackList styleId="read" feedbacks={readFeedbacks}/>
       </Tab>
     </Tabs>

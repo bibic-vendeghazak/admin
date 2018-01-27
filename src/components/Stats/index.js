@@ -30,12 +30,12 @@ export default class Stats extends Component {
       }
     }
     for (let feedback in feedbacks) {
-      if (feedbacks[feedback].metadata.handled) {
-        if (!feedbackPerRooms[feedbacks[feedback].metadata.roomId]) {
-          feedbackPerRooms[feedbacks[feedback].metadata.roomId] = []
-          feedbackPerRooms[feedbacks[feedback].metadata.roomId].push(feedbacks[feedback].metadata.rating)
+      if (feedbacks[feedback].handled) {
+        if (!feedbackPerRooms[feedbacks[feedback].roomId]) {
+          feedbackPerRooms[feedbacks[feedback].roomId] = []
+          feedbackPerRooms[feedbacks[feedback].roomId].push(feedbacks[feedback].rating)
         } else {
-          feedbackPerRooms[feedbacks[feedback].metadata.roomId].push(feedbacks[feedback].metadata.rating)
+          feedbackPerRooms[feedbacks[feedback].roomId].push(feedbacks[feedback].rating)
         }
       }
 
