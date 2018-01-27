@@ -20,6 +20,10 @@ const muiTheme = getMuiTheme({
   badge: {
     primaryColor: orange
   },
+  datePicker: {
+    headerColor: orange,
+    selectColor: lightBrown
+  },
   // raisedButton: {
   //   secondaryColor: orange
   // },
