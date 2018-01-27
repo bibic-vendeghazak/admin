@@ -3,12 +3,12 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import RaisedButton from 'material-ui/RaisedButton'
 
-const Logout = ({reset}) => {
+const Logout = ({reset, loginAttempt}) => {
   const logout = () => {
     reset()
-    firebase.auth().signOut()
-    // TODO: Notification toast for successful logout.
-    console.log('Kijelentkezve.')
+    firebase.auth().signOut().then(() => {
+      loginAttempt("Sikeres kijelentkezés.")
+    })
   }
   return (
     <RaisedButton 

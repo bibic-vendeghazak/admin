@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import firebase from 'firebase/app'
 
-import {initialAppState, formatData} from '../utils'
+import {initialAppState} from '../utils'
 
 import Welcome from './Welcome'
 import Login from './Auth/Login'
@@ -31,7 +31,14 @@ export default class App extends Component {
 
   loginAttempt = message => this.setState({isLoginAttempt: true, message})
   
-  handleSnackbarClose = () => {this.setState({isLoginAttempt: false})}
+  handleSnackbarClose = snackbarType => {
+    this.setState({[snackbarType]: false})
+    snackbarType === "gotError" && firebase.database().ref("error").set({
+      message: "",
+      newReservationId: "",
+      oldReservationId: ""
+    })
+  }
 
   handleAppBarRightButtonClick = appBarRightAction => {
     this.setState({appBarRightAction})
@@ -101,7 +108,7 @@ export default class App extends Component {
           })
         })
         this.setState({isLoggedIn: true})
-      }
+      } 
     })
   }
 
@@ -111,18 +118,27 @@ export default class App extends Component {
       isMenuActive, rooms,
       reservations, handledReservations,feedbacks,
       openedMenuItem, openedMenuTitle, roomsBooked,
-      isDrawerOpened, isLoggedIn,
+      isDrawerOpened, isLoggedIn, gotError, dbMessage,
       appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction, message, isLoginAttempt
     } = this.state
+    
     
     return (
       <div className="app">
         <Snackbar 
           autoHideDuration={4000} 
           open={isLoginAttempt}
-          onRequestClose={this.handleSnackbarClose}
+          onRequestClose={() => this.handleSnackbarClose("isLoginAttempt")}
           {...{message}}
         />
+        {dbMessage !== "" ?
+          <Snackbar
+          autoHideDuration={4000} 
+          open={gotError}
+          onRequestClose={() => this.handleSnackbarClose("gotError")}
+          message={dbMessage}
+          /> : null
+        }
         {isLoggedIn ?
           <div>
             <AppBar
@@ -146,10 +162,10 @@ export default class App extends Component {
               onRightIconButtonClick={() => this.handleAppBarRightButtonClick(openedMenuItem)}
             />
             <Sidebar
-              {...{profile, isMenuActive, unreadReservationCount, unreadFeedbackCount}}
+              loginAttempt={this.loginAttempt}
+              {...{profile, isMenuActive, isDrawerOpened,unreadReservationCount, unreadFeedbackCount}}
               reset={this.reset}
               changeOpenedMenuItem={this.changeOpenedMenuItem}
-              {...{isDrawerOpened}}
             />
             <main style={{
               marginLeft: isDrawerOpened && 256,

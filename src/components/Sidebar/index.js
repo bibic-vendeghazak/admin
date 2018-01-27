@@ -15,7 +15,8 @@ export default class Sidebar extends Component {
 
 	render() {
 		const {profile, unreadReservationCount,
-			unreadFeedbackCount, reset, isDrawerOpened, changeOpenedMenuItem} = this.props
+			unreadFeedbackCount, reset, isDrawerOpened, changeOpenedMenuItem, loginAttempt} = this.props
+			
 		return (
 			<div id="menu" >
 				
@@ -69,7 +70,7 @@ export default class Sidebar extends Component {
 							onClick={() => changeOpenedMenuItem("settings")}
 						/>
 						
-						<Logout {...{reset}}/>
+						<Logout {...{reset, loginAttempt}}/>
 						</Drawer>
 					</aside>}
 			</div>
@@ -93,7 +94,7 @@ const SidebarMenuItem = ({primaryText, leftIcon, count, href, onClick}) => (
 		style={{color: "white"}} 
 		primaryText={primaryText}
 		leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">{leftIcon}</FontIcon>}
-		rightIcon={count && <Badge primary badgeContent={count}/>}
+		rightIcon={count ? <Badge primary badgeContent={count.toString()}/> : null}
 		onClick={() => onClick && onClick()}
 		href={href}
 		target={href && "_blank"}
