@@ -84,10 +84,23 @@ export default class App extends Component {
           let unreadReservationCount = 0
           const handledReservations = {}
           Object.keys(reservations).forEach(reservation => {
-            const {metadata: {handled}} = reservations[reservation]
+            const {metadata: {handled, roomId, from, to}} = reservations[reservation]
+            
             if(!handled){
               unreadReservationCount+=1
-            } else handledReservations[reservation] = reservations[reservation]
+            } else {
+              handledReservations[reservation] = reservations[reservation]
+              if (
+                moment.range(moment(from), moment(to))
+                .overlaps(
+                  moment.range(moment().startOf("day"), moment().endOf("day"))
+              )) {
+                this.setState({roomsBooked: {
+                  ...this.state.roomsBooked,
+                  [roomId-1]: true
+                }})
+              }
+            }
           })
           this.setState({reservations, handledReservations, unreadReservationCount})
         })
@@ -128,7 +141,6 @@ export default class App extends Component {
       gotServerMessage, serverMessage, type,
       appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction, message, isLoginAttempt
     } = this.state
-    
     
     return (
       <div className="app">
