@@ -1,6 +1,5 @@
 import React from 'react'
 import Badge from 'material-ui/Badge'
-import moment from 'moment'
 
 export const initialAppState = {
     isDrawerOpened: true,
