@@ -4,6 +4,8 @@ import SearchBar from './SearchBar'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {TabLabel} from '../../utils'
 
+import NewReservation, {NewReservationButton} from './NewReservation'
+
 export default class Reservations extends Component {
   state = {
     query: "",
@@ -13,8 +15,15 @@ export default class Reservations extends Component {
     // HACK: Find a better solution
     from: new Date(1970,1,1).getTime(),
     to: new Date(2100,12,31).getTime(),
-    handled: false
+    handled: false,
+    isDialogOpen: false
   }
+
+  openDialog = () => this.setState({isDialogOpen: true})
+  handleDialogToggle = () => this.setState(({isDialogOpen}) => ({isDialogOpen: !isDialogOpen}))
+  handleCancelDialog = () => this.setState({isDialogOpen: false})
+  handleSubmitDialog = () => this.setState({isDialogOpen: false})
+
 
   handleChange = (handled) => {
     this.setState({handled})
@@ -31,8 +40,9 @@ export default class Reservations extends Component {
   }
 
   render() {
-    const {query, rooms, from, to, handled} = this.state
+    const {query, rooms, from, to, handled, isDialogOpen} = this.state
     const {reservations, appBarRightAction} = this.props
+    
     return (
       <div>
         <SearchBar
@@ -41,6 +51,16 @@ export default class Reservations extends Component {
           handleRoomToggle={id => this.handleRoomToggle(id)}
           showHandled={handled => this.showHandled(handled)}
         />
+        {
+          isDialogOpen &&
+            <NewReservation
+              {...{isDialogOpen}}
+              handleCancelDialog={this.handleCancelDialog}
+              handleSubmitDialog={this.handleSubmitDialog}
+              handleDialogToggle={this.handleDialogToggle}
+            />
+        }
+        <NewReservationButton openDialog={this.openDialog}/>
         <Tabs
           value={handled}
           onChange={this.handleChange}
