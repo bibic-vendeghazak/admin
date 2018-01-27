@@ -76,6 +76,12 @@ export default class NewReservation extends Component {
   const {newReservation} = this.state
     return ReactDOM.createPortal(
       <Dialog 
+        autoScrollBodyContent={window.innerWidth <= 768}
+        contentStyle={{
+          marginTop: -16,
+          width: window.innerWidth <= 960 ? "95%" : 768,
+          maxWidth: 'none'
+        }}
         onRequestClose={handleCancelDialog}
         actions={[
           <FlatButton
@@ -86,7 +92,7 @@ export default class NewReservation extends Component {
           />,
           <RaisedButton
             label="Foglalás felvétele"
-            secondary
+            primary
             // disabled={!newReservation.to}
             onClick={this.handleSubmitDialog}
           />
@@ -173,10 +179,9 @@ class HorizontalLinearStepper extends Component {
             />
           }
           {!isLast &&
-            <RaisedButton
+            <FlatButton
               label="Következő"
               disabled={stepIndex === 5}
-              secondary
               onClick={this.handleNext}
             />
           }

@@ -43,40 +43,41 @@
       > 
       <div>
         <h4>A foglaló adatai</h4>
-        <List>
+        <List style={{display: "flex", flexWrap: "wrap"}}>
           <ListItem disabled leftIcon={<Email/>} primaryText={<a href={`mailto:${email}`}>{email}</a>} secondaryText="E-mail"/>
           <ListItem disabled leftIcon={<CommunicationCall/>} primaryText={<a href={`tel:${tel}`}>{tel}</a>} secondaryText="Telefonszám"/>
           <ListItem disabled leftIcon={<Message/>} primaryText={message ? message : "Nincs üzenet"} secondaryText="Üzenet"/>
         </List>
       <h4>A foglalás részletei</h4>
       <Table selectable={false}>
-            <TableHeader 
-              displaySelectAll={false}
-              adjustForCheckbox={false}
-              >
-              <TableRow>
-              </TableRow>
+            <TableBody displayRowCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn>Szobaszám</TableHeaderColumn>
                 <TableHeaderColumn>Felnőtt</TableHeaderColumn>
                 <TableHeaderColumn>Gyerek</TableHeaderColumn>
                 <TableHeaderColumn>Érkezés</TableHeaderColumn>
                 <TableHeaderColumn>Távozás</TableHeaderColumn>
+                <TableHeaderColumn colSpan={1} style={{textAlign: "center"}}>Szerkeszt</TableHeaderColumn>
+
               </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false}>
               <TableRow>
                 <TableRowColumn>{roomId}. szoba</TableRowColumn>
                 <TableRowColumn>{adults} személy</TableRowColumn>
                 <TableRowColumn>{children} személy</TableRowColumn>
-                <TableRowColumn>{toDate(from)}</TableRowColumn>
-                <TableRowColumn>{toDate(to)}</TableRowColumn>
+                <TableRowColumn>{moment(from).format('MMMM D.')}</TableRowColumn>
+                <TableRowColumn>{moment(to).format('MMMM D.')}</TableRowColumn>
+                <TableRowColumn colSpan={1} style={{textAlign: "center"}}>
+                <FontIcon>
+                  <Edit/>
+                </FontIcon>
+              </TableRowColumn>
               </TableRow>
             </TableBody>
       </Table>
       <div>
             {!handled &&
             <RaisedButton
+              style={{marginRight: 12}}
               primary
               label="Elfogadás"
               onClick={() => handleReservation(true)}

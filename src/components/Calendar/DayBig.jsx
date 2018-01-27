@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 
-import FontIcon from 'material-ui/FontIcon'
-import Edit from 'material-ui/svg-icons/image/edit'
+
 
 import {Card, CardHeader} from 'material-ui/Card'
 import {
@@ -52,7 +51,6 @@ export default class DayBig extends Component {
             <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Telefon</TableHeaderColumn>
             <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Érkezés</TableHeaderColumn>
             <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Távozás</TableHeaderColumn>
-            <TableHeaderColumn colSpan={1} style={{textAlign: "center"}}>Szerkeszt</TableHeaderColumn>
           </TableRow>
             {reservations.map(([key, {
               metadata: {roomId, from, to},
@@ -65,11 +63,7 @@ export default class DayBig extends Component {
                 <TableRowColumn colSpan={2} style={{textAlign: "center"}}><a href={`tel:${tel}`}>{tel}</a></TableRowColumn>
                 <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(from).format('MMMM D.')}</TableRowColumn>
                 <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(to).format('MMMM D.')}</TableRowColumn>
-                <TableRowColumn colSpan={1} style={{textAlign: "center"}}>
-                  <FontIcon>
-                    <Edit/>
-                  </FontIcon>
-                </TableRowColumn>
+
               </TableRow>
               )
             )}
