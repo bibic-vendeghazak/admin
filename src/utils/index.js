@@ -13,7 +13,7 @@ export const initialAppState = {
     roomServices: {},
     unreadReservationCount: 0,
     unreadFeedbackCount: 0,
-    openedMenuItem: "rooms",
+    openedMenuItem: "reservations",
     appBarRightIcon: [null, null],
     openedMenuTitle: {
         welcome: "Admin kezelőfelület",
@@ -24,57 +24,11 @@ export const initialAppState = {
         feedbacks: "Visszajelzések",
         settings: "Beállítások"
     },
+    gotError: false,
+    dbMessage: "",
     message: "",
     isLoginAttempt: false
 }
-
-export const formatData = (user, data) => {
-    const {admins, rooms} = data
-    const [reservations, unreadReservationCount] = fetchPosts(data.reservations)
-    const [feedbacks, unreadFeedbackCount] = fetchPosts(data.feedbacks)
-    const {name, src} = admins[user.uid]
-    const handledReservations = {}
-    const roomsBooked = Array(Object.keys(data.rooms).length)
-
-    const todayInterval = moment.range(moment().startOf("day"), moment().endOf("day"))
-    
-
-    Object.entries(reservations).forEach(reservation => {
-        const {from, to, handled, roomId} = reservation[1].metadata
-
-
-        // Check if the room is available today
-        if (todayInterval.overlaps(moment.range(moment(from), moment(to)))) {
-            roomsBooked[roomId-1] = true
-        }
-        
-        if (handled) {
-            handledReservations[reservation[0]] = reservation[1]
-        }
-    })
-    
-    return {
-        profile: {name, src},
-        roomsBooked, rooms,
-        reservations, unreadReservationCount, handledReservations,
-        feedbacks, unreadFeedbackCount
-    }
-}
-
-const fetchPosts = posts => {
-    let unreadPostCount = 0
-    let merged = {}
-    const {metadata, details} = posts
-    for (let post in metadata) {
-        !metadata[post].handled && unreadPostCount++
-        merged[post] = {
-            metadata: metadata[post],
-            details: details[post]
-        }
-    }
-    return [merged, unreadPostCount]
-}
-
 
 
 export const colors = {

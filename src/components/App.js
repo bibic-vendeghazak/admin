@@ -47,13 +47,60 @@ export default class App extends Component {
     this.setState({openedMenuItem})
   }
 
+
   componentDidMount = () => {
+    const db = firebase.database()
+    const reservationsRef = db.ref("reservations")
+    const feedbacksRef = db.ref("feedbacks")
+    const roomsRef = db.ref("rooms")
+    const roomServicesRef = db.ref("roomServices")
+    const errorRef = db.ref("error")
     firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        firebase.database().ref("/").on('value', snap => {
-          const data = formatData(user, snap.val())
-          this.setState({...data, isLoggedIn: true})
+      if(user){
+        db.ref(`admins/${user.uid}`).once("value", snap =>{
+          this.setState({profile: snap.val()})
         })
+        errorRef.on("value", snap => {
+          this.setState({
+            dbMessage: snap.val().message,
+            gotError: true
+          })
+        })
+        reservationsRef.on("value", snap => {
+          const reservations = snap.val()
+          let unreadReservationCount = 0
+          const handledReservations = {}
+          Object.keys(reservations).forEach(reservation => {
+            const {metadata: {handled}} = reservations[reservation]
+            if(!handled){
+              unreadReservationCount+=1
+            } else handledReservations[reservation] = reservations[reservation]
+          })
+          this.setState({reservations, handledReservations, unreadReservationCount})
+        })
+        feedbacksRef.on("value", snap => {
+          const feedbacks = snap.val()
+          let unreadFeedbackCount = 0
+          Object.values(feedbacks).forEach(({handled}) => {
+            if(!handled){
+              unreadFeedbackCount+=1
+            } 
+          })
+          this.setState({
+            feedbacks, unreadFeedbackCount
+          })
+        })
+        roomsRef.on("value", snap => {
+          this.setState({
+            rooms: snap.val()
+          })
+        })
+        roomServicesRef.on("value", snap => {
+          this.setState({
+            roomServices: snap.val()
+          })
+        })
+        this.setState({isLoggedIn: true})
       }
     })
   }

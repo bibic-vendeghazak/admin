@@ -1,6 +1,5 @@
   import React from 'react'
   import firebase from 'firebase'
-  import 'firebase/database'
   import {List, ListItem} from 'material-ui/List'
   import {ExpandableCard} from '../shared'
   import RaisedButton from 'material-ui/RaisedButton'
@@ -17,10 +16,11 @@
   import Message from 'material-ui/svg-icons/communication/message'
 
 
-  const Reservation = ({id, reservation}) => {
+
+  const Reservation = ({id, reservation: {details: {name, email, tel, message, adults, children}, metadata: {roomId, from, to, handled}}}) => {
 
     const handleReservation = isAccepted => {
-      firebase.database().ref(`reservations/metadata/${id}`).update({"handled": isAccepted})
+      firebase.database().ref(`reservations/${id}/metadata`).update({"handled": isAccepted})
     }
 
     const toDate = date => {
@@ -33,9 +33,8 @@
       return daysDifference
     }
 
-    const {metadata, details} = reservation
-    const {roomId, from, to, handled} = metadata
-    const {name, email, tel, message, adults, children} = details
+
+
     return (
       <ListItem disabled style={{padding: ".25em 4em"}}>
       <ExpandableCard
@@ -92,6 +91,7 @@
       </div>
       </ExpandableCard>
     </ListItem>
+
     )
   }
 
