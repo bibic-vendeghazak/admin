@@ -24,6 +24,7 @@ export const initialAppState = {
         settings: "Beállítások"
     },
     gotServerMessage: false,
+    roomsBooked: {},
     serverMessage: "",
     isLoginAttempt: false,
     message: ""

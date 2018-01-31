@@ -83,7 +83,7 @@ export default class App extends Component {
           const reservations = snap.val()
           let unreadReservationCount = 0
           const handledReservations = {}
-          Object.keys(reservations).forEach(reservation => {
+          reservations && Object.keys(reservations).forEach(reservation => {
             const {metadata: {handled, roomId, from, to}} = reservations[reservation]
             
             if(!handled){

@@ -42,7 +42,7 @@ export default class Reservations extends Component {
   render() {
     const {query, rooms, from, to, handled, isDialogOpen} = this.state
     const {reservations, appBarRightAction, unreadReservationCount} = this.props
-    const readReservationCount = Object.keys(reservations).length - unreadReservationCount
+    const readReservationCount = reservations ? Object.keys(reservations).length - unreadReservationCount : 0
     return (
       <div>
         <SearchBar
