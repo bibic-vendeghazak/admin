@@ -16,7 +16,10 @@ export default class Rooms extends Component {
 
   componentDidMount() {
     firebase.database().ref("rooms").on("value", snap => {
-      this.setState({rooms: snap.val()})
+      this.setState({
+        rooms: snap.val(), 
+        // bigRoom: snap.val()[0]
+      })
     })
     firebase.database().ref("roomServices").on("value", snap => {
       this.setState({roomServices: snap.val()})
@@ -41,6 +44,7 @@ export default class Rooms extends Component {
         name, isAvailable: Object.values(inRoom).includes(roomId)
       }
     })
+    
     this.setState({
       isBigRoom: true,
       bigRoom: {
@@ -65,11 +69,12 @@ export default class Rooms extends Component {
           closeBigRoom={this.closeBigRoom}
           {...{...bigRoom}}
         /> :
-        <ul className="rooms posts-wrapper">
-          {rooms.map((room, index) => (
+        <ul className="rooms">
+          {rooms.map(({id, available}, index) => (
             <Room
-              roomId={room.id}
-              key={room.id}
+              key={id}
+              available={available}
+              roomId={id}
               isBooked={roomsBooked[index]} 
               handleRoomClick={this.handleRoomClick}
               />

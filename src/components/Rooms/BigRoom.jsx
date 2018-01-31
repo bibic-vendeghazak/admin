@@ -1,16 +1,20 @@
 import React, { Component } from 'react'
 import firebase from "firebase"
 
-import Prices from './Prices'
 import Services from './Services'
+import Population from './Population'
+import Prices from './Prices'
+import Availability from './Availability'
+import Description from './Description'
 
+import Subheader from 'material-ui/Subheader'
 
 export default class BigRoom extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      maxAdults: this.props.maxAdults,
-      maxChildren: this.props.maxChildren
+      maxAdults: props.maxAdults,
+      maxChildren: props.maxChildren
     }
   }
 
@@ -71,55 +75,21 @@ export default class BigRoom extends Component {
     console.log("yo");
   }
 
-  changeValue(type, direction, minValue = 0) {
-    // FIXME: Change value
-    // if (this.state[type]+minValue > 0) {
-    //   this.setState({
-    //     [type]: this.state[type] + direction
-    //   })
-    // }
-  }
-
   render(){
-    const {services, id: roomId, populatePrices, maxAdults, maxChildren, prices} = this.props
+    const {services, id: roomId} = this.props
     return(
-      <ul className="edit-room">
+      <div className="big-room">
+        <Subheader style={{marginLeft: "1.5em"}}>Szoba {roomId} állapota</Subheader>
+        <Availability {...{roomId}}/>
+        <Subheader style={{marginLeft: "1.5em"}}>Szoba {roomId} leírása</Subheader>
+        <Description {...{roomId}}/>
+        <Subheader style={{marginLeft: "1.5em"}}>Szolgáltatások (Szoba {roomId})</Subheader>
         <Services {...{services, roomId}}/>
-        <li>
-          <p>Maximum felnőtt: </p>
-          <div className="change-people">
-            <button  onClick={(e, direction, minValue) => this.changeValue("maxAdults",-1, 1)}>-</button>
-            <input
-              min="1"
-              data-type="max-people maxAdults"
-              className="room-number-input"
-              type="number"
-              onChange={e => this.handleChange(e)}
-              value={maxAdults}/>
-            <button  onClick={(e, direction, minValue) => this.changeValue("maxAdults",1,1)}>+</button>
-          </div>
-        </li>
-        <li>
-          <p>Maximum gyerek: </p>
-          <div className="change-people">
-            <button onClick={(e,direction) => this.changeValue("maxChildren",-1)}>-</button>
-            <input
-              min="0"
-              data-type="max-people maxChildren"
-              className="room-number-input"
-              type="number"
-              onChange={e => this.handleChange(e)}
-              value={maxChildren}/>
-            <button onClick={(e,direction) => this.changeValue("maxChildren",1)}>+</button>
-          </div>
-        </li>
-        <li className="room-populate-btn">
-          <button onClick={() => populatePrices()}>Ár opciók frissítése</button>
-        </li>
-        <li>
-          <Prices {...{roomId, prices}}/>
-        </li>
-      </ul>
+        <Subheader style={{marginLeft: "1.5em"}}>Lakók száma (Szoba {roomId})</Subheader>
+        <Population {...{roomId}}/>
+        <Subheader style={{marginLeft: "1.5em"}}>Ártáblázat (Szoba {roomId})</Subheader>
+        <Prices {...{roomId}}/>
+      </div>
     )
   }
 }

@@ -1,8 +1,14 @@
 import React, {Component} from 'react'
-import Chip from 'material-ui/Chip'
-import Avatar from 'material-ui/Avatar'
-import Card from 'material-ui/Card'
+
 import firebase from 'firebase'
+
+import {colors} from '../../utils'
+
+import Card from 'material-ui/Card'
+import Toggle from 'material-ui/Toggle'
+import List, {ListItem} from 'material-ui/List'
+
+const {orange, lightOrange} = colors
 
 class Service extends Component {
   
@@ -43,19 +49,31 @@ class Service extends Component {
       }
   }
 
+  
   render() {
     const {serviceKey, name} = this.props
     const {isAvailable} = this.state
     return (
-    <li className="room-service">
-    <Chip 
-      backgroundColor={isAvailable ? "#888" : "#ddd"}
-      onClick={() => this.handleClick(serviceKey)}
+    <ListItem 
+    onClick={() => this.handleClick(serviceKey)}
+    rightIcon={
+      <Toggle
+        style={{width: "auto"}}
+        label={isAvailable ? "Van": "Nincs"}
+        toggled={isAvailable}
+        thumbStyle={{backgroundColor: "#eee"}}
+        trackStyle={{backgroundColor: "#ddd"}}
+        thumbSwitchedStyle={{backgroundColor: orange}}
+        trackSwitchedStyle={{backgroundColor: lightOrange}}
+        
+      />
+    }
     >
-      <Avatar src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/icons/services/${serviceKey}.svg`}/>
-      <p>{name}</p>
-    </Chip>
-    </li>
+      <div style={{display: "flex", alignItems: "center"}}>
+        <img width={24} style={{padding: "0 8px"}} alt={serviceKey} src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/icons/services/${serviceKey}.svg`}/>
+        <p>{name}</p>
+      </div>
+    </ListItem>
   )
   }
 }
@@ -63,14 +81,14 @@ class Service extends Component {
 const Services = ({services, roomId}) => (
   <Card className="room-edit-block">
   {roomId}
-    <ul className="room-services">
-      {Object.keys(services).map(serviceKey => {
+    <List className="room-services">
+      {services && Object.keys(services).map(serviceKey => {
         const service = services[serviceKey]
         return(
-          <Service key={serviceKey} {...{...service, serviceKey, roomId}}/>
+          <Service key={serviceKey} style={{flexGrow: 1}} {...{...service, serviceKey, roomId}}/>
         )
       })}
-    </ul>
+    </List>
   </Card>
 )
 

@@ -3,7 +3,7 @@ import {Card, CardActions, CardMedia, CardTitle} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import {colors} from '../../utils'
 
-const Room = ({isBooked, handleRoomClick, roomId}) => (
+const Room = ({available, isBooked, handleRoomClick, roomId}) => (
   <li className="room">
    <Card>
     <CardMedia
@@ -22,9 +22,15 @@ const Room = ({isBooked, handleRoomClick, roomId}) => (
           }}
           className="room-title"
           title={`Szoba ${roomId}`} 
-          subtitle={<span style={{color: isBooked && colors.orange}}>{!isBooked && "NEM"} FOGLALT</span>}
-          />
-        }
+          subtitle={
+            <span style={{textShadow: "0 0 5px rgba(0,0,0,.5)", textTransform: "uppercase", color: (isBooked || !available) && colors.red}}>
+              {available ? 
+                `${!isBooked ? "Nem" : ""} foglalt`:
+                "Nem elérhető"}
+            </span>
+          }
+        />
+      }
     >
       <img
         src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/images/rooms/${roomId}_0.jpg`}
