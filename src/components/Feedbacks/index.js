@@ -9,7 +9,7 @@ const FeedbackList = ({styleId, feedbacks}) => {
   return(
       feedbacks.length !== 0 ?
         <List>{feedbacks}</List> : 
-        <p>Nincs {styleId==="read" ? "olvasott" : "olvasatlan"} visszajelzés</p>
+        <p style={{textAlign: "center", margin: "25%"}}>Nincs {styleId==="read" ? "olvasott" : "olvasatlan"} visszajelzés</p>
   )
 }
 
@@ -33,6 +33,7 @@ export default class Feedbacks extends Component {
     }
   return (
     <Tabs
+      inkBarStyle={{marginTop: -4, height: 4}}
       value={this.state.read}
       onChange={this.handleChange}
     >
