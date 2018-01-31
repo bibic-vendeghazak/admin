@@ -164,7 +164,7 @@ export default class App extends Component {
               {{
                 error: <Error color={red}/>,
                 warning: <Warning color={yellow}/>,
-                success: <Success color={green}>
+                success: <Success color={green}/>
               }[type]}
             </div>
             }
