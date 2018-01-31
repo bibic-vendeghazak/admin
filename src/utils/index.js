@@ -31,9 +31,13 @@ export const initialAppState = {
 
 
 export const colors = {
-    orange: "#fe4536",
+    orange: "#b35d41",
+    lightOrange: "#cc8c78",
     lightBrown: "#482c29",
-    darkBrown: "#1f1511"
+    darkBrown: "#1f1511",
+    red: "#C62828",
+    yellow: "#f9c554",
+    green: "#388E3C"
 }
 
 export const TabLabel = ({title, count}) => (
