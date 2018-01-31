@@ -19,9 +19,8 @@
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src/styles/sass src/styles/sass/main.sass src/styles/main.css -w -r",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
-    "build": "npm run build-css && react-scripts build",
+    "test": "npm run build-css && react-scripts build",
     "deploy": "npm run build && firebase deploy",
-    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
 }
