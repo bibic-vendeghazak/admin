@@ -44,11 +44,14 @@ export default class NewReservation extends Component {
     const reservationsRef = firebase.database().ref("reservations")
     reservationsRef.child('metadata').push().then(snap => {
       const {key} = snap
-      const metadata = {roomId, from: from.unix()*1000, to: to.unix()*1000, handled: false}
+      const metadata = {roomId, from: from.unix()*1000, to: (to.unix()*1000)-1, handled: false}
       const details = {name, email, tel, message, adults, children}
-      console.log({metadata, details});
 
-      reservationsRef.child(key).set({metadata, details}).then(() => this.props.handleSubmitDialog())
+      reservationsRef.child(key).set({
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        lastHandledBy: firebase.auth().currentUser.uid,
+        metadata, details
+      }).then(() => this.props.handleSubmitDialog())
     })
   }
 
