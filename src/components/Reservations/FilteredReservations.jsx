@@ -77,7 +77,7 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
        <List>
          {unread}
          {read}
-       </List> : <p>Nincs egyezés</p>
+       </List> : <p style={{textAlign: "center", margin: "25%"}}>Nincs egyezés</p>
      }
    </div>
   )
