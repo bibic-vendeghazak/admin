@@ -1,6 +1,3 @@
-import React from 'react'
-import Badge from 'material-ui/Badge'
-
 export const initialAppState = {
     isDrawerOpened: true,
     isLoggedIn: false,
@@ -30,7 +27,6 @@ export const initialAppState = {
     message: ""
 }
 
-
 export const colors = {
     orange: "#b35d41",
     lightOrange: "#cc8c78",
@@ -41,9 +37,24 @@ export const colors = {
     green: "#388E3C"
 }
 
-export const TabLabel = ({title, count}) => (
-    <div style={{display:"flex", alignItems: "center"}}>
-      <div>{title}</div>
-      <Badge style={{marginLeft: 12, padding: 12}} primary badgeContent={count}/>
-    </div>
-)
+
+const {darkBrown, lightBrown, orange} = colors
+export const muiTheme = {
+    palette: {
+        primary1Color: darkBrown,
+        primary2Color: lightBrown,
+        accent1Color: orange
+    },
+    badge: {
+        primaryColor: orange
+    },
+    datePicker: {
+        headerColor: orange,
+        selectColor: lightBrown
+    },
+    drawer: {
+        color: lightBrown
+    }
+}
+  
+  

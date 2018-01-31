@@ -37,6 +37,7 @@ export default class Feedback extends Component {
             title={`Szoba ${roomId}`}
             subtitle={<div style={{display: "flex"}}>{
               Array(5).map((e,i) => (
+                // REVIEW: Fix stars
                 <span key={i} className={`feedback-star ${i < Math.floor(rating) ?  "full" : "blank"}`}></span>
               ))
             }</div>}

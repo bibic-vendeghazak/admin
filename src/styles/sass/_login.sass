@@ -1,0 +1,64 @@
+.app
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+  background-color: darken($light, 10)
+
+
+  header
+    position: relative
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    justify-content: center
+
+  h2
+    font-size: 1.2em
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-direction: column
+    padding: 0
+    img
+      margin: .5em
+#login-wrapper
+  flex-direction: column
+  display: flex
+  align-items: center
+  margin-bottom: 15%
+  >div
+    display: flex
+    margin: 2.5vmin
+    flex-direction: column
+  input
+    flex-grow: 1
+    padding: 1em
+    transition: background-color .3s
+    &:focus
+      background-color: darken($light, 2)
+      box-shadow: 0 0 15px rgba(0,0,0,.2)
+  a
+    align-self: center
+
+#login-title
+  img
+    width: 64px
+
+@media (min-width: 768px)
+  #login-wrapper
+    margin-bottom: 0
+  #login-title
+    flex-direction: column !important
+  #login-form
+    justify-content: center
+  @media (orientation: landscape)
+    #login-wrapper
+      >div
+        flex-direction: row
+        input:first-of-type
+          margin-right: 2.5vmin
+      button
+        width: auto
+        height: auto
+        border-radius: 0
+        padding: 1em 2em

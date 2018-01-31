@@ -7,7 +7,7 @@ export default class Welcome extends Component {
   }
   render() {
     return (
-      <h2 style={{paddingTop: "25%"}}>Admin kezelőfelület</h2>
+      <h2 style={{paddingTop: "30%", textAlign: "center"}}>Admin kezelőfelület</h2>
     )
   }
 }

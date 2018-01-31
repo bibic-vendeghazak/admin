@@ -3,7 +3,7 @@ import Feedback from './Feedback'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List} from 'material-ui/List'
 
-import {TabLabel} from '../../utils'
+import {TabLabel} from '../shared'
 
 const FeedbackList = ({styleId, feedbacks}) => {
   return(

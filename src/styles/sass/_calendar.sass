@@ -1,0 +1,68 @@
+.today-month
+  grid-area: today
+  justify-self: start
+.prev-month
+  grid-area: prev
+  justify-self: end
+.next-month
+  grid-area: next
+  justify-self: start
+
+
+.weekend-title
+  background-color: $lightred !important
+
+
+.calendar-footer
+  display: flex
+  align-items: center
+  justify-content: space-between
+  >div
+    display: flex
+  h4
+    text-transform: capitalize
+    color: darken($grey, 50)
+.room-legend
+  display: flex
+  li
+    margin: 6px
+    cursor: pointer
+  p
+    position: relative
+    display: flex
+    justify-content: center
+    align-items: center
+    border-radius: 50%
+    width: 32px
+    height: 32px
+    color: $light
+    margin-top: 0
+    transition: filter .5s
+    border: 1px solid black transparent
+    &:hover
+      filter: brightness(1.1)
+
+.unchecked
+  filter: contrast(2)
+  box-shadow: 0 0 10px rgba(0,0,0,.5)
+  border: 1px solid $light !important
+  &:hover
+    filter: contrast(1.3) !important
+
+.room-1
+  background-color: $room-1 !important
+.room-2
+  margin-top: 8px
+  background-color: $room-2 !important
+.room-3
+  margin-top: 16px
+  background-color: $room-3 !important
+.room-4
+  margin-top: 24px
+  background-color: $room-4 !important
+.room-5
+  margin-top: 32px
+  background-color: $room-5 !important
+.room-6
+  margin-top: 40px
+  background-color: $room-6 !important

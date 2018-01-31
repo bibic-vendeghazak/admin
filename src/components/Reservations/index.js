@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import FilteredReservations from './FilteredReservations'
 import SearchBar from './SearchBar'
 import {Tabs, Tab} from 'material-ui/Tabs'
-import {TabLabel} from '../../utils'
+import {TabLabel} from '../shared'
 
 import NewReservation, {NewReservationButton} from './NewReservation'
 
