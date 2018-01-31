@@ -15,7 +15,7 @@ export default class Reservations extends Component {
     // HACK: Find a better solution
     from: new Date(1970,1,1).getTime(),
     to: new Date(2100,12,31).getTime(),
-    handled: false,
+    handled: true,
     isDialogOpen: false
   }
 
@@ -62,6 +62,7 @@ export default class Reservations extends Component {
         }
         <NewReservationButton openDialog={this.openDialog}/>
         <Tabs
+          inkBarStyle={{marginTop: -4, height: 4}}
           value={handled}
           onChange={this.handleChange}
         >

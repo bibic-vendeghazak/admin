@@ -17,9 +17,12 @@ import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import FontIcon from 'material-ui/FontIcon'
 import Error from 'material-ui/svg-icons/alert/error'
+import Success from 'material-ui/svg-icons/action/check-circle'
 import Warning from 'material-ui/svg-icons/alert/warning'
 
+import {colors} from '../utils'
 
+const {red, yellow, green} = colors
 
 export default class App extends Component {
   
@@ -89,7 +92,7 @@ export default class App extends Component {
             if(!handled){
               unreadReservationCount+=1
             } else {
-              handledReservations[reservation] = reservations[reservation]
+              handledReservations[reservation] = reservations[reservation]        
               if (
                 moment.range(moment(from), moment(to))
                 .overlaps(
@@ -159,8 +162,9 @@ export default class App extends Component {
             <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", margin: "0 6px"}}>
               {serverMessage} 
               {{
-                error: <Error color="#f44242"/>,
-                warning: <Warning color="#ce3737"/>
+                error: <Error color={red}/>,
+                warning: <Warning color={yellow}/>,
+                success: <Success color={green}>
               }[type]}
             </div>
             }
