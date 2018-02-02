@@ -1,7 +1,10 @@
 import React from 'react'
+
 import {Card, CardActions, CardMedia, CardTitle} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import {colors} from '../../utils'
+
+import {colors} from '../../../utils'
+
 
 const Room = ({available, isBooked, handleRoomClick, roomId}) => (
   <li className="room">

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import moment from 'moment'
+
 import Month from './Month'
 import DayBig from './DayBig'
-import moment from 'moment'
 
 
 export default class Calendar extends Component {

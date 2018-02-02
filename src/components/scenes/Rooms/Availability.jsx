@@ -3,14 +3,10 @@ import React, {Component} from 'react'
 
 import firebase from 'firebase'
 
-import {colors} from '../../utils'
-
 import Card from 'material-ui/Card'
 import Toggle from 'material-ui/Toggle'
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
-
-const {orange, lightOrange} = colors
 
 export default class Availability extends Component {
   
@@ -84,10 +80,7 @@ export default class Availability extends Component {
             onClick={() => this.handleDialogOpen()}
             style={{width: "auto"}}
             toggled={isAvailable}
-            thumbStyle={{backgroundColor: "#eee"}}
-            trackStyle={{backgroundColor: "#ddd"}}
-            thumbSwitchedStyle={{backgroundColor: orange}}
-            trackSwitchedStyle={{backgroundColor: lightOrange}}
+           
           />
         </div>
       </Card>

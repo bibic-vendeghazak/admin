@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 const RoomLegend = ({id}) => {
 
   const handleClick = e => {

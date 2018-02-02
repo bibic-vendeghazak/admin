@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Logout from '../Auth/Logout'
+
 import Badge from 'material-ui/Badge'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
@@ -7,15 +7,18 @@ import FontIcon from 'material-ui/FontIcon'
 import Drawer from 'material-ui/Drawer'
 import Avatar from 'material-ui/Avatar'
 
+import Logout from '../Auth/Logout'
+
 const dividerStyle = {
 	backgroundColor: "rgba(255,255,255,.5)"
 }
+
 
 export default class Sidebar extends Component {
 
 	render() {
 		const {profile, unreadReservationCount,
-			unreadFeedbackCount, reset, isDrawerOpened, changeOpenedMenuItem, loginAttempt, toggleSidebar} = this.props
+			unreadFeedbackCount, handleLogout, isDrawerOpened, changeOpenedMenuItem, toggleSidebar} = this.props
 			
 		return (
 			<aside onClick={() => window.innerWidth <= 768 && toggleSidebar()} id="sidebar">
@@ -67,7 +70,7 @@ export default class Sidebar extends Component {
 					onClick={() => changeOpenedMenuItem("settings")}
 				/>
 				
-				<Logout {...{reset, loginAttempt}}/>
+				<Logout {...{handleLogout}}/>
 				</Drawer>
 			</aside>
 		)}

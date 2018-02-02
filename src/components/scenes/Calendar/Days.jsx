@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 
+
 const Days = ({isPlaceholder = false, from = 0, to, currentDate, reservations, handleDayClick}) => {
   const days = []
   for (let day = from+1; day <= to; day++) {

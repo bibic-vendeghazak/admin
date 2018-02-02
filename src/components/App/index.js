@@ -2,31 +2,57 @@ import React, {Component} from 'react'
 import firebase from 'firebase/app'
 import moment from 'moment'
 
-import Snackbar from 'material-ui/Snackbar'
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import FontIcon from 'material-ui/FontIcon'
-import Error from 'material-ui/svg-icons/alert/error'
-import Success from 'material-ui/svg-icons/action/check-circle'
-import Warning from 'material-ui/svg-icons/alert/warning'
-import Login from '../Auth/Login'
 
-import Welcome from '../Welcome'
-import Sidebar from '../Sidebar'
-import Rooms from '../Rooms'
-import Reservations from '../Reservations'
-import Calendar from '../Calendar'
-import Stats from '../Stats'
-import Feedbacks from '../Feedbacks'
+import Sidebar from './Sidebar'
+import Login from './Auth/Login'
 
-import {initialAppState, colors} from '../../utils'
-const {red, yellow, green} = colors
+import Welcome from '../scenes/Welcome'
+import Rooms from '../scenes/Rooms'
+import Reservations from '../scenes/Reservations'
+import Calendar from '../scenes/Calendar'
+import Stats from '../scenes/Stats'
+import Feedbacks from '../scenes/Feedbacks'
+import Notification from '../shared/Notification'
+
+const initialAppState = {
+  isDrawerOpened: true,
+  isLoggedIn: false,
+
+  // Notification state
+  isNotificationOpen: false,
+  notificationMessage: "",
+  notificationType: "",
+  errorType: "",
+
+  rooms: {},
+  calendar: {},
+  stats: {},
+  feedbacks: {},
+  reservations: {},
+  roomServices: {},
+  unreadReservationCount: 0,
+  unreadFeedbackCount: 0,
+  openedMenuItem: "reservations",
+  appBarRightIcon: [null, null],
+  openedMenuTitle: {
+    welcome: "Kezdőlap",
+    rooms: "Szobák",
+    reservations: "Foglalások",
+    calendar: "Dátumok",
+    stats: "Statisztikák",
+    feedbacks: "Visszajelzések",
+    settings: "Beállítások"
+  },
+  roomsBooked: {}
+}
+
 
 export default class App extends Component {
   
   state = initialAppState
-
-  reset = () => this.setState(initialAppState)
 
   toggleSidebar = () => {
     this.setState(({isDrawerOpened}) => (
@@ -34,14 +60,27 @@ export default class App extends Component {
     )
   }
 
-  loginAttempt = message => this.setState({isLoginAttempt: true, message})
-  
-  handleSnackbarClose = snackbarType => {
-    this.setState({[snackbarType]: false})
-    snackbarType === "gotServerMessage" && firebase.database().ref("serverMessage").set({
-      message: "", type: "", newId: "", oldId: ""
+  handleNotification = (notificationMessage, notificationType, errorType) => {
+    
+    this.setState({
+      isNotificationOpen: true,
+      notificationType,
+      notificationMessage,
+      errorType
     })
   }
+
+  handleNotificationClose = () => this.setState({isNotificationOpen: false})
+
+  handleLogout = () => {
+    firebase.auth().signOut().then(() => {
+      this.handleNotification("Sikeres kijelentkezés", "success")
+      this.setState({isLoggedIn: false})
+    })
+  }
+  
+  
+
 
   handleAppBarRightButtonClick = appBarRightAction => {
     this.setState({appBarRightAction})
@@ -51,14 +90,10 @@ export default class App extends Component {
     this.setState({appBarRightIcon})
   }
 
-
   changeOpenedMenuItem = (openedMenuItem, appBarRightIcon) => {
     this.changeAppBarRightIcon(appBarRightIcon)
     this.setState({openedMenuItem})
   }
-
-
-
 
   componentDidMount = () => {
     window.innerWidth <=768 && this.setState({isDrawerOpened: false})
@@ -74,11 +109,8 @@ export default class App extends Component {
           this.setState({profile: snap.val()})
         })
         serverMessageRef.on("value", snap => {
-          const {message: serverMessage, type} = snap.val()
-          this.setState({
-            serverMessage, type,
-            gotServerMessage: true
-          })
+          const {message, type} = snap.val()
+          message !== "" && this.handleNotification(message, type, "server")
         })
         reservationsRef.on("value", snap => {
           const reservations = snap.val()
@@ -138,36 +170,16 @@ export default class App extends Component {
       isMenuActive, rooms,
       reservations, handledReservations,feedbacks,
       openedMenuItem, openedMenuTitle, roomsBooked,
-      isDrawerOpened, isLoggedIn, 
-      gotServerMessage, serverMessage, type,
-      appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction, message, isLoginAttempt
+      isDrawerOpened, isLoggedIn,
+      // Snackbar states
+      notificationMessage, notificationType, isNotificationOpen, errorType,
+      // Appbar states
+      appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction
     } = this.state
     
     return (
       <div className="app">
-        <Snackbar 
-          autoHideDuration={4000} 
-          open={isLoginAttempt}
-          onRequestClose={() => this.handleSnackbarClose("isLoginAttempt")}
-          {...{message}}
-        />
-        {serverMessage !== "" &&
-          <Snackbar
-          autoHideDuration={8000} 
-          open={gotServerMessage}
-          onRequestClose={() => this.handleSnackbarClose("gotServerMessage")}
-          message={
-            <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", margin: "0 6px"}}>
-              {serverMessage} 
-              {{
-                error: <Error color={red}/>,
-                warning: <Warning color={yellow}/>,
-                success: <Success color={green}/>
-              }[type]}
-            </div>
-            }
-          />
-        }
+        <Notification handleNotificationClose={this.handleNotificationClose} {...{isLoggedIn, notificationMessage, notificationType, isNotificationOpen, errorType}}/> 
         {isLoggedIn ?
           <div>
             <AppBar
@@ -191,9 +203,8 @@ export default class App extends Component {
               onRightIconButtonClick={() => this.handleAppBarRightButtonClick(openedMenuItem)}
             />
             <Sidebar
-              loginAttempt={this.loginAttempt}
+              handleLogout={this.handleLogout}
               {...{profile, isMenuActive, isDrawerOpened,unreadReservationCount, unreadFeedbackCount}}
-              reset={this.reset}
               toggleSidebar={this.toggleSidebar}
               changeOpenedMenuItem={this.changeOpenedMenuItem}
             />
@@ -220,7 +231,7 @@ export default class App extends Component {
               }[openedMenuItem]}
             </main>      
           </div> :
-          <Login loginAttempt={this.loginAttempt}/>
+          <Login handleNotification={this.handleNotification}/>
         }
       </div>
     )

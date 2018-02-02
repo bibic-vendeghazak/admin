@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-
-
+import moment from 'moment'
 
 import {Card, CardHeader} from 'material-ui/Card'
 import {
@@ -10,7 +9,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table'
-import moment from 'moment'
+
 
 export default class DayBig extends Component {
 
@@ -41,7 +40,7 @@ export default class DayBig extends Component {
     
     return (
       <Card className="day-big">
-        <CardHeader style={{margin: 16, textTransform: "capitalize"}} title={date.format('MMMM DD, dddd')}/>
+        <CardHeader style={{textTransform: "capitalize"}} title={date.format('MMMM DD, dddd')}/>
         <Table style={{tableLayout: "auto"}}>
           <TableBody showRowHover displayRowCheckbox={false}>
           <TableRow>
@@ -57,7 +56,7 @@ export default class DayBig extends Component {
               details: {name, email, tel}
             }]) => (
               <TableRow {...{key}}>
-                <TableRowColumn colSpan={1} style={{textAlign: "center"}} className={`room-day-big room-${roomId}`}>{roomId}</TableRowColumn>
+                <TableRowColumn colSpan={1} style={{textAlign: "center", color: "white"}} className={`room-day-big room-${roomId}`}>{roomId}</TableRowColumn>
                 <TableRowColumn colSpan={4} style={{textAlign: "center"}}>{name}</TableRowColumn>
                 <TableRowColumn colSpan={3} style={{textAlign: "center"}}><a href={`mailto:${email}`}>{email}</a></TableRowColumn>
                 <TableRowColumn colSpan={2} style={{textAlign: "center"}}><a href={`tel:${tel}`}>{tel}</a></TableRowColumn>

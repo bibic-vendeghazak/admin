@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import Days from './Days'
-import MonthFooter from './MonthFooter'
+import moment from 'moment'
+
 import FloatingActionButton from 'material-ui/FloatingActionButton'
+
 import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
-import moment from 'moment'
+
+import Days from './Days'
+import MonthFooter from './MonthFooter'
+
 
 export default class Month extends Component {
   constructor(props){

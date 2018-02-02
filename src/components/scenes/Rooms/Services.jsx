@@ -2,13 +2,11 @@ import React, {Component} from 'react'
 
 import firebase from 'firebase'
 
-import {colors} from '../../utils'
 
 import Card from 'material-ui/Card'
 import Toggle from 'material-ui/Toggle'
 import List, {ListItem} from 'material-ui/List'
 
-const {orange, lightOrange} = colors
 
 class Service extends Component {
   
@@ -61,11 +59,6 @@ class Service extends Component {
         style={{width: "auto"}}
         label={isAvailable ? "Van": "Nincs"}
         toggled={isAvailable}
-        thumbStyle={{backgroundColor: "#eee"}}
-        trackStyle={{backgroundColor: "#ddd"}}
-        thumbSwitchedStyle={{backgroundColor: orange}}
-        trackSwitchedStyle={{backgroundColor: lightOrange}}
-        
       />
     }
     >

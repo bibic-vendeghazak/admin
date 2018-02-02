@@ -22,8 +22,7 @@ exports.isOverlapError = functions.database
                     return Promise.all([
                                 admin.database().ref("serverMessage").set({
                                     type: "error",
-                                    message: `Szoba ${oldRoom} foglalt ebben az időintervallumban!`,
-                                    newId, oldId
+                                    message: "A szoba foglalt ebben az intervallumban"
                                 }),
                                 reservationsRef.child(`${newId}/metadata/handled`).set(false),
                                 reservationsRef.child(`${newId}/lastHandledBy`).set(lastHandledBy)
@@ -50,8 +49,7 @@ exports.isOverlapWarning = functions.database
                     return admin.database()
                             .ref("serverMessage").set({
                                 type: "warning",
-                                message: `Szoba ${oldRoom} foglalt ebben az időintervallumban!`,
-                                newId, oldId
+                                message: "Szoba foglalt ebben az intervallumban!"
                             })
                 }
                 return null

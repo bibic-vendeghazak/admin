@@ -79,15 +79,15 @@ export default class BigRoom extends Component {
     const {services, id: roomId} = this.props
     return(
       <div className="big-room">
-        <Subheader style={{marginLeft: "1.5em"}}>Szoba {roomId} állapota</Subheader>
+        <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>
         <Availability {...{roomId}}/>
-        <Subheader style={{marginLeft: "1.5em"}}>Szoba {roomId} leírása</Subheader>
+        <Subheader style={{textAlign: "center"}}>Szoba leírása</Subheader>
         <Description {...{roomId}}/>
-        <Subheader style={{marginLeft: "1.5em"}}>Szolgáltatások (Szoba {roomId})</Subheader>
+        <Subheader style={{textAlign: "center"}}>Szolgáltatások</Subheader>
         <Services {...{services, roomId}}/>
-        <Subheader style={{marginLeft: "1.5em"}}>Lakók száma (Szoba {roomId})</Subheader>
+        <Subheader style={{textAlign: "center"}}>Lakók száma</Subheader>
         <Population {...{roomId}}/>
-        <Subheader style={{marginLeft: "1.5em"}}>Ártáblázat (Szoba {roomId})</Subheader>
+        <Subheader style={{textAlign: "center"}}>Ártáblázat</Subheader>
         <Prices {...{roomId}}/>
       </div>
     )

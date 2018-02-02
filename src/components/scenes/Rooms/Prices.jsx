@@ -15,8 +15,7 @@ import Edit from 'material-ui/svg-icons/image/edit'
 import Close from 'material-ui/svg-icons/navigation/close'
 import Dialog from "material-ui/Dialog"
 
-import {colors} from '../../utils'
-
+import {colors} from '../../../utils'
 const {red, green} = colors
 
 const priceTypeName = {
@@ -25,6 +24,7 @@ const priceTypeName = {
   fullBoard: "Teljes ellátás",
   halfBoard: "Félpanzió"
 }
+
 
 export default class Prices extends Component {
   state = {

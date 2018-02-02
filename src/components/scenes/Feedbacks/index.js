@@ -1,15 +1,17 @@
 import React, {Component} from 'react'
-import Feedback from './Feedback'
+
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List} from 'material-ui/List'
 
-import {TabLabel} from '../shared'
+import Feedback from './Feedback'
+
+import {TabLabel, PlaceholderText} from '../../shared'
 
 const FeedbackList = ({styleId, feedbacks}) => {
   return(
       feedbacks.length !== 0 ?
         <List>{feedbacks}</List> : 
-        <p style={{textAlign: "center", margin: "25%"}}>Nincs {styleId==="read" ? "olvasott" : "olvasatlan"} visszajelzés</p>
+        <PlaceholderText>Nincs {styleId==="read" ? "olvasott" : "olvasatlan"} visszajelzés</PlaceholderText>
   )
 }
 

@@ -1,6 +1,10 @@
 import React from 'react'
-import Reservation from './Reservation'
+
 import {List} from 'material-ui/List'
+
+import Reservation from './Reservation'
+
+import {PlaceholderText} from '../../shared'
 
 
 const FilteredReservations = ({reservations, query, rooms, from, to, handled}) => {
@@ -54,7 +58,7 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
   let filteredReservations = []
   for (let key in reservations) {
     const reservation = reservations[key]
-    const reservationComponent = <Reservation key={key} id={key} reservation={reservation}/>
+    const reservationComponent = <Reservation id={key} {...{key, reservation}}/>
     filteredReservations.push(reservationComponent)
   }
 
@@ -77,7 +81,7 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
        <List>
          {unread}
          {read}
-       </List> : <p style={{textAlign: "center", margin: "25%"}}>Nincs egyezés</p>
+       </List> : <PlaceholderText>Nincs egyezés</PlaceholderText>
      }
    </div>
   )

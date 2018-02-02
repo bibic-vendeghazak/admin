@@ -1,5 +1,7 @@
 import React from 'react'
+
 import RoomLegends from './RoomLegends'
+
 
 const MonthFooter = ({currentDate}) => (
   <div className="calendar-footer">

@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from 'firebase'
+
 import RaisedButton from 'material-ui/RaisedButton'
 
 const initialState = {
   email: "",
   password: ""
 }
+
 
 export default class Login extends Component {
   state = initialState
@@ -15,20 +16,17 @@ export default class Login extends Component {
     if (email !== "" && password !== "") {
       firebase.auth().signInWithEmailAndPassword(email, password)
       .then(() => {
-        this.props.loginAttempt("Sikeres bejelentkezés.")
+        this.handleNotification("Sikeres bejelentkezés.", "success")
         this.setState(initialState)
       })
-      .catch(({message}) => this.props.loginAttempt(message))
+      .catch(({message, code}) => this.props.handleNotification(message, "error", code))
     }
   }
 
-  handleEnterPress(e) {
-    e.key === 'Enter' && this.handleLogin()
-  }
+  handleEnterPress = ({key}) => key === 'Enter' && this.handleLogin()
 
-  handleInput(e, type) {
-    this.setState({[type]: e.target.value})
-  }
+  handleEmailInput = e => this.setState({email: e.target.value})
+  handlePasswordInput = e => this.setState({password: e.target.value})
 
   render() {
     return (
@@ -41,15 +39,15 @@ export default class Login extends Component {
             <div id="login-form">
               <input
                 id="email"
-                onKeyPress={e => this.handleEnterPress(e)}
-                onChange={e => this.handleInput(e,"email")}
+                onKeyPress={this.handleEnterPress}
+                onChange={this.handleEmailInput}
                 type="email"
                 placeholder="E-mail cím"
               />
               <input
                 id="password"
-                onKeyPress={e => this.handleEnterPress(e)}
-                onChange={e => this.handleInput(e,"password")}
+                onKeyPress={this.handleEnterPress}
+                onChange={this.handlePasswordInput}
                 type="password"
                 placeholder="Jelszó"
               />

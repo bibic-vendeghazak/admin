@@ -1,32 +1,3 @@
-export const initialAppState = {
-    isDrawerOpened: true,
-    isLoggedIn: false,
-    rooms: {},
-    calendar: {},
-    stats: {},
-    feedbacks: {},
-    reservations: {},
-    roomServices: {},
-    unreadReservationCount: 0,
-    unreadFeedbackCount: 0,
-    openedMenuItem: "reservations",
-    appBarRightIcon: [null, null],
-    openedMenuTitle: {
-        welcome: "Kezdőlap",
-        rooms: "Szobák",
-        reservations: "Foglalások",
-        calendar: "Dátumok",
-        stats: "Statisztikák",
-        feedbacks: "Visszajelzések",
-        settings: "Beállítások"
-    },
-    gotServerMessage: false,
-    roomsBooked: {},
-    serverMessage: "",
-    isLoginAttempt: false,
-    message: ""
-}
-
 export const colors = {
     orange: "#b35d41",
     lightOrange: "#cc8c78",
@@ -38,7 +9,7 @@ export const colors = {
 }
 
 
-const {darkBrown, lightBrown, orange} = colors
+const {darkBrown, lightBrown, orange, lightOrange} = colors
 export const muiTheme = {
     palette: {
         primary1Color: darkBrown,
@@ -52,9 +23,31 @@ export const muiTheme = {
         headerColor: orange,
         selectColor: lightBrown
     },
+    timePicker: {
+        headerColor: orange,
+        selectColor: lightBrown
+    },
     drawer: {
         color: lightBrown
+    },
+    toggle: {
+        thumbOffColor: "#eee",
+        thumbOnColor: orange,
+        trackOffColor: "#ddd",
+        trackOnColor: lightOrange
     }
 }
   
   
+export const validateEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+export const validateName = name => name.length < 140 
+export const validateTel = tel => typeof tel === Number
+
+export const parseValue = (value, type) => {
+    switch (type) {
+      case "number":
+        return parseInt(value, 10)
+      default:
+        return value
+    }
+  }
