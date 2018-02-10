@@ -1,14 +1,19 @@
 .rooms
-  display: flex
-  flex-wrap: wrap
-  justify-content: space-evenly
+  display: grid
+  justify-content: center
+  margin: 2vmin
+  @media (min-width: 640px)
+    grid-template-columns: repeat(2, 1fr)
+  @media (min-width: 960px)
+    grid-template-columns: repeat(3, 1fr)
+  
 
 .room-title
   position: relative
   z-index: 1
 
 .room
-  margin: 2.5vmin
+  margin: 2vmin
   @for $i from 1 through length($rooms)
     &:nth-of-type(#{$i})
       .room-bg::after
@@ -19,10 +24,9 @@
         width: 100%
         height: 100%
         background-color: transparentize(nth($rooms, $i), .5)
-  @media (min-width: 768px)
-    max-width: 30%
-    &:nth-of-type(2), &:nth-of-type(5)
-      margin: 2.5vmin 0
+  //   max-width: 30%
+    // &:nth-of-type(2), &:nth-of-type(5)
+    //   margin: 2.5vmin 0
 
 .room-bg
   overflow: hidden
