@@ -1,9 +1,7 @@
 language: node_js
 node_js:
-  - "node"
-  - "lts/*"
-deploy:
-  provider: firebase
-  token:
-    secure: PVqcD1znBUv7cs4AnT24Ht1VfEH9aF9+yAqkw7MPevFj1qXj9tsWdvRrGCk+6Lx896U1+YnmD+T9HXWJNhwoA5VbF2dxr1hWHNekRYn9VQ68BwOKMCDKM3b75p5Ds2VjGDLuNsq/wL3YxYoEIL2m6IXx9hZ1UlTLvX0DzzylF+VfANlxwPKmrAdQtaPRdQ1Q9mr/BJdtxUCOgkhi16sVU1DcAg3udR/mt9OjNrAakzNS2IXA+ePoWPBHndcCK7ZD/DluCAGbvXJdXS2kEOm2LfgJcIMBF+zaxxeg3Yn42GQefhSDxXWXU9J2v5WAzp3CxuUBLJ7+ceWUz3aMu+MwVpEgCmzkyGQcXuKgUlbHe4/iaR6pSiyDCAhdn6EEHvoGxo5rqYYw2MJpRX6lbqWsnKt5e0bqm1eHt3VSWvxOuvru6OO69G/l/0E5lk7ECFzi0faUBMJFNt0po0/zvBM1xoml7oAn+49C/jE1AJHi7LlowDL3MPHj4HVoRPowblxGQyIvGJYMZuxmqAKfPLUvlgnmsp27KitRnAWDZj18OSP3UKuQxLilEw0csp+Dzw3x5JpvvqPA48eEn8JnqOgkrzDig3WmUYduoJXept/NkxNGfVsJjPmttMLk98EemYkmWYSvjSyHlZUn1fL6ACbimb7OusNEwm5CU9Tg1Sw899E=
-    message: ":rocket: Deploy"
+- node
+script:
+  - yarn build
+after_success:
+  - firebase deploy --token "$FIREBASE_TOKEN"
