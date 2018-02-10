@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import {colors} from '../../../utils'
 
 
-const Room = ({available, isBooked, handleRoomClick, roomId}) => (
+const Room = ({available, isBooked, handleRoomClick, roomId, name}) => (
   <li className="room">
    <Card>
     <CardMedia
@@ -24,7 +24,7 @@ const Room = ({available, isBooked, handleRoomClick, roomId}) => (
             fontSize: ".8em"
           }}
           className="room-title"
-          title={`Szoba ${roomId}`} 
+          title={name} 
           subtitle={
             <span style={{textShadow: "0 0 5px rgba(0,0,0,.5)", textTransform: "uppercase", color: (isBooked || !available) && colors.red}}>
               {available ? 
@@ -36,8 +36,8 @@ const Room = ({available, isBooked, handleRoomClick, roomId}) => (
       }
     >
       <img
-        src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/images/rooms/${roomId}_0.jpg`}
-        alt={`Szoba ${roomId}`}
+        src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/images/rooms/${roomId === 7 ? 1 : roomId}_0.jpg`}
+        alt={name}
       />
     </CardMedia>
     <CardActions>
