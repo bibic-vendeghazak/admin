@@ -41,7 +41,13 @@ export default class DayBig extends Component {
     return (
       <Card className="day-big">
         <CardHeader style={{textTransform: "capitalize"}} title={date.format('MMMM DD, dddd')}/>
-        <Table style={{tableLayout: "auto"}}>
+        <Table 
+          bodyStyle={{
+            overflowX:'visible',
+            minWidth: 880
+          }} 
+          style={{tableLayout: "auto"
+          }}>
           <TableBody showRowHover displayRowCheckbox={false}>
           <TableRow>
             <TableHeaderColumn colSpan={1} style={{textAlign: "center"}}>Szoba</TableHeaderColumn>

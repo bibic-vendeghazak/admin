@@ -70,14 +70,14 @@ export default class Rooms extends Component {
           {...{...bigRoom}}
         /> :
         <ul className="rooms">
-          {rooms.map(({id, available}, index) => (
+          {rooms.map(({id, available, name}, index) => (
             <Room
               key={id}
-              available={available}
               roomId={id}
               isBooked={roomsBooked[index]} 
               handleRoomClick={this.handleRoomClick}
-              />
+              {...{available, name}}
+            />
             )
           )}
         </ul>

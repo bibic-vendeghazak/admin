@@ -136,7 +136,13 @@ export default class Reservation extends Component {
               defaultDate={new Date(to)}
             />
           </ModalDialog>
-          <Table selectable={false}>
+          <Table
+            bodyStyle={{
+              overflowX:'visible',
+              minWidth: 640
+            }} 
+            selectable={false}
+          >
             <TableBody displayRowCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn>Szobaszám</TableHeaderColumn>
