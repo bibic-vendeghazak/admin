@@ -50,7 +50,7 @@ export default class DayBig extends Component {
           }}>
           <TableBody showRowHover displayRowCheckbox={false}>
           <TableRow>
-            <TableHeaderColumn colSpan={1} style={{textAlign: "center"}}>Szoba</TableHeaderColumn>
+            <TableHeaderColumn style={{textAlign: "center"}}>Szoba</TableHeaderColumn>
             <TableHeaderColumn colSpan={4} style={{textAlign: "center"}}>Foglaló neve</TableHeaderColumn>
             <TableHeaderColumn colSpan={3} style={{textAlign: "center"}}>E-mail</TableHeaderColumn>
             <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Telefon</TableHeaderColumn>
@@ -62,13 +62,12 @@ export default class DayBig extends Component {
               details: {name, email, tel}
             }]) => (
               <TableRow {...{key}}>
-                <TableRowColumn colSpan={1} style={{textAlign: "center", color: "white"}} className={`room-day-big room-${roomId}`}>{roomId}</TableRowColumn>
+                <TableRowColumn style={{textAlign: "center", color: "white"}} className={`room-day-big room-${roomId}`}>{roomId}</TableRowColumn>
                 <TableRowColumn colSpan={4} style={{textAlign: "center"}}>{name}</TableRowColumn>
                 <TableRowColumn colSpan={3} style={{textAlign: "center"}}><a href={`mailto:${email}`}>{email}</a></TableRowColumn>
                 <TableRowColumn colSpan={2} style={{textAlign: "center"}}><a href={`tel:${tel}`}>{tel}</a></TableRowColumn>
                 <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(from).format('MMMM D.')}</TableRowColumn>
                 <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(to).format('MMMM D.')}</TableRowColumn>
-
               </TableRow>
               )
             )}
