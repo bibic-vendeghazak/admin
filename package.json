@@ -11,8 +11,8 @@
     "npm-run-all": "^4.1.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.0",
-    "typeface-roboto": "0.0.50"
+    "react-scripts": "1.1.1",
+    "typeface-roboto": "0.0.54"
   },
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src/styles/sass src/styles/sass/main.sass src/styles/main.css",
