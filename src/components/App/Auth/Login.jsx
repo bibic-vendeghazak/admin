@@ -33,7 +33,7 @@ export default class Login extends Component {
         <header>
           <div id="login-wrapper">
             <div id="login-title">
-              <a href="https://balazsorban44.github.io/bibic-vendeghazak" target="_blank" rel="noopener noreferrer"><img src={"https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/images/other/logo-brown.png"} alt="Bíbic vendégházak logo"/></a>
+              <a href="https://balazsorban44.github.io/bibic-vendeghazak" target="_blank" rel="noopener noreferrer"><img src={"https://bibic-vendeghazak.github.io/web/assets/images/other/logo-brown.png"} alt="Bíbic vendégházak logo"/></a>
               <h2>Admin kezelőfelület</h2>
             </div>
             <div id="login-form">

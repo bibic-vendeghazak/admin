@@ -18,9 +18,12 @@ import TextField from 'material-ui/TextField/TextField'
 
 import Edit from 'material-ui/svg-icons/image/edit'
 import Done from 'material-ui/svg-icons/action/done'
+import Delete from 'material-ui/svg-icons/action/delete'
+import Reject from 'material-ui/svg-icons/content/redo'
 import Tel from 'material-ui/svg-icons/communication/call'
 import Email from 'material-ui/svg-icons/communication/email'
 import Message from 'material-ui/svg-icons/communication/message'
+
 
 import {Post, ModalDialog} from '../../shared'
 
@@ -173,13 +176,17 @@ export default class Reservation extends Component {
                 <RaisedButton
                   style={{marginRight: 12}}
                   primary
-                  label="Elfogadás"
+                  label="Elfogad"
+                  icon={<Done/>}
+                  labelPosition="before"
                   onClick={() => this.handleReservation(true)}
                 />
               }
               <RaisedButton
                 secondary
                 label={handled ? "Visszavon" : "Törlés"}
+                icon={handled ? <Reject/> : <Delete/>}
+                labelPosition="before"
                 onClick={() => handled ? this.handleReservation(false) : this.openDeleteReservation()}
               />
             </div>

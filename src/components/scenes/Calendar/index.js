@@ -1,17 +1,32 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-
+import firebase from 'firebase'
 import Month from './Month'
 import DayBig from './DayBig'
 
+const reservationsRef = firebase.database().ref("/reservations")
 
 export default class Calendar extends Component {
 
   state = {
+    reservations: null,
     isDayBig: false,
     date: null,
-    reservations: {},
+    bigDayreservations: null,
     currentDate: moment()
+  }
+
+
+  componentDidMount() {
+    reservationsRef.on("value", snap => {
+      const reservations = snap.val()
+      reservations && Object.keys(reservations).forEach(reservation => {
+        if(!reservations[reservation].metadata.handled){
+          delete reservations[reservation]
+        } 
+      })
+      this.setState({reservations})
+    })
   }
 
   changeDate = direction => {
@@ -21,21 +36,20 @@ export default class Calendar extends Component {
   }
 
   handleDayClick = day => {
-    this.props.changeAppBarRightIcon(["close", "Bezárás"])
     const {date, dayReservations} = day
-    const reservations = Object.assign({}, this.props.reservations)
+    const reservations = Object.assign({}, this.state.reservations)
     Object.keys(reservations).forEach( key => {
       !dayReservations.includes(key) && delete reservations[key]
     })
+    
     this.setState({
       isDayBig: true,
       date,
-      reservations
+      bigDayreservations: reservations
     })
   }
 
   closeBigDay = () => {
-    this.props.changeAppBarRightIcon(["event", "Ugrás erre: Ma"])
     this.setState({isDayBig: false})
   }
 
@@ -49,7 +63,7 @@ export default class Calendar extends Component {
   render() {    
     const reservations = {}
     const {isDayBig, date, currentDate} = this.state
-    Object.entries(this.props.reservations).forEach(reservation => {
+    Object.entries(this.state.reservations || {}).forEach(reservation => {
       const [key,value] = reservation
       const {roomId, from, to} = value.metadata
       reservations[key] = {roomId, from, to}
@@ -61,7 +75,7 @@ export default class Calendar extends Component {
         {isDayBig ?
           <DayBig
             closeBigDay={this.closeBigDay}
-            reservations={this.state.reservations}
+            reservations={this.state.bigDayreservations}
             {...{date}}
           /> :
           <Month 

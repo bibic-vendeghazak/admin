@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
+import {Route, withRouter, Link} from 'react-router-dom'
 import firebase from 'firebase/app'
-import moment from 'moment'
+
 
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
@@ -16,41 +17,21 @@ import Calendar from '../scenes/Calendar'
 import Stats from '../scenes/Stats'
 import Feedbacks from '../scenes/Feedbacks'
 import Notification from '../shared/Notification'
+import * as routes from '../../utils/routes';
 
 const initialAppState = {
   isDrawerOpened: true,
   isLoggedIn: false,
-
+  title:"",
   // Notification state
   isNotificationOpen: false,
   notificationMessage: "",
   notificationType: "",
-  errorType: "",
-
-  rooms: {},
-  calendar: {},
-  stats: {},
-  feedbacks: {},
-  reservations: {},
-  roomServices: {},
-  unreadReservationCount: 0,
-  unreadFeedbackCount: 0,
-  openedMenuItem: "reservations",
-  appBarRightIcon: [null, null],
-  openedMenuTitle: {
-    welcome: "Kezdőlap",
-    rooms: "Szobák",
-    reservations: "Foglalások",
-    calendar: "Dátumok",
-    stats: "Statisztikák",
-    feedbacks: "Visszajelzések",
-    settings: "Beállítások"
-  },
-  roomsBooked: {}
+  errorType: ""
 }
 
 
-export default class App extends Component {
+class App extends Component {
   
   state = initialAppState
 
@@ -79,21 +60,6 @@ export default class App extends Component {
     })
   }
   
-  
-
-
-  handleAppBarRightButtonClick = appBarRightAction => {
-    this.setState({appBarRightAction})
-  }
-  
-  changeAppBarRightIcon = (appBarRightIcon=[null,null]) => {
-    this.setState({appBarRightIcon})
-  }
-
-  changeOpenedMenuItem = (openedMenuItem, appBarRightIcon) => {
-    this.changeAppBarRightIcon(appBarRightIcon)
-    this.setState({openedMenuItem})
-  }
 
   componentDidMount = () => {
     window.innerWidth <=768 && this.setState({isDrawerOpened: false})
@@ -113,42 +79,24 @@ export default class App extends Component {
           message !== "" && this.handleNotification(message, type, "server")
         })
         reservationsRef.on("value", snap => {
-          const reservations = snap.val()
           let unreadReservationCount = 0
-          const handledReservations = {}
-          reservations && Object.keys(reservations).forEach(reservation => {
-            const {metadata: {handled, roomId, from, to}} = reservations[reservation]
-            
-            if(!handled){
+          snap.forEach(reservation => {
+            if (reservation.val().metadata.handled) {
               unreadReservationCount+=1
-            } else {
-              handledReservations[reservation] = reservations[reservation]        
-              if (
-                moment.range(moment(from), moment(to))
-                .overlaps(
-                  moment.range(moment().startOf("day"), moment().endOf("day"))
-              )) {
-                this.setState({roomsBooked: {
-                  ...this.state.roomsBooked,
-                  [roomId-1]: true
-                }})
-              }
             }
           })
-          this.setState({reservations, handledReservations, unreadReservationCount})
+          this.setState({unreadReservationCount})
         })
         feedbacksRef.on("value", snap => {
-          const feedbacks = snap.val()
           let unreadFeedbackCount = 0
-          Object.values(feedbacks).forEach(({handled}) => {
-            if(!handled){
+          snap.forEach(feedback => {
+            if (!feedback.val().handled) {
               unreadFeedbackCount+=1
-            } 
+            }
           })
-          this.setState({
-            feedbacks, unreadFeedbackCount
-          })
+          this.setState({unreadFeedbackCount})
         })
+
         roomsRef.on("value", snap => {
           this.setState({
             rooms: snap.val()
@@ -164,17 +112,68 @@ export default class App extends Component {
     })
   }
 
+  renderTitle = () => {
+    switch("/"+this.props.location.pathname.split("/")[1]) {
+      case routes.ROOMS:
+        return "Szobák"
+      case routes.SPECIAL_OFFER:
+        return "Akciós ajánlatok"
+      case routes.CALENDAR:
+        return "Naptár"
+      case routes.RESERVATIONS:
+        return "Foglalások"
+      case routes.FEEDBACKS:
+        return "Visszajelzések"
+      case routes.FOODS:
+        return "Ételek"
+      case routes.STATS:
+        return "Statisztikák"
+      default:
+        return "Admin kezelőfelület"
+    }
+  }
+
+  renderRightIcon = () => {
+    let iconName, iconText= ""
+    const {pathname} = this.props.location
+    const iconPath = "/"+pathname.split("/")[1]
+    if (iconPath === routes.ROOMS && pathname.includes("szerkeszt")) {
+      iconName = "close"
+      iconText = "Bezárás"
+    } else if(iconPath === routes.CALENDAR) {
+      iconName = "close"
+      iconText = "Bezárás"
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          color: "#fff"
+        }}>
+        <p>{iconText}</p>
+        <Link to={iconPath}>
+          <IconButton>
+            <FontIcon 
+              color="#fff" 
+              className="material-icons">
+              {iconName}
+            </FontIcon>
+          </IconButton>
+        </Link>
+      </div>
+    )
+  }
+
+
   render() {
     const {
       profile, unreadReservationCount, unreadFeedbackCount,
-      isMenuActive, rooms,
-      reservations, handledReservations,feedbacks,
-      openedMenuItem, openedMenuTitle, roomsBooked,
+      isMenuActive,
       isDrawerOpened, isLoggedIn,
       // Snackbar states
       notificationMessage, notificationType, isNotificationOpen, errorType,
-      // Appbar states
-      appBarRightIcon: [appBarRightIconName, appBarRightIconText], appBarRightAction
     } = this.state
     
     return (
@@ -185,50 +184,49 @@ export default class App extends Component {
             <AppBar
               onLeftIconButtonClick={() => this.toggleSidebar()}
               style={{position: "fixed"}}
-              title={openedMenuTitle[openedMenuItem]}
-              iconElementRight={
-                appBarRightIconName &&
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#fff"
-                  }}>
-                  <p>{appBarRightIconText}</p>
-                  <IconButton>
-                    <FontIcon color="#fff" className="material-icons">{appBarRightIconName}</FontIcon>
-                  </IconButton>
-                </div>
-              }
-              onRightIconButtonClick={() => this.handleAppBarRightButtonClick(openedMenuItem)}
+              title={this.renderTitle()}
+              iconElementRight={this.renderRightIcon()}
             />
             <Sidebar
               handleLogout={this.handleLogout}
               {...{profile, isMenuActive, isDrawerOpened,unreadReservationCount, unreadFeedbackCount}}
               toggleSidebar={this.toggleSidebar}
-              changeOpenedMenuItem={this.changeOpenedMenuItem}
             />
             <main style={{
               marginLeft: isDrawerOpened && window.innerWidth >= 768 && 256,
               transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'
             }}>
-              {{
-                welcome: <Welcome {...{profile, appBarRightAction}}/>,
-                rooms: 
-                  <Rooms
-                    changeAppBarRightIcon={this.changeAppBarRightIcon}
-                    {...{roomsBooked, appBarRightAction}}
-                  />,
-                reservations: <Reservations {...{unreadReservationCount, reservations, appBarRightAction}}/>,
-                calendar: 
-                  <Calendar 
-                    changeAppBarRightIcon={this.changeAppBarRightIcon}
-                    {...{appBarRightAction}}
-                    reservations={handledReservations}
-                  />,
-                stats: <Stats {...{rooms, feedbacks}} reservations={handledReservations}/>,
-                feedbacks: <Feedbacks {...{feedbacks}}/>  
-              }[openedMenuItem]}
+                <Route
+                  path={routes.WELCOME}
+                  component={({match}) =>
+                    <Welcome {...{match, profile}}/>
+                  }
+                />
+                <Route
+                  path={routes.CALENDAR}
+                  component={Calendar}
+                />
+                <Route
+                  path={routes.ROOMS}
+                  component={Rooms}
+                />
+                <Route
+                  path={routes.RESERVATIONS+"/:readState"}
+                  component={Reservations}
+                />
+                <Route
+                  path={routes.FEEDBACKS+"/:readState"}
+                  component={Feedbacks}
+                />
+                {/* <Route
+                  path={routes.STATS}
+                  component={({match}) =>
+                    <Stats
+                      {...{match, rooms, feedbacks}}
+                      reservations={handledReservations}
+                    />
+                  }
+                /> */}
             </main>      
           </div> :
           <Login handleNotification={this.handleNotification}/>
@@ -237,3 +235,6 @@ export default class App extends Component {
     )
   }
 }
+
+
+export default withRouter(App)

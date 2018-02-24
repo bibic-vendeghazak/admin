@@ -3,6 +3,7 @@ import firebase from "firebase"
 
 import Services from './Services'
 import Population from './Population'
+import Pictures from './Pictures'
 import Prices from './Prices'
 import Availability from './Availability'
 import Description from './Description'
@@ -10,12 +11,12 @@ import Description from './Description'
 import Subheader from 'material-ui/Subheader'
 
 export default class BigRoom extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      maxAdults: props.maxAdults,
-      maxChildren: props.maxChildren
-    }
+  
+
+  componentDidMount() {
+    firebase.database().ref("rooms"+this.props.match.params.roomId).on("value", snap => {
+      console.log(snap.val())
+    })
   }
 
   handleRoomEdit(event) {
@@ -72,19 +73,20 @@ export default class BigRoom extends Component {
 
   handleChange(e) {
     this.props.handleRoomEdit(e)
-    console.log("yo");
   }
 
   render(){
-    const {services, id: roomId} = this.props
+    const {roomId} = this.props.match.params
     return(
       <div className="big-room">
         <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>
         <Availability {...{roomId}}/>
+        <Subheader style={{textAlign: "center"}}>Szoba képek</Subheader>
+        <Pictures {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szoba leírása</Subheader>
         <Description {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szolgáltatások</Subheader>
-        <Services {...{services, roomId}}/>
+        <Services {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Lakók száma</Subheader>
         <Population {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Ártáblázat</Subheader>

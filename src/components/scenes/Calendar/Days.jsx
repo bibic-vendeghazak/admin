@@ -1,11 +1,11 @@
 import React from 'react'
+import {Link, withRouter} from 'react-router-dom'
 import moment from 'moment'
 
 
-const Days = ({isPlaceholder = false, from = 0, to, currentDate, reservations, handleDayClick}) => {
+const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reservations, handleDayClick}) => {
   const days = []
   for (let day = from+1; day <= to; day++) {
-    const isToday = currentDate && moment().isSame(currentDate.date(day),'day')
     let dayReservations = {}
     Object.keys(reservations).forEach(key => {
       const value = reservations[key]
@@ -30,9 +30,10 @@ const Days = ({isPlaceholder = false, from = 0, to, currentDate, reservations, h
       <Day
         date={currentDate.clone().date(day)}
         {...{
+          location,
           key: day, isPlaceholder,
           reservations: dayReservations,
-          isToday, handleDayClick, 
+          handleDayClick
         }}
       />
     )
@@ -40,9 +41,8 @@ const Days = ({isPlaceholder = false, from = 0, to, currentDate, reservations, h
   return days
 }
 
-const Day = ({reservations, date, isPlaceholder, isToday, handleDayClick}) => {
+const Day = ({location: {pathname}, reservations, date, isPlaceholder, handleDayClick}) => {
   let rooms = []  
-  
   Object.entries(reservations).forEach(reservation => {
     const [key,value] = reservation
     const {roomId, from, to} = value
@@ -56,18 +56,27 @@ const Day = ({reservations, date, isPlaceholder, isToday, handleDayClick}) => {
       date, dayReservations: Object.keys(reservations)
     })
   }
-
+  
+  const isToday = moment().isSame(date,'day')
+  const year = date.format("YYYY")
+  const month = date.format("MM")
+  const day = date.format("DD")
   return (
     <li
-      className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
-      onClick={handleClick}
-    >
-      <p>{date.format('D')}</p>
-      <ul className="reserved-list">
-        {rooms}
-      </ul>
+        onClick={handleClick}
+        className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
+        >
+      {/* <Link 
+        className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
+        to={pathname+"/"+year+"/"+month+"/"+day} 
+        style={{textDecoration: "none"}}> */}
+          <p>{date.format('D')}</p>
+          <ul className="reserved-list">
+            {rooms}
+          </ul>
+      {/* </Link> */}
     </li>
   )
 }
 
-export default Days
+export default withRouter(Days)

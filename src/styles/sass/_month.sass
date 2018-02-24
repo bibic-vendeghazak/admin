@@ -12,10 +12,6 @@
       color: $accent-color
       margin: .1em
       font-size: 1em
-  >ul
-    >li
-      border-right: 1px solid lighten($dark, 20)
-      border-bottom: 1px solid lighten($dark, 20)
 
 .month-btn
   position: absolute
@@ -46,22 +42,40 @@
   grid-template-rows: repeat(6, 1fr)
   grid-template-columns: repeat(7, 1fr)
   height: 0
-  >li
-    background-color: darken($light, 15)
-    p
-      line-height: 1
-      padding: 2px 0 0 2px
-      color: $accent-color
+
 .day
+  border-right: 1px solid lighten($dark, 20)
+  border-bottom: 1px solid lighten($dark, 20)
   transition: background-color .5s
   cursor: pointer
+  background-color: darken($light, 15)
+  p
+    line-height: 1
+    padding: 2px 0 0 2px
+    color: $accent-color
+
 .day:hover, .today
     background-color: $light !important
 .today
+  padding-top: 18px
+  position: relative
   p
+    display: flex
+    justify-content: center
+    align-items: center
+    border-radius: 50%
+    position: absolute
+    top: 0
+    width: 16px
+    height: 16px
+    margin: 2px
+    padding: 2px !important
+    text-align: center
+    font-size: .7em
+    color: $light !important
     font-weight: bold
-    color: $room-3 !important
-    text-decoration: underline
+    background-color: $room-3 !important
+
 .day-placeholder
   opacity: .5
 
@@ -97,6 +111,8 @@
       height: auto
     .day, .day-placeholder
       height: 64px
+    .today
+      height: 46px
 @media(min-width: 768px)
 
   .step-month

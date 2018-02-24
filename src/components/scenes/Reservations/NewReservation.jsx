@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
-import ContentAdd from 'material-ui/svg-icons/content/add'
+import Booking from 'material-ui/svg-icons/action/bookmark-border'
 import TextField from 'material-ui/TextField'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
@@ -320,12 +320,14 @@ class NewReservationDialog extends Component {
 }
 
 export const NewReservationFAB = ({openNewReservation}) => (
-  <div className="new-reservation-btn">
+  <div 
+  className="new-reservation-btn">
   <FloatingActionButton 
+    title="Foglalás felvétele"
     onClick={openNewReservation}
     secondary
     >
-    <ContentAdd/>
+    <Booking/>
   </FloatingActionButton>
   </div>
 )

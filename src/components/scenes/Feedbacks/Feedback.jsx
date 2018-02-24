@@ -5,6 +5,8 @@ import moment from 'moment'
 import {ListItem} from 'material-ui/List'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
+import Read from 'material-ui/svg-icons/content/drafts'
+import Unread from 'material-ui/svg-icons/content/mail'
 
 
 export default class Feedback extends Component {
@@ -50,8 +52,19 @@ export default class Feedback extends Component {
           <CardActions>
             <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end"}}>
               {handled ?
-                <RaisedButton label="Megjelölés olvasatlanként" onClick={() => this.markRead(false)}/> :
-                <RaisedButton secondary label="Megjelölés olvasottként" onClick={() => this.markRead(true)}/>}
+                <RaisedButton
+                  label="Olvasatlan"
+                  icon={<Unread/>}
+                  labelPosition="before"
+                  onClick={() => this.markRead(false)}
+                /> :
+                <RaisedButton secondary
+                  label="Olvasott"
+                  icon={<Read/>}
+                  labelPosition="before"
+                  onClick={() => this.markRead(true)}
+                />
+              }
                 <p style={{marginTop: "1em", color: "#ccc", fontSize: ".8em", fontStyle: "italic"}}>Visszajelzés beküldve: {moment(timestamp).format("YYYY. MMMM DD. HH:mm")}</p>
             </div>
           </CardActions>

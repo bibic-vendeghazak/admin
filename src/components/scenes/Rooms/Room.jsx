@@ -1,12 +1,13 @@
 import React from 'react'
-
+import {Link} from 'react-router-dom'
 import {Card, CardActions, CardMedia, CardTitle} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import {colors} from '../../../utils'
+import {ROOMS, EDIT} from '../../../utils/routes'
 
 
-const Room = ({available, isBooked, handleRoomClick, roomId, name}) => (
+const Room = ({available, isBooked, roomId, name}) => (
   <li className="room">
    <Card>
     <CardMedia
@@ -36,12 +37,14 @@ const Room = ({available, isBooked, handleRoomClick, roomId, name}) => (
       }
     >
       <img
-        src={`https://bibic-vendeghazak.github.io/bibic-vendeghazak-web/assets/images/rooms/${roomId === 7 ? 1 : roomId}_0.jpg`}
+        src={`https://bibic-vendeghazak.github.io/web/assets/images/rooms/${roomId === 7 ? 1 : roomId}_0.jpg`}
         alt={name}
       />
     </CardMedia>
     <CardActions>
-      <RaisedButton secondary onClick={() => handleRoomClick(roomId)} label="Szerkesztés" />
+      <Link to={`${ROOMS}/${roomId}${EDIT}`}>
+        <RaisedButton secondary label="Szerkesztés" />
+      </Link>
     </CardActions>
   </Card>
   </li>
