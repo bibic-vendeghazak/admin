@@ -7,7 +7,20 @@
   @media (min-width: 960px)
     grid-template-columns: repeat(3, 1fr)
   
-
+.inputfile
+	width: 0.1px
+	height: 0.1px
+	opacity: 0
+	overflow: hidden
+	position: absolute
+	z-index: -1
+.file-label
+  display: flex
+  justify-content: center
+  cursor: pointer
+  flex-grow: 1
+  align-items: center
+  
 .room-title
   position: relative
   z-index: 1
@@ -41,7 +54,7 @@
   margin: 2.5vw auto
   max-width: 640px
   @media (max-width: 640px)
-    margin: 0 auto
+    margin: 0 2.5vw
 
 .room-edit-block
   flex-grow: 1
@@ -55,6 +68,7 @@
   cursor: pointer
   margin: .25em
   max-width: calc(33% - .5em)
+  background-color: black
   &:hover
     .hover
       opacity: 1
