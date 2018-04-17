@@ -27,7 +27,8 @@ const initialAppState = {
   isNotificationOpen: false,
   notificationMessage: "",
   notificationType: "",
-  errorType: ""
+  errorType: "",
+  unHandledReservationCount: 0
 }
 
 
@@ -64,7 +65,7 @@ class App extends Component {
   componentDidMount = () => {
     window.innerWidth <=768 && this.setState({isDrawerOpened: false})
     const db = firebase.database()
-    const reservationsRef = db.ref("reservations")
+    const reservations = db.ref("reservations")
     const feedbacksRef = db.ref("feedbacks")
     const roomsRef = db.ref("rooms")
     const roomServicesRef = db.ref("roomServices")
@@ -78,14 +79,14 @@ class App extends Component {
           const {message, type} = snap.val()
           message !== "" && this.handleNotification(message, type, "server")
         })
-        reservationsRef.on("value", snap => {
-          let unreadReservationCount = 0
+        reservations.on("value", snap => {
+          let unHandledReservationCount = 0
           snap.forEach(reservation => {
-            if (reservation.val().metadata.handled) {
-              unreadReservationCount+=1
-            }
-          })
-          this.setState({unreadReservationCount})
+              if (!reservation.val().handled) {
+                unHandledReservationCount++
+              }
+            })
+          this.setState({unHandledReservationCount})
         })
         feedbacksRef.on("value", snap => {
           let unreadFeedbackCount = 0
@@ -169,13 +170,12 @@ class App extends Component {
 
   render() {
     const {
-      profile, unreadReservationCount, unreadFeedbackCount,
+      profile, unHandledReservationCount, unreadFeedbackCount,
       isMenuActive,
       isDrawerOpened, isLoggedIn,
       // Snackbar states
       notificationMessage, notificationType, isNotificationOpen, errorType,
     } = this.state
-    
     return (
       <div className="app">
         <Notification handleNotificationClose={this.handleNotificationClose} {...{isLoggedIn, notificationMessage, notificationType, isNotificationOpen, errorType}}/> 
@@ -189,7 +189,7 @@ class App extends Component {
             />
             <Sidebar
               handleLogout={this.handleLogout}
-              {...{profile, isMenuActive, isDrawerOpened,unreadReservationCount, unreadFeedbackCount}}
+              {...{profile, isMenuActive, isDrawerOpened,unHandledReservationCount, unreadFeedbackCount}}
               toggleSidebar={this.toggleSidebar}
             />
             <main style={{

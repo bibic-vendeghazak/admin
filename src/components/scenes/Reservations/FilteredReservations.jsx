@@ -7,8 +7,7 @@ import Reservation from './Reservation'
 import {PlaceholderText} from '../../shared'
 
 
-const FilteredReservations = ({reservations, query, rooms, from, to, handled}) => {
-
+const FilteredReservations = ({reservations, query, rooms, from, to}) => {
   const filterByRoom = (listToFilter, rooms) => {
     const filteredList = new Set(listToFilter)
     listToFilter.forEach(filteredElement => {
@@ -22,7 +21,7 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
   const filterByDate = (listToFilter, fromDate, toDate) => {
     const filteredList = []
     listToFilter.forEach(filteredElement => {
-      const reservation = filteredElement.props.reservation.metadata
+      const {reservation} = filteredElement.props
       const from = new Date(reservation.from)
       const to = new Date(reservation.to)
       if (from >= fromDate && to <= toDate) {
@@ -30,15 +29,6 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
       }
     })
     return filteredList
-  }
-
-  const filterByHandled = (listToFilter, handled) => {
-    if (handled) {
-      listToFilter = listToFilter.filter(filteredElement => filteredElement.props.reservation.metadata.handled)
-    } else {
-      listToFilter = listToFilter.filter(filteredElement => !filteredElement.props.reservation.metadata.handled)
-    }
-    return listToFilter
   }
 
   const filterByWords = (listToFilter, query) => {
@@ -63,27 +53,17 @@ const FilteredReservations = ({reservations, query, rooms, from, to, handled}) =
   }
 
   filteredReservations = filterByRoom(filteredReservations, rooms)
-  filteredReservations = filterByHandled(filteredReservations, handled)
   filteredReservations = filterByDate(filteredReservations, from, to)
   filteredReservations = filterByWords(filteredReservations, query)
 
-  // Unhandled reservations first
-  let read = []
-  let unread = []
-  filteredReservations.forEach(filteredReservation => {
-    filteredReservation.props.reservation.metadata.handled ?
-    read.push(filteredReservation) :
-    unread.push(filteredReservation)
-  })
   return (
-   <div>
-     {filteredReservations.length !== 0 ?
-       <List>
-         {unread}
-         {read}
-       </List> : <PlaceholderText>Nincs egyezés</PlaceholderText>
-     }
-   </div>
+    <div>
+      {filteredReservations.length !== 0 ?
+        <List>
+          {filteredReservations}
+        </List> : <PlaceholderText>Nincs egyezés</PlaceholderText>
+      }
+    </div>
   )
 }
 

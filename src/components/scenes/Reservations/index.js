@@ -1,20 +1,21 @@
 import React, {Component} from 'react'
 import moment from 'moment'
 import {Tabs, Tab} from 'material-ui/Tabs'
-
+import {Route} from 'react-router-dom'
 // import SearchBar from './SearchBar'
 import NewReservation from './NewReservation'
 import FilteredReservations from './FilteredReservations'
-
+import {EditReservation} from './Reservation'
 import {TabLabel} from '../../shared'
 import { firebase } from '@firebase/app';
 
 
 export default class Reservations extends Component {
   state = {
-    reservations: null,
     handledReservations: null,
-    unreadReservationCount: 0,
+    unHandledReservations: null,
+    unHandledReservationCount: 0,
+    handledReservationCount: 0,
     query: "",
     // HACK: Get the rooms dynamically
     rooms: Array(6).fill().map((x,i) => true),
@@ -25,31 +26,44 @@ export default class Reservations extends Component {
   }
 
   componentDidMount() {
-    const reservationsRef = firebase.database().ref("/reservations")
-    reservationsRef.on("value", snap => {
-      const reservations = snap.val()
-      let unreadReservationCount = 0
-      const handledReservations = {}
-      reservations && Object.keys(reservations).forEach(reservation => {
-        const {metadata: {handled, roomId, from, to}} = reservations[reservation]
-        
-        if(!handled){
-          unreadReservationCount+=1
-        } else {
-          handledReservations[reservation] = reservations[reservation]        
-          if (
-            moment.range(moment(from), moment(to))
-            .overlaps(
-              moment.range(moment().startOf("day"), moment().endOf("day"))
-          )) {
-            this.setState({roomsBooked: {
-              ...this.state.roomsBooked,
-              [roomId-1]: true
-            }})
+    firebase.database().ref("/reservations").on("value", snap => {
+      let unHandledReservationCount = 0
+      let handledReservationCount = 0
+      let handledReservations = {}
+      let unHandledReservations = {}
+      snap.forEach(reservation => {
+          const {handled, roomId, from, to} = reservation.val()
+  
+          if(!handled){
+            unHandledReservationCount+=1
+            unHandledReservations = {
+              ...unHandledReservations,
+              [reservation.key]: reservation.val()
+            }
+          } else {
+            handledReservationCount+=1
+            handledReservations = {
+              ...handledReservations,
+              [reservation.key]: reservation.val()
+            }
+            if (
+              moment.range(moment(from), moment(to))
+              .overlaps(
+                moment.range(moment().startOf("day"), moment().endOf("day"))
+            )) {
+              this.setState({roomsBooked: {
+                ...this.state.roomsBooked,
+                [roomId-1]: true
+              }})
+            }
           }
-        }
+          this.setState({
+            unHandledReservations,
+            handledReservations,
+            unHandledReservationCount,
+            handledReservationCount
+          })
       })
-      this.setState({reservations, handledReservations, unreadReservationCount})
     })
   }
 
@@ -73,8 +87,11 @@ export default class Reservations extends Component {
   }
 
   render() {
-    const {query, rooms, from, to, reservations, unreadReservationCount} = this.state
-    const readReservationCount = reservations ? Object.keys(reservations).length - unreadReservationCount : 0
+    const {query, rooms, from, to, 
+      handledReservations, handledReservationCount, 
+      unHandledReservations, unHandledReservationCount
+    } = this.state
+    const {match} = this.props 
     return (
       <div>
         {/* <SearchBar
@@ -86,24 +103,25 @@ export default class Reservations extends Component {
         <NewReservation/>
         <Tabs
             inkBarStyle={{marginTop: -4, height: 4}}
-            value={this.props.match.params.readState === "kezelt"}
+            value={match.params.readState === "kezelt"}
             onChange={this.handleChange}
           >
           <Tab value={false}
-            label={<TabLabel title="Új" count={unreadReservationCount}/>}
+            label={<TabLabel title="Új" count={unHandledReservationCount}/>}
           >
-            <FilteredReservations handled={false}
-              {...{query, rooms, from, to, reservations}}
+            <FilteredReservations
+              {...{query, rooms, from, to, reservations: unHandledReservations}}
             />
           </Tab>
           <Tab value
-            label={<TabLabel title="Elfogadott" count={readReservationCount}/>}
+            label={<TabLabel title="Elfogadott" count={handledReservationCount}/>}
           >
-            <FilteredReservations handled
-              {...{query, rooms, from, to, reservations}}
+            <FilteredReservations
+              {...{query, rooms, from, to, reservations: handledReservations}}
             />
           </Tab>
         </Tabs>
+        <Route exact path={`${match.url}/:reservationId/szerkeszt`} component={EditReservation}/>
       </div>
     )
   }

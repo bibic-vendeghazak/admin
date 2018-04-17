@@ -18,10 +18,7 @@ export default class Population extends Component {
     const {roomId} = this.props
     return (
       <Card className="room-edit-block">
-        <List disabled>
-          <PeopleCount populateDatabase={this.populateDatabase} type="maxAdults" label="Felnőtt" {...{roomId}}/>
-          <PeopleCount populateDatabase={this.populateDatabase} type="maxChildren" label="Gyerek" {...{roomId}}/>
-        </List>
+        <PeopleCount populateDatabase={this.populateDatabase} type="maxPeople" label="Személy" {...{roomId}}/>
       </Card>
     )
   }
@@ -42,13 +39,13 @@ class PeopleCount extends Component {
     const {roomId, type} = this.props
     this.handleCloseEdit()
     firebase.database()
-    .ref(`rooms/${roomId-1}/${type}`)
+    .ref(`rooms/${roomId-1}/prices/metadata/${type}`)
     .set(parseInt(this.state.count, 10))
   }
   
   componentDidMount() {
     const {roomId, type} = this.props
-    firebase.database().ref(`rooms/${roomId-1}/${type}`).on("value", snap => {
+    firebase.database().ref(`rooms/${roomId-1}/prices/metadata/${type}`).on("value", snap => {
       this.setState({count: snap.val()})
     })
   }

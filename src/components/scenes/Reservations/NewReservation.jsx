@@ -68,15 +68,25 @@ class NewReservationDialog extends Component {
     } = this.state
     message = message || "Nincs üzenet"
     const reservationsRef = firebase.database().ref("reservations")
+    const newReservation = {
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      lastHandledBy: firebase.auth().currentUser.uid,
+      roomId: parseInt(roomId, 10),
+      from: moment(from).set("hour", 14).unix()*1000,
+      to: moment(to).set("hour", 10).unix()*1000,
+      handled: false,
+      name,
+      email,
+      tel,
+      message,
+      adults,
+      children
+    }
+
     reservationsRef.push().then(snap => {
       const {key} = snap
-      const metadata = {roomId, from: moment(from).unix()*1000, to: (moment(to).unix()*1000), handled: false}
-      const details = {name, email, tel, message, adults, children}
-      reservationsRef.child(key).set({
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        lastHandledBy: firebase.auth().currentUser.uid,
-        metadata, details
-      }).then(() => this.props.closeNewReservation())
+      reservationsRef.child(key).set(newReservation).then(() => this.props.closeNewReservation())
+      .catch(e => console.error(e))
     })
   }
 
@@ -100,8 +110,8 @@ class NewReservationDialog extends Component {
         errorMessage = "Érvénytelen név"
         break
       default:
-       isValid = true
-       errorMessage = ""
+        isValid = true
+        errorMessage = ""
     }
     
     this.setState({
@@ -115,8 +125,8 @@ class NewReservationDialog extends Component {
       })
     } else {
       this.setState({
-         errorType: focusedField,
-         errorMessage
+        errorType: focusedField,
+        errorMessage
       })
     }
     

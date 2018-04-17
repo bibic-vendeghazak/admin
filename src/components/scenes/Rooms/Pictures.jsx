@@ -3,18 +3,20 @@ import firebase from 'firebase'
 
 import IconButton from 'material-ui/IconButton'
 import Delete from 'material-ui/svg-icons/action/delete'
+import Upload from 'material-ui/svg-icons/file/file-upload'
 import Progress from 'material-ui/LinearProgress'
 import Card, { CardActions } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField/TextField'
 import { colors } from '../../../utils';
+import { CircularProgress } from 'material-ui';
 
 export default class Pictures extends Component {
   
   state = {
     isEditing: false,
     progress: 0,
-    pictures: []
+    pictures: null
   }
 
   componentDidMount() {
@@ -22,18 +24,14 @@ export default class Pictures extends Component {
     firebase.database()
     .ref(`rooms/${roomId}/pictures`)
     .once("value", snap => {
+      const pictures = []
       snap.forEach(picture => {
-        firebase.storage()
-        .ref(`photos/rooms/${roomId}/${picture.val()}`)
-        .getDownloadURL().then(url => {
-          this.setState({
-            pictures: [
-              ...this.state.pictures,
-              {url, fileName: picture.val()}
-            ]
-          })
+        pictures.push( {
+          fileName: picture.val().name,
+          url: picture.val().resized
         })
       })
+      this.setState({pictures})
     })
   }
   
@@ -44,10 +42,7 @@ export default class Pictures extends Component {
   handleFileChange = e => {
     const roomId = this.props.roomId - 1
     const file = e.target.files[0]    
-    
-    firebase.database()
-    .ref(`rooms/${roomId}/pictures`).push().set(file.name)
-    
+
     firebase.storage()
       .ref(`photos/rooms/${roomId}/${file.name}`)
       .put(file).on("state_changed",
@@ -81,14 +76,37 @@ export default class Pictures extends Component {
         {isEditing ?
 
           <div><Progress  mode="determinate"  value={progress}/>
-          <input type="file" value="" onChange={this.handleFileChange} />
           </div> :
-          <div
-          style={{display: "flex",flexWrap: "wrap" }}
-          >
-          {pictures.map(({url, fileName}) => (
+          <div 
+          style={{
+              flexGrow: 1,
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: !pictures && "center",
+              alignItems: pictures ? "flex-start" : "center",
+              minHeight: 120
+            }}
+            >
+            {pictures &&
+              <div
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  border: "4px dashed grey",
+                  width: 140,
+                  height: 112
+                }}
+              >
+                <input type="file" name="file" value="" onChange={this.handleFileChange} id="file" className="inputfile" />
+                <label title="Kép feltöltése" className="file-label" htmlFor="file"><Upload color="grey"/></label>
+              </div>
+
+            }
+          {pictures ? pictures.map(({url, fileName}) => (
             <Picture key={fileName} {...{fileName}} roomId={this.props.roomId} src={url}/>
-          ))}
+          )) :
+            <CircularProgress/>
+          }
         </div>
         }
 

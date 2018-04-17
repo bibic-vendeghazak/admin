@@ -21,7 +21,7 @@ export default class Calendar extends Component {
     reservationsRef.on("value", snap => {
       const reservations = snap.val()
       reservations && Object.keys(reservations).forEach(reservation => {
-        if(!reservations[reservation].metadata.handled){
+        if(!reservations[reservation].handled){
           delete reservations[reservation]
         } 
       })
@@ -65,7 +65,7 @@ export default class Calendar extends Component {
     const {isDayBig, date, currentDate} = this.state
     Object.entries(this.state.reservations || {}).forEach(reservation => {
       const [key,value] = reservation
-      const {roomId, from, to} = value.metadata
+      const {roomId, from, to} = value
       reservations[key] = {roomId, from, to}
     })
 

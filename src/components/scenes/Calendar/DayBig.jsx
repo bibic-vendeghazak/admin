@@ -36,7 +36,7 @@ export default class DayBig extends Component {
   render() {
     const {date} = this.props
     let {reservations} = this.props
-    reservations = Object.entries(reservations).sort((a,b) => a[1].metadata.roomId - b[1].metadata.roomId)
+    reservations = Object.entries(reservations).sort((a,b) => a[1].roomId - b[1].roomId)
     
     return (
       <Card className="day-big">
@@ -58,8 +58,8 @@ export default class DayBig extends Component {
             <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Távozás</TableHeaderColumn>
           </TableRow>
             {reservations.map(([key, {
-              metadata: {roomId, from, to},
-              details: {name, email, tel}
+              roomId, from, to,
+              name, email, tel
             }]) => (
               <TableRow {...{key}}>
                 <TableRowColumn style={{textAlign: "center", color: "white"}} className={`room-day-big room-${roomId}`}>{roomId}</TableRowColumn>

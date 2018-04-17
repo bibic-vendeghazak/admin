@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import firebase from 'firebase'
 import moment from 'moment'
+import {Link, withRouter} from 'react-router-dom'
 
 import {List, ListItem} from 'material-ui/List'
 import {
@@ -27,35 +29,32 @@ import Message from 'material-ui/svg-icons/communication/message'
 
 import {Post, ModalDialog} from '../../shared'
 
-export default class Reservation extends Component {
+class Reservation extends Component {
   
-  constructor(props) {
-    super(props)
-    const {
-      details: {adults, children},
-      metadata: {roomId, from, to}
-    } = props.reservation
-    
-    this.state = {
-      isDeleting: false,
-      isEditing: false,
-      adminName: "Még senki",
-      roomId,
-      adults, children,
-      from,to
+  state = {
+    isDeleting: false,
+    adminName: "Még senki",
+    reservation: {
+      name: null,
+      email: null,
+      tel: null,
+      message: null,
+      adults: null,
+      children: null,
+      roomId: null,
+      from: null,
+      to: null,
+      handled: null,
+      timestamp: null
     }
   }
 
+
   handleReservation = isHandled => {
     const reservationRef = firebase.database().ref(`reservations/${this.props.id}`)
-    reservationRef.child('metadata/handled').set(isHandled)
+    reservationRef.child('handled').set(isHandled)
     reservationRef.child('lastHandledBy').set(firebase.auth().currentUser.uid)
   }
-
-  openEditReservation = () => this.setState({isEditing: true})
-  closeEditReservation = () => this.setState({isEditing: false})
-  // NOTE: add submit functionality
-  saveReservationChanges = () => this.setState({isEditing: false})
 
   openDeleteReservation = () => this.setState({isDeleting: true})
   closeDeleteReservation = () => this.setState({isDeleting: false})
@@ -63,28 +62,40 @@ export default class Reservation extends Component {
 
   componentDidMount() {
     const db = firebase.database()
-    db.ref(`reservations/${this.props.id}/lastHandledBy`).on('value', snap => {
-      db.ref(`admins/${snap.val()}`)
-        .on("value", snap => {
-          this.setState({
-            adminName: snap.val() ? snap.val().name : "Még senki"
+    db.ref(`reservations/${this.props.id}`).on('value', snap => {
+      this.setState({
+        reservation: snap.val()
+      })
+
+      if (snap.val().lastHandledBy) {
+        db.ref(`admins/${snap.val().lastHandledBy}`)
+          .once("value").then(snap => {
+            this.setState({
+              adminName: snap.val().name
+            })
           })
-        })
+      }
     })
+
   }
 
 
   render() {
     const {
-      details: {name, email, tel, message}, 
-      metadata: {handled}, timestamp
-    } = this.props.reservation
-
+      id,
+      match
+    } = this.props
+    
     const {
-      isDeleting, adminName, isEditing,
-      roomId, adults, children, from, to
+      isDeleting, adminName,
+      reservation: {
+        name, email, tel, message, adults, children, 
+        roomId, from, to, handled,
+        timestamp
+      }
     } = this.state
-  
+    
+
     return (
       <ListItem disabled style={{padding: ".25em 5vw"}}>
         <Post
@@ -110,35 +121,6 @@ export default class Reservation extends Component {
             />
           </List>
           <Subheader>A foglalás részletei</Subheader>
-          <ModalDialog
-            title="Foglalás módosítása"
-            open={isEditing}
-            submitLabel="Mentés"
-            onCancel={this.closeEditReservation}
-            onSubmit={this.saveReservationChanges}
-          >
-            <TextField
-              id="Szoba"
-              type="number"
-              value={roomId}
-            />
-            <TextField
-              id="Felnőtt"
-              type="number"
-              value={adults}
-            />
-            <TextField
-              id="Gyerek"
-              type="number"
-              value={children}
-            />
-            <DatePicker
-              defaultDate={new Date(from)}
-            />
-            <DatePicker
-              defaultDate={new Date(to)}
-            />
-          </ModalDialog>
           <Table
             bodyStyle={{
               overflowX:'visible',
@@ -158,18 +140,17 @@ export default class Reservation extends Component {
               <TableRow>
                 <TableRowColumn>{roomId}. szoba</TableRowColumn>
                 <TableRowColumn>{adults} személy</TableRowColumn>
-                <TableRowColumn>{children} személy</TableRowColumn>
-                <TableRowColumn>{moment(from).format('MMMM D.')}</TableRowColumn>
-                <TableRowColumn>{moment(to).format('MMMM D.')}</TableRowColumn>
+                <TableRowColumn>{(children || []).length} személy</TableRowColumn>
+                <TableRowColumn>{moment(from).format('MMMM D. HH:mm')}</TableRowColumn>
+                <TableRowColumn>{moment(to).format('MMMM D. HH:mm')}</TableRowColumn>
                 <TableRowColumn colSpan={1} style={{textAlign: "center"}}>
-                <IconButton onClick={() => isEditing ? this.closeEditReservation(): this.openEditReservation()}>
-                  {isEditing ? <Done/> : <Edit/>}
+                <IconButton>
+                  <Link to={`${match.url}/${id}/szerkeszt`}><Edit/></Link>
                 </IconButton>
               </TableRowColumn>
               </TableRow>
             </TableBody>
           </Table>
-          <p style={{margin: 12, textAlign: "center"}}>Foglalást utoljára kezelte: {adminName}</p>
           <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-evenly", alignItems: "flex-end"}}>
             <div style={{display: window.innerWidth <= 768 && "flex", flexGrow: 1, justifyContent: "space-between"}}>
               {!handled &&
@@ -190,7 +171,7 @@ export default class Reservation extends Component {
                 onClick={() => handled ? this.handleReservation(false) : this.openDeleteReservation()}
               />
             </div>
-            <p style={{marginTop: "1em", color: "#ccc", fontSize: ".8em", fontStyle: "italic"}}>Foglalás dátuma: {moment(timestamp).format("YYYY. MMMM DD. HH:mm")}</p>
+            <p style={{marginTop: "1em", color: "#ccc", fontSize: ".8em", fontStyle: "italic"}}>{adminName === "Még senki" ? "Foglalás dátuma" : `Utolsó módosítás (${adminName})`}: {moment(timestamp).format("YYYY. MMMM DD. HH:mm:SS")}</p>
             <ModalDialog
               title="Foglalás végleges törlése"
               open={isDeleting}
@@ -204,3 +185,129 @@ export default class Reservation extends Component {
     )
   }
 }
+
+
+export default withRouter(Reservation)
+
+
+
+
+class EditReservation extends Component {
+
+  state = {
+    children: null,
+    adults: null,
+    lastHandledBy: null,
+    from: null,
+    to: null,
+    roomId: null
+  }
+
+  componentDidMount() {
+    const {reservationId} = this.props.match.params
+    firebase.database()
+      .ref(`reservations/${reservationId}`)
+      .once("value")
+      .then(snap => {
+        this.setState({
+          ...snap.val(),
+          reservationId
+        })
+      })
+  }
+
+  handleClose = () => {
+    this.props.history.push(this.props.match.path.split("/:")[0])
+  }
+
+  handleSubmit = () => {
+    const newReservation = Object.assign({}, this.state)
+    delete newReservation.reservationId
+    newReservation.timestamp = firebase.database.ServerValue.TIMESTAMP
+    firebase.database().ref(`reservations/${this.state.reservationId}`)
+      .set(newReservation)
+      .then(() => this.handleClose())
+  }
+
+  handleMetadataTextChange = ({target: {name, value, type}}) => {
+    this.setState({
+      ...this.state,
+      [name]: type === "number" && value ? parseInt(value, 10) : value
+    })
+  }
+
+  handleDateChange = (date, type) => {
+    this.setState({
+      ...this.state,
+      [type]: moment(date).set("hours", type === "from" ?  14 : 10).unix() * 1000,
+      lastHandledBy: firebase.auth().currentUser.uid
+    })
+  }
+
+  render() {
+    const {children, adults, from, to, roomId} = this.state
+    
+    return ReactDOM.createPortal(
+      <ModalDialog
+        title="Foglalás módosítása"
+        open
+        submitLabel="Mentés"
+        onCancel={this.handleClose}
+        onSubmit={this.handleSubmit}
+    >
+      {roomId !== null &&
+      <TextField
+        onChange={this.handleMetadataTextChange}
+        floatingLabelText="Szoba"
+        id="roomId"
+        name="roomId"
+        type="number"
+        value={roomId}
+      />
+      }
+      <div>
+        {adults !== null &&
+          <TextField
+            floatingLabelText="Felnőtt"
+            id="adults"
+            type="number"
+            value={adults}
+            />
+          }
+        {children !== null &&
+          <TextField
+            floatingLabelText="Gyerek"
+            id="children"
+            type="number"
+            value={children}
+            />
+          }
+      </div>
+      <div 
+        style={{display: "flex"}}
+        >
+        {from &&
+          <DatePicker
+            autoOk
+            onChange={(e, date) => this.handleDateChange(date, "from")}
+            floatingLabelText="Érkezés"
+            id="from"
+            defaultDate={new Date(from)}
+            />
+          }
+        {to &&
+          <DatePicker
+            autoOk
+            onChange={(e, date) => this.handleDateChange(date, "to")}
+            floatingLabelText="Távozás"
+            id="to"
+            defaultDate={new Date(to)}
+          />
+        }
+      </div>
+    </ModalDialog>, document.querySelector(".modal-root"))
+  }
+}
+
+
+export {EditReservation}

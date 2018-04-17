@@ -76,7 +76,8 @@ export default class BigRoom extends Component {
   }
 
   render(){
-    const {roomId} = this.props.match.params
+    let {roomId} = this.props.match.params
+    roomId = parseInt(roomId, 10)
     return(
       <div className="big-room">
         <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>

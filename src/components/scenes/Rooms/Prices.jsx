@@ -19,23 +19,20 @@ import {colors} from '../../../utils'
 const {red, green} = colors
 
 const priceTypeName = {
-  allInclusive: "All inclusive",
-  breakfast: "Reggelivel",
-  fullBoard: "Teljes ellátás",
+  breakfast: "Reggeli",
   halfBoard: "Félpanzió"
 }
-
 
 export default class Prices extends Component {
   state = {
     prices: {},
-    value: 'allInclusive'
+    value: 'breakfast'
   }
 
 
   componentDidMount() {
     firebase.database()
-    .ref(`rooms/${this.props.roomId-1}/prices`)
+    .ref(`rooms/${this.props.roomId-1}/prices/table`)
     .on("value", snap => this.setState({prices: snap.val()}))
   }
 
@@ -53,7 +50,7 @@ export default class Prices extends Component {
           value={this.state.value}
           onChange={this.handleChange}
         >
-          {Object.keys(prices).map(priceType => (
+          {prices && Object.keys(prices).map(priceType => (
             <Tab 
               key={priceType}
               label={priceTypeName[priceType]}
@@ -85,6 +82,7 @@ class PriceType extends Component{
 
   render() {
     const {prices, priceType, roomId} = this.props
+    
     return (
       <div
         style={{
@@ -95,22 +93,23 @@ class PriceType extends Component{
         <Table>
           <TableBody displayRowCheckbox={false}>
             <TableRow>
-              <TableHeaderColumn colSpan={2}>Név</TableHeaderColumn>
-              <TableHeaderColumn>Ár</TableHeaderColumn>
-              <TableHeaderColumn style={{textAlign: "right"}} colSpan={3}>Módosítás</TableHeaderColumn>
+              <TableHeaderColumn colSpan={4}>Név</TableHeaderColumn>
+              <TableHeaderColumn colSpan={3}>Ár</TableHeaderColumn>
+              <TableHeaderColumn style={{textAlign: "right"}} colSpan={2}>Módosítás</TableHeaderColumn>
             </TableRow>
-            {Object.keys(prices).map(priceId => (
-              priceId !== "preventDeleteKey" &&
-              <Price
-                key={priceId}
-                price={prices[priceId].price}
-                name={prices[priceId].name}
-                {...{priceType, roomId, priceId}}
-              />
-            ))}
+            {Object.keys(prices).map(adultCount => (
+              Object.keys(prices[adultCount]).map(childCount => {
+                const {price, name} = prices[adultCount][childCount]
+                  return <Price
+                    key={adultCount + "_" + childCount}
+                    {...{priceType, roomId, price, name, adultCount, childCount}}
+                  />
+              })
+            )
+            )}
           </TableBody>
         </Table>
-        <RaisedButton onClick={() => this.addNewPrice()} style={{margin: 12}} primary label="Új ár felvétele"/>
+        <RaisedButton onClick={this.addNewPrice} style={{margin: 12}} primary label="Új ár felvétele"/>
       </div>
     )
   }
@@ -118,14 +117,45 @@ class PriceType extends Component{
 
 class Price extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      isDialogOpen: false,
-      isEditing: false,
-      name: props.name,
-      price: props.price
+  state = {
+    isDialogOpen: false,
+    isEditing: false,
+    name: "",
+    price: null
+  }
+
+  componentDidMount() {
+    const {price, name} = this.props
+    this.setState({price, name})
+    document.addEventListener('keyup', this.toggleWithKeyBoard, false)
+  }
+  
+  toggleWithKeyBoard = e => {
+    const key = e.keyCode
+    const {isEditing, isDialogOpen} = this.state
+    if (isEditing) {
+      switch (key) {
+        case 13: // Enter
+          isDialogOpen ?
+          this.handleDelete() :
+          this.handleSave()
+          break
+        case 27: // Esc
+          isDialogOpen ?
+          this.handleCloseDeleteDialog() :
+          this.handleCloseEdit()
+          break
+        case 68: // d
+          this.handleOpenDeleteDialog()
+          break
+        default:
+          break
+      }
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.toggleWithKeyBoard, false)
   }
 
   handleCloseEdit = () => {
@@ -140,70 +170,74 @@ class Price extends Component {
     })
   }
 
+
+
   componentWillReceiveProps({name, price}) {
     this.setState({name, price})
   }
 
   handleSave = () => {
-    const {roomId, priceType, priceId} = this.props
-    const {name, price} = this.state
+    const {roomId, priceType, adultCount, childCount} = this.props
     this.handleCloseEdit()
-    firebase.database().ref(`rooms/${roomId-1}/prices/${priceType}/${priceId}`).set({
-      name, price: parseInt(price, 10) || 0
-    })
+    firebase.database()
+    .ref(`rooms/${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}/price`)
+    .set(parseInt(this.state.price, 10) || 0)
+    .catch(e => console.error(e)
+  )
+}
+
+handleOpenDeleteDialog = () => this.setState({isDialogOpen: true})
+handleCloseDeleteDialog = () => this.setState({isDialogOpen: false})
+
+handleDelete = () => {
+  const {roomId, priceType, adultCount, childCount} = this.props
+  firebase.database()
+    .ref(`rooms/${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}`).remove()
+  this.handleCloseDeleteDialog()
+  this.handleCloseEdit()
+}
+
+
+
+  handlePriceChange = ({target: {value: price}}) => {
+    this.setState({price: parseInt(price) || 0})
   }
-
-  handleOpenDeleteDialog = () => this.setState({isDialogOpen: true})
-  handleCloseDeleteDialog = () => this.setState({isDialogOpen: false})
-
-  handleDelete = () => {
-    const {roomId, priceType, priceId} = this.props
-    this.handleCloseEdit()
-    firebase.database().ref(`rooms/${roomId-1}/prices/${priceType}/${priceId}`).remove()
-    this.handleCloseDeleteDialog()
-  }
-
-
-
-  handlePriceChange = ({target: {value: price}}) => this.setState({price})
-  handleNameChange = ({target: {value: name}}) => this.setState({name})
 
   render() {
     const {isEditing, isDialogOpen, name, price} = this.state
     return (
     <TableRow>
-      <TableRowColumn colSpan={2}>
+      <TableRowColumn colSpan={4}>
+        <p>{name}</p>
+      </TableRowColumn>
+      <TableRowColumn
+      colSpan={3}>
         {isEditing ?
           <TextField
-            fullWidth 
-            value={name}
-            onChange={this.handleNameChange}
-            floatingLabelText="Személyek"
-            />:
-            <p>{name}</p>
+          autoFocus
+          fullWidth 
+          type="number"
+          value={price || ""}
+          onChange={this.handlePriceChange}
+          floatingLabelText="Forint"
+          />:
+          <p
+
+            onClick={this.handleOpenEdit}
+            style={{fontWeight: "bold", cursor: "pointer"}}
+          >
+            {(price || 0).toLocaleString("hu-HU", {style: "currency", currency: "HUF", minimumFractionDigits: 0} )} 
+          </p>
         }
       </TableRowColumn>
-      <TableRowColumn >
-        {isEditing ?
-          <TextField
-            fullWidth 
-            min={0}
-            type="number"
-            value={price}
-            onChange={this.handlePriceChange}
-            floatingLabelText="Forint"
-            />:
-            <p style={{fontWeight: "bold"}}>{price.toLocaleString("hu-HU", {style: "currency", currency: "HUF", minimumFractionDigits: 0} )} </p>
-        }
-      </TableRowColumn>
-      <TableRowColumn colSpan={3} style={{textAlign: "right"}}>
+      <TableRowColumn colSpan={2} style={{textAlign: "right"}}>
           <Dialog
             title="Ár törlése"
             modal
             open={isDialogOpen}
             actions={[
-              <RaisedButton style={{marginRight: 12}} onClick={() => this.handleCloseDeleteDialog()} label="Mégse"/>,
-              <RaisedButton onClick={() => this.handleDelete()} secondary label="Igen"/>
+              <RaisedButton style={{marginRight: 12}} onClick={this.handleCloseDeleteDialog} label="Mégse"/>,
+              <RaisedButton onClick={this.handleDelete} secondary label="Igen"/>
             ]}
           >
             Biztos törölni szeretné ezt az árat az adatbázisból?
@@ -216,7 +250,7 @@ class Price extends Component {
           <IconButton iconStyle={{color: isEditing && green}} onClick={() => isEditing ? this.handleSave() : this.handleOpenEdit()}>
             {isEditing ? <Done/> : <Edit/>}
           </IconButton>
-        <IconButton iconStyle={{color: red}} onClick={() => this.handleOpenDeleteDialog()}>
+        <IconButton iconStyle={{color: red}} onClick={this.handleOpenDeleteDialog}>
           <Delete/>
         </IconButton>
       </TableRowColumn>

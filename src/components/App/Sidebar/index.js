@@ -19,7 +19,7 @@ const dividerStyle = {
 export default class Sidebar extends Component {
 
 	render() {
-		const {profile, unreadReservationCount,
+		const {profile, unHandledReservationCount,
 			unreadFeedbackCount, handleLogout, isDrawerOpened, toggleSidebar} = this.props
 			
 		return (
@@ -27,10 +27,19 @@ export default class Sidebar extends Component {
 				<Drawer  open={isDrawerOpened} containerStyle={{height: 'calc(100% - 64px)', top: 64}}>
 				<Profile {...{profile}}/>
 				<Divider style={dividerStyle}/>
-					<SidebarMenuItem
-						primaryText="Irány a weblap"
-						leftIcon="language"
-						to="https://bibic-vendeghazak.github.io/web/"
+					<MenuItem
+						primaryText={
+							<a
+								style={{
+									color: "white",
+									textDecoration: "none",
+									display: "flex"
+								}} 
+								href="https://bibic-vendeghazak-web.firebaseapp.com"
+								target="_blank" rel="noopener noreferrer"
+								>Irány a weblap</a>
+						}
+						leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">language</FontIcon>}
 					/>
 					<SidebarMenuItem
 						to={routes.SETTINGS}
@@ -46,19 +55,14 @@ export default class Sidebar extends Component {
 					<SidebarMenuItem
 						to={routes.SPECIAL_OFFER}
 						primaryText="Akciós ajánlatok"
-						leftIcon="monetization_on"
+						leftIcon="attach_money"
 					/>	
 					<SidebarMenuItem
 						to={routes.RESERVATIONS+"/kezeletlen"}
 						primaryText="Foglalások"
 						leftIcon="bookmark_border"
-						count={unreadReservationCount}
+						count={unHandledReservationCount}
 					/>
-					<SidebarMenuItem
-						to={routes.EVENTS}
-						primaryText="Rendezvények"
-						leftIcon="event"
-					/>	
 					<SidebarMenuItem
 						to={routes.CALENDAR}
 						primaryText="Naptár"
@@ -68,6 +72,11 @@ export default class Sidebar extends Component {
 						to={routes.FOODS}
 						primaryText="Ételek"
 						leftIcon="restaurant"
+					/>	
+					<SidebarMenuItem
+						to={routes.EVENTS}
+						primaryText="Rendezvények"
+						leftIcon="event"
 					/>	
 					{/* <SidebarMenuItem
 						to={routes.STATS}
