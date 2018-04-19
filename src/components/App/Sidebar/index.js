@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import * as routes from '../../../utils/routes'
-
+import moment from 'moment'
 import Badge from 'material-ui/Badge'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
@@ -64,7 +64,7 @@ export default class Sidebar extends Component {
 						count={unHandledReservationCount}
 					/>
 					<SidebarMenuItem
-						to={routes.CALENDAR}
+						to={`${routes.CALENDAR}/${moment().format("YYYY")}/${moment().format("M")}`}
 						primaryText="Naptár"
 						leftIcon="date_range"
 					/>	

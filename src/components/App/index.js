@@ -136,25 +136,26 @@ class App extends Component {
 
   renderRightIcon = () => {
     let iconName, iconText= ""
-    const {pathname} = this.props.location
-    const iconPath = "/"+pathname.split("/")[1]
-    if (iconPath === routes.ROOMS && pathname.includes("szerkeszt")) {
-      iconName = "close"
-      iconText = "Bezárás"
-    } else if(iconPath === routes.CALENDAR) {
-      iconName = "close"
-      iconText = "Bezárás"
-    }
+    let {pathname} = this.props.location
+
+    iconName = "close"
+    iconText = "Bezárás"
+
 
     return (
+      ( pathname.includes("szerkeszt") ||
+        (pathname.includes(routes.CALENDAR) && pathname.split("/").length === 5)
+      ) ? 
       <div
+        title={`Esc\n__________\nNyomd le ezt a billentyűt`}
+        onClick={this.props.history.goBack}
         style={{
+          cursor: "pointer",
           display: "flex",
           alignItems: "center",
           color: "#fff"
         }}>
         <p>{iconText}</p>
-        <Link to={iconPath}>
           <IconButton>
             <FontIcon 
               color="#fff" 
@@ -162,8 +163,7 @@ class App extends Component {
               {iconName}
             </FontIcon>
           </IconButton>
-        </Link>
-      </div>
+      </div> : null
     )
   }
 
@@ -203,7 +203,7 @@ class App extends Component {
                   }
                 />
                 <Route
-                  path={routes.CALENDAR}
+                  path={routes.CALENDAR+"/:year/:month"}
                   component={Calendar}
                 />
                 <Route
