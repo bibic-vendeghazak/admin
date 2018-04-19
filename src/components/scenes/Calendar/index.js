@@ -1,23 +1,34 @@
 import React, { Component } from 'react'
+import {Route} from 'react-router-dom'
 import moment from 'moment'
 import firebase from 'firebase'
 import Month from './Month'
 import DayBig from './DayBig'
-
+import { CALENDAR } from '../../../utils/routes';
 const reservationsRef = firebase.database().ref("/reservations")
 
 export default class Calendar extends Component {
 
   state = {
     reservations: null,
-    isDayBig: false,
     date: null,
-    bigDayreservations: null,
-    currentDate: moment()
+    currentDate: moment(),
+    mutat: []
   }
 
+  updateURL = params => {
+    if (params.year && params.month) {
+      const {year, month} = params
+      this.setState({
+        currentDate:  moment(`${year}-${month}-01`)
+      })
+    }
+  }
 
   componentDidMount() {
+    
+    this.updateURL(this.props.match.params)
+
     reservationsRef.on("value", snap => {
       const reservations = snap.val()
       reservations && Object.keys(reservations).forEach(reservation => {
@@ -29,61 +40,40 @@ export default class Calendar extends Component {
     })
   }
 
+
+  componentWillReceiveProps = ({match:{params}}) => {
+    this.updateURL(params)
+  }
+
   changeDate = direction => {
     this.setState( ({currentDate}) => ({
       currentDate: !direction ? moment() : currentDate.add(direction, 'month')
     }))
   }
 
-  handleDayClick = day => {
-    const {date, dayReservations} = day
-    const reservations = Object.assign({}, this.state.reservations)
-    Object.keys(reservations).forEach( key => {
-      !dayReservations.includes(key) && delete reservations[key]
-    })
-    
-    this.setState({
-      isDayBig: true,
-      date,
-      bigDayreservations: reservations
-    })
-  }
 
-  closeBigDay = () => {
-    this.setState({isDayBig: false})
-  }
-
-  // FIXME: Clicking on hamburger menu triggers closeBigDay()
-  componentWillReceiveProps ({appBarRightAction}) {
-    if (appBarRightAction === "calendar") {
-      this.state.isDayBig ? this.closeBigDay() : this.changeDate(0)
-    }
-  }
-
-  render() {    
+  render() {
+    const {history} = this.props
     const reservations = {}
-    const {isDayBig, date, currentDate} = this.state
+    const {currentDate} = this.state
     Object.entries(this.state.reservations || {}).forEach(reservation => {
       const [key,value] = reservation
       const {roomId, from, to} = value
       reservations[key] = {roomId, from, to}
     })
 
-
+    
     return (
       <div id="calendar-wrapper">
-        {isDayBig ?
-          <DayBig
-            closeBigDay={this.closeBigDay}
-            reservations={this.state.bigDayreservations}
-            {...{date}}
-          /> :
-          <Month 
+        <Route exact path={`${CALENDAR}/:year/:month`} component={
+          () => (
+            <Month 
             handleDayClick={this.handleDayClick}
-            changeDate={this.changeDate}
-            {...{reservations, currentDate}}
-          />
-        }
+            {...{history, reservations, currentDate}}
+            />
+          )
+        }/>
+        <Route path={`${CALENDAR}/:year/:month/:day`} component={DayBig}/>
       </div>
     )
   }

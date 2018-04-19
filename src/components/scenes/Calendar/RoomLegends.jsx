@@ -12,7 +12,7 @@ const RoomLegend = ({id}) => {
   }
 
   return(
-   <li >
+   <li title={`${id}\n__________\nNyomd le ezt a billentyűt`}>
      <p
        className={`room-${id}`}
        onClick={handleClick}

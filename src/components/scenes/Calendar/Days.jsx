@@ -1,11 +1,12 @@
 import React from 'react'
 import {Link, withRouter} from 'react-router-dom'
 import moment from 'moment'
+import { CALENDAR } from '../../../utils/routes'
 
 
-const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reservations, handleDayClick}) => {
+const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reservations}) => {
   const days = []
-  for (let day = from+1; day <= to; day++) {
+  for (let day = from + 1; day <= to; day++) {
     let dayReservations = {}
     Object.keys(reservations).forEach(key => {
       const value = reservations[key]
@@ -32,8 +33,7 @@ const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reser
         {...{
           location,
           key: day, isPlaceholder,
-          reservations: dayReservations,
-          handleDayClick
+          reservations: dayReservations
         }}
       />
     )
@@ -41,41 +41,35 @@ const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reser
   return days
 }
 
-const Day = ({location: {pathname}, reservations, date, isPlaceholder, handleDayClick}) => {
-  let rooms = []  
-  Object.entries(reservations).forEach(reservation => {
-    const [key,value] = reservation
-    const {roomId, from, to} = value
-    rooms.push(
-      <li key={key} className={`reserved room-${roomId} ${from && to ? "from-to" : from ? "from" : to && "to"}`}/>
-    )
+const Day = ({location: {pathname}, reservations, date, isPlaceholder}) => {
+  let rooms = []
+
+  Object.keys(reservations).forEach(key => {
+    const {roomId, from, to} = reservations[key]
+    const reservationState = from && to ? "from-to" : from ? "from" : to && "to"
+    rooms.push(<li {...{key}} className={`reserved room-${roomId} ${reservationState}`}/>)
   })
 
-  const handleClick = () => {
-    handleDayClick({
-      date, dayReservations: Object.keys(reservations)
-    })
-  }
-  
-  const isToday = moment().isSame(date,'day')
+  const isToday = moment().isSame(date, 'day') ? "today" : ""
+  isPlaceholder = isPlaceholder ? "-placeholder" : ""
+  const day = date.format("D")
+  const month = date.format("M")
   const year = date.format("YYYY")
-  const month = date.format("MM")
-  const day = date.format("DD")
+  
   return (
-    <li
-        onClick={handleClick}
-        className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
-        >
-      {/* <Link 
-        className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
-        to={pathname+"/"+year+"/"+month+"/"+day} 
-        style={{textDecoration: "none"}}> */}
-          <p>{date.format('D')}</p>
-          <ul className="reserved-list">
-            {rooms}
-          </ul>
-      {/* </Link> */}
-    </li>
+    Object.keys(reservations).length ?
+    <Link
+      className={`day ${isToday} day${isPlaceholder}`}
+      to={`${CALENDAR}/${year}/${month}/${day}`} 
+    >
+      <p>{day}</p>
+      <ul className="reserved-list">
+        {rooms}
+      </ul>
+    </Link> :
+    <div className={`day ${isToday} day${isPlaceholder}`}>
+      <p>{day}</p>
+    </div>
   )
 }
 
