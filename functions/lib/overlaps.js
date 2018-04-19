@@ -2,6 +2,50 @@ const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const moment = require('./moment')
 
+
+module.exports.overlaps = (req, res) => {
+	let {roomId, type, date} = req.query
+	if (type === "month") {
+		return monthOverlap(roomId, date)
+						.then(days => {
+							console.log(days);
+							data = {}
+
+							Object.keys(days).forEach(day => {
+								if (days[day].includes("r"+roomId)) {
+									const dayKey = `${date}-${day}`
+									data[dayKey] = roomId
+								}
+							})
+							
+							
+							
+							return res.send(JSON.stringify(days))})
+
+						// const data = {}
+						// snap.forEach(day => {
+						// 	day = Object.keys(day.val())
+						// 	if (day.includes("r"+roomId)) {
+						// 		data[dayKey] = roomId
+						// 	}
+						// })
+	} else {
+		return console.log("Implement day overlap????")
+	}
+}
+
+
+const monthOverlap = (roomId, date) => {
+	dateArray = date.split("-")
+	return admin.database()
+							.ref(`reservationDates/${dateArray[0]}/${dateArray[1]}`)
+							.once("value").then(snap => {
+								if (snap) {
+									return snap.val()
+								} else return {status: "ERROR", message: "No result was found."}
+							})
+}
+
 module.exports.getOverlaps = (req, res) => {
 	let {roomId,month} = req.query
 	roomId = parseInt(roomId, 10)
