@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import {Route, withRouter, Link} from 'react-router-dom'
-import firebase from 'firebase/app'
-
+import {Route, withRouter} from 'react-router-dom'
+import {MyProvider} from './Context'
+import {AUTH} from "../../utils/firebase"
 
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
@@ -14,10 +14,10 @@ import Welcome from '../scenes/Welcome'
 import Rooms from '../scenes/Rooms'
 import Reservations from '../scenes/Reservations'
 import Calendar from '../scenes/Calendar'
-import Stats from '../scenes/Stats'
 import Feedbacks from '../scenes/Feedbacks'
 import Notification from '../shared/Notification'
-import * as routes from '../../utils/routes';
+
+import * as routes from '../../utils/routes'
 
 const initialAppState = {
   isDrawerOpened: true,
@@ -27,9 +27,13 @@ const initialAppState = {
   isNotificationOpen: false,
   notificationMessage: "",
   notificationType: "",
-  errorType: "",
-  unHandledReservationCount: 0
+  errorType: ""
 }
+
+
+
+
+
 
 
 class App extends Component {
@@ -55,7 +59,7 @@ class App extends Component {
   handleNotificationClose = () => this.setState({isNotificationOpen: false})
 
   handleLogout = () => {
-    firebase.auth().signOut().then(() => {
+    AUTH.signOut().then(() => {
       this.handleNotification("Sikeres kijelentkezés", "success")
       this.setState({isLoggedIn: false})
     })

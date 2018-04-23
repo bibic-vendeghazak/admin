@@ -1,17 +1,18 @@
-import React, {Component} from 'react'
-import {Link} from 'react-router-dom'
-import moment from 'moment'
-import {Card, CardHeader} from 'material-ui/Card'
+import React, {Component} from "react"
+import {Link} from "react-router-dom"
+import moment from "moment"
+import {Card, CardHeader} from "material-ui/Card"
 import {
-  Table,
-  TableBody,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table'
-import LinkIcon from 'material-ui/svg-icons/content/link'
-import {RESERVATIONS} from "../../../utils/routes"
-import {db} from "../../../utils/firebase"
+	Table,
+	TableBody,
+	TableHeaderColumn,
+	TableRow,
+	TableRowColumn,
+} from "material-ui/Table"
+import LinkIcon from "material-ui/svg-icons/content/link"
+import {RESERVATIONS, EDIT, CALENDAR} from "../../../utils/routes"
+import {DB, RESERVATIONS_FS} from "../../../utils/firebase"
+import { CircularProgress } from "material-ui"
 
 
 export default class DayBig extends Component {

@@ -10,4 +10,4 @@ export const FEEDBACKS = "/visszajelzesek"
 export const STATS = "/statisztika"
 
 
-export const EDIT = "/szerkeszt"
+export const EDIT = "szerkeszt"

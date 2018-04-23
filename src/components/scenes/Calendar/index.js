@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import {Route} from 'react-router-dom'
 import moment from 'moment'
-import firebase from 'firebase'
 import Month from './Month'
 import DayBig from './DayBig'
-import { CALENDAR } from '../../../utils/routes';
-const reservationsRef = firebase.database().ref("/reservations")
+import { CALENDAR } from '../../../utils/routes'
+import {RESERVATIONS_FS} from '../../../utils/firebase'
 
 export default class Calendar extends Component {
 

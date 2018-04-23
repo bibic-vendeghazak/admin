@@ -1,7 +1,7 @@
-import React from 'react'
-import {Link, withRouter} from 'react-router-dom'
-import moment from 'moment'
-import { CALENDAR } from '../../../utils/routes'
+import React from "react"
+import {Link, withRouter} from "react-router-dom"
+import moment from "moment"
+import { CALENDAR } from "../../../utils/routes"
 
 
 const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reservations}) => {

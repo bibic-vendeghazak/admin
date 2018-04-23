@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import firebase from 'firebase'
 
 import Card from 'material-ui/Card'
-import List, { ListItem } from 'material-ui/List'
+import { ListItem } from 'material-ui/List'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField/TextField'
 

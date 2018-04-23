@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import firebase from 'firebase'
 
-import RaisedButton from 'material-ui/RaisedButton'
+import {Divider, RaisedButton} from 'material-ui'
 
 const initialState = {
   email: "",
@@ -25,8 +25,7 @@ export default class Login extends Component {
 
   handleEnterPress = ({key}) => key === 'Enter' && this.handleLogin()
 
-  handleEmailInput = e => this.setState({email: e.target.value})
-  handlePasswordInput = e => this.setState({password: e.target.value})
+  handleInputChange = ({target: {name, value}}) => this.setState({[name]: value})
 
   render() {
     return (
@@ -34,20 +33,20 @@ export default class Login extends Component {
           <div id="login-wrapper">
             <div id="login-title">
               <a href="https://balazsorban44.github.io/bibic-vendeghazak" target="_blank" rel="noopener noreferrer"><img src={"https://bibic-vendeghazak.github.io/web/assets/images/other/logo-brown.png"} alt="Bíbic vendégházak logo"/></a>
-              <h2>Admin kezelőfelület</h2>
             </div>
             <div id="login-form">
               <input
-                id="email"
+                name="email"
                 onKeyPress={this.handleEnterPress}
-                onChange={this.handleEmailInput}
+                onChange={this.handleInputChange}
                 type="email"
                 placeholder="E-mail cím"
               />
+              <Divider/>
               <input
-                id="password"
+                name="password"
                 onKeyPress={this.handleEnterPress}
-                onChange={this.handlePasswordInput}
+                onChange={this.handleInputChange}
                 type="password"
                 placeholder="Jelszó"
               />

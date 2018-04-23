@@ -7,9 +7,8 @@ import Upload from 'material-ui/svg-icons/file/file-upload'
 import Progress from 'material-ui/LinearProgress'
 import Card, { CardActions } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField/TextField'
-import { colors } from '../../../utils';
-import { CircularProgress } from 'material-ui';
+import { colors } from '../../../utils'
+import { CircularProgress } from 'material-ui'
 
 export default class Pictures extends Component {
   
@@ -181,7 +180,7 @@ class Picture extends Component {
             </span>
           </div>
         }
-        <img {...{src}}/>
+        <img alt="" {...{src}}/>
       </div>
     )
   }

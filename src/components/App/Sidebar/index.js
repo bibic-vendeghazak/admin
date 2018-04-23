@@ -1,15 +1,16 @@
-import React, {Component} from 'react'
-import {Link} from 'react-router-dom'
-import * as routes from '../../../utils/routes'
-import moment from 'moment'
-import Badge from 'material-ui/Badge'
-import MenuItem from 'material-ui/MenuItem'
-import Divider from 'material-ui/Divider'
-import FontIcon from 'material-ui/FontIcon'
-import Drawer from 'material-ui/Drawer'
-import Avatar from 'material-ui/Avatar'
+import React, {Component} from "react"
+import {NavLink} from "react-router-dom"
+import MyContext from "../Context"
+import * as routes from "../../../utils/routes"
+import moment from "moment"
+import Badge from "material-ui/Badge"
+import MenuItem from "material-ui/MenuItem"
+import Divider from "material-ui/Divider"
+import FontIcon from "material-ui/FontIcon"
+import Drawer from "material-ui/Drawer"
+import Avatar from "material-ui/Avatar"
 
-import Logout from '../Auth/Logout'
+import Logout from "../Auth/Logout"
 
 const dividerStyle = {
 	backgroundColor: "rgba(255,255,255,.5)"
@@ -37,7 +38,7 @@ export default class Sidebar extends Component {
 								}} 
 								href="https://bibic-vendeghazak-web.firebaseapp.com"
 								target="_blank" rel="noopener noreferrer"
-								>Irány a weblap</a>
+							>Irány a weblap</a>
 						}
 						leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">language</FontIcon>}
 					/>

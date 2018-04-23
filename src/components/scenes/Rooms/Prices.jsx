@@ -200,7 +200,7 @@ handleDelete = () => {
 
 
   handlePriceChange = ({target: {value: price}}) => {
-    this.setState({price: parseInt(price) || 0})
+    this.setState({price: parseInt(price, 10) || 0})
   }
 
   render() {
