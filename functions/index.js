@@ -2,105 +2,93 @@ const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 admin.initializeApp()
 
+// ---------------------------------------------------------------------------------------------------
 // Imports from lib
+const moment = require("./lib/moment")
 const overlaps = require('./lib/overlaps')
-const emailTemplate = require("./lib/email")
+const email = require("./lib/email")
+const prices = require("./lib/prices")
 
-// Init Firebase
-
+// ---------------------------------------------------------------------------------------------------
 // Database refs
 const roomsRef = admin.database().ref("rooms")
-const reservationsRef = admin.database().ref("reservations")
-const reservationRef = functions.database.ref('reservations/{reservationId}')
+const reservationDatesRef = admin.database().ref("reservationDates")
 
-const moment = require("./lib/moment")
-
-
-
-
-exports.reservationCreated = reservationRef.onCreate((snap, context) => {
-  const {email, name, tel, from, to, roomId, message} = snap.val()
-  const reservation = {name, tel, from, to, roomId, message}
-  const {reservationId} = context.params
-  console.log("New reservation!");
-  return emailTemplate.reservationRecieved(reservationId, email, reservation)
-})
+// ---------------------------------------------------------------------------------------------------
+// Firestore refs
+const reservationRef = functions.firestore
+                          .document("reservations/{reservationId}")
 
 
-const updateReservationDates = (from, to, roomId, value) => {
-  const reservationDatesRef = admin.database().ref("reservationDates")
+
+// ---------------------------------------------------------------------------------------------------
+// Helper functions
+
+const updateReservationDates = (from, to, roomId, value=null) => {
   reservationPeriod = moment.range(from, to)
   for (let day of reservationPeriod.by('day')) {
-    day = day.format("YYYY-MM-DD").split("-").map(part => parseInt(part))
-    reservationDateRef = reservationDatesRef.child(`${day[0]}/${day[1]}/${day[2]}/r${roomId}`)
-    reservationDateRef.set(value)
+    reservationDatesRef
+      .child(`${day.format("YYYY/MM/DD")}/r${roomId}`)
+      .set(value)
   }
 }
 
+const isEquivalent = (a, b) => {
+  const keys = Object.keys(a)
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if (a[key] !== b[key]) {
+      return false
+    }
+  }
+  return true
+}
 
-exports.reservationDeleted = reservationRef.onDelete((snap, context) => {
-  const {email, from, to, name, roomId} = snap.val()
-  updateReservationDates(from, to, roomId, null)
-  console.log("Delete reservation, sending email...")
-  // return emailTemplate.reservationRejected(email, name, "töröltük")
+
+// ---------------------------------------------------------------------------------------------------
+// Reservation handling
+
+exports.reservationCreated = reservationRef.onCreate((snap, {params: {reservationId}}) => {
+  console.log("New reservation");
+  return email.reservationCreated(reservationId, snap.data())
 })
 
-exports.reservationChanged = reservationRef.onUpdate((change, context) => {
-  const {
-          handled: handledBefore,
-          name: oldName,
-          tel: oldTel,
-          from: oldFrom,
-          to: oldTo,
-          adults: oldAdults,
-          children: oldChildren,
-          message: oldMessage,
-          roomId: oldRoomId,
-          lastHandledBy: lastHandledByBefore
-        } = change.before.val()
-        const {
-          handled: handledAfter,
-          email,
-          name, tel, from, to, adults, children, roomId, message
-        } = change.after.val()
-  const oldReservation = {
-    name: oldName,
-    tel: oldTel,
-    from: oldFrom,
-    to: oldTo,
-    adults: oldAdults,
-    children: oldChildren,
-    message: oldMessage,
-    roomId: oldRoomId
-  }
-  const {reservationId} = context.params
-  const reservation = {name, tel, from, to, adults, children, roomId, message}
+
+exports.reservationDeleted = reservationRef.onDelete((change, context) => {
+  const {email, from, to, name, roomId} = change.data()
+  updateReservationDates(from, to, roomId)
+  return email.reservationRejected(email, name, true)
+})
+
+
+exports.reservationChanged = reservationRef.onUpdate(({before, after}, {params: {reservationId}}) => {
+  before = before.data()
+  after = after.data()
+
+  // 🔥 Remove old dates
+  updateReservationDates(before.from, before.to, before.roomId)
+  // ✨ Add new dates
+  updateReservationDates(after.from, after.to, after.roomId, after.handled ? reservationId : null)
   
-  updateReservationDates(from, to, roomId, handledAfter ? change.after.key : null)
-  
-  if (!handledBefore && handledAfter && lastHandledByBefore === "") {
-    console.log("Reservation accepted, sending email...")
-    return emailTemplate.reservationAccepted(reservationId, email, reservation)
-  }
-  if (!handledAfter && lastHandledByBefore !== "") {
-    console.log("Reservation rejected, sending email...")
-    return emailTemplate.reservationRejected(email, oldName, "elutasítottuk")
+  // Reservation accepted 🎉
+  if (!before.handled && after.handled) {
+    return email.reservationAccepted(reservationId, after)
   }
 
-  if(oldReservation !== reservation) {
-    console.log("Reservation details changed, sending email...")
-    return emailTemplate.reservationChanged(email, reservation)
+  // Reservation rejected ❌
+  if (!after.handled) {
+    return email.reservationRejected(after.email, after.name)
   }
 
+  // Reservation changed 🔔
+  if (!isEquivalent(before, after)) {
+    return email.reservationChanged(before, after)
+  }
   return null
 })
+
     
-exports.getOverlaps = functions.https
-  .onRequest((req, res) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    return overlaps.getOverlaps(req, res)
-  })
-  
+// Return overlaps in a month
 exports.overlaps = functions.https
   .onRequest((req, res) => {
     res.header('Access-Control-Allow-Origin', '*')
@@ -108,16 +96,20 @@ exports.overlaps = functions.https
   })
 
 
+// ---------------------------------------------------------------------------------------------------
+// Room handling
 exports.populatePrices = functions.database
   .ref("rooms/{roomId}/prices/metadata")
   .onUpdate((change, context) => {
-    const {roomId} = contect.params
+    const {roomId} = context.params
     const {maxPeople} = change.after.val()
     const priceTableRef = roomsRef.child(`${roomId}/prices/table`)
     const priceTypes = ["breakfast", "halfBoard"]
-    const promises = priceTypes.map(priceType => (
-          priceTableRef.child(priceType).once("value", snap => snap.val())
-      ))
+    const promises = priceTypes.map(priceType => 
+        priceTableRef
+          .child(priceType)
+          .once("value", snap => snap.val())
+      )
     return Promise
       .all(promises)
       .then(values => {
