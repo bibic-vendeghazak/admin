@@ -51,3 +51,8 @@ export const parseValue = (value, type) => {
 		return value
 	}
 }
+
+
+
+// NOTE: Fix reservation validation
+export const  isValidReservation = reservation => false
