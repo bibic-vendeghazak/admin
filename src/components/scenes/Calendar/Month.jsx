@@ -122,8 +122,9 @@ const DayNames = () => (
 )
 
 const MonthControls = ({history, previousMonth, nextMonth}) => {
-  previousMonth = previousMonth.format("YYYY-M").replace("-", "/")
-  nextMonth = nextMonth.format("YYYY-M").replace("-", "/")
+  
+  previousMonth = previousMonth.format("YYYY/MM")
+  nextMonth = nextMonth.format("YYYY/MM")
   return(
     <div>
       <Link to={`${CALENDAR}/${previousMonth}`}>
