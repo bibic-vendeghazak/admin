@@ -1,0 +1,57 @@
+.search-bar
+  background-color: $accent-color-dark
+  padding: .5em 1em
+  font-family: sans-serif
+
+.omnibar
+  display: flex
+  align-items: center
+  input
+    flex-grow: 1
+    border-radius: 1.25em
+    padding: .75em 1.25em
+    margin: .5em
+    line-height: 1
+
+.filters-hidden
+  display: none
+
+
+.filter
+  margin-top: 1.5rem
+  display: flex
+  flex-wrap: wrap
+  color: $light
+  align-items: center
+  h4
+    margin-left: 2em
+  ul
+    justify-content: center
+    display: flex
+    flex-wrap: wrap
+@media (min-width: 640px)
+  .filter
+    margin-top: .5em
+
+.room-filter
+  border-radius: 1em
+  cursor: pointer
+  padding: .2em .25em .2em .5em
+  margin: .2em 0
+  display: flex
+  align-items: center
+  a
+    margin: 0 1.3em
+    color: $light
+
+.date-picker
+  color: $light !important
+  display: flex
+  align-items: center
+  padding: .75em
+  &:first-of-type
+    &::after
+      content: "-tól"
+  &:last-of-type
+    &::after
+      content: "-ig"

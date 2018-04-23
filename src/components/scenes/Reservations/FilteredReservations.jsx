@@ -1,70 +1,77 @@
-import React from 'react'
+import React, {Component} from "react"
+import {withRouter} from "react-router-dom"
+import QueryString from "query-string"
+import {List} from "material-ui/List"
 
-import {List} from 'material-ui/List'
+import Reservation from "./Reservation"
 
-import Reservation from './Reservation'
+import {PlaceholderText} from "../../shared"
+import moment from "moment"
 
-import {PlaceholderText} from '../../shared'
 
-
-const FilteredReservations = ({reservations, query, rooms, from, to}) => {
-  const filterByRoom = (listToFilter, rooms) => {
-    const filteredList = new Set(listToFilter)
-    listToFilter.forEach(filteredElement => {
-      for (var i = 0; i < rooms.length; i++) {
-        !rooms[i] && filteredElement.props.reservation.metadata.roomId - 1 === i && filteredList.delete(filteredElement)
-      }
-    })
-    return Array.from(filteredList)
+class FilteredReservations extends Component {
+  
+  state = {
+  	elrejt: [],
+  	keres: "",
+  	tol: moment().subtract(1, "months").toDate(),
+  	ig: moment().add(3, "months").toDate()
   }
 
-  const filterByDate = (listToFilter, fromDate, toDate) => {
-    const filteredList = []
-    listToFilter.forEach(filteredElement => {
-      const {reservation} = filteredElement.props
-      const from = new Date(reservation.from)
-      const to = new Date(reservation.to)
-      if (from >= fromDate && to <= toDate) {
-        filteredList.push(filteredElement)
-      }
-    })
-    return filteredList
+  componentDidMount() {this.updateFromURL(this.props.location.search)}
+
+  componentWillReceiveProps({location: {search}}) {this.updateFromURL(search)}
+  
+  updateFromURL = search => {
+  	const query = QueryString.parse(search)
+  	Object.keys(query).forEach(key => {
+  		this.setState({[key]: query[key]})
+  	})
+  	if (!query.elrejt) {
+  		this.setState({elrejt: []})
+  	}
   }
 
-  const filterByWords = (listToFilter, query) => {
-    if (query !== null && query.length >= 1){
-        const filteredList = []
-        listToFilter.forEach(filteredElement => {
-        const {message, name} = filteredElement.props.reservation.details
-        if (message.toLowerCase().includes(query) || name.toLowerCase().includes(query)) {
-          !filteredList.includes(filteredElement) && filteredList.push(filteredElement)
-        }
-      })
-      return filteredList
-    }
-    return listToFilter
-  }
+  shouldFilterByRoom = (roomId, rooms) =>  
+  	!rooms.includes(roomId.toString())
+  
 
-  let filteredReservations = []
-  for (let key in reservations) {
-    const reservation = reservations[key]
-    const reservationComponent = <Reservation id={key} {...{key, reservation}}/>
-    filteredReservations.push(reservationComponent)
-  }
-
-  filteredReservations = filterByRoom(filteredReservations, rooms)
-  filteredReservations = filterByDate(filteredReservations, from, to)
-  filteredReservations = filterByWords(filteredReservations, query)
-
-  return (
-    <div>
-      {filteredReservations.length !== 0 ?
-        <List>
-          {filteredReservations}
-        </List> : <PlaceholderText>Nincs egyezés</PlaceholderText>
-      }
-    </div>
+  shouldFilterByDate = (reservationFrom, reservationTo, filterFrom, filterTo) => (
+  	moment.range(moment(filterFrom), moment(filterTo))
+  		.overlaps(moment.range(moment(reservationFrom), moment(reservationTo)))
   )
+
+  shouldFilterBySearch = (name, message, query) => (
+  	message.toLowerCase().includes(query.toLowerCase()) || 
+    name.toLowerCase().includes(query.toLowerCase())
+  )
+
+  
+  
+  render() {
+  	const {keres, elrejt, tol, ig} = this.state
+  	const {reservations} = this.props
+  	const filtered = reservations ? reservations
+  		.filter(({name, message, from, to, roomId}) => 
+  			this.shouldFilterBySearch(name, message, keres) &&
+      this.shouldFilterByDate(from, to, tol, ig) &&
+      this.shouldFilterByRoom(roomId, elrejt)
+  		).map(reservation => 
+  			<Reservation 
+  				key={reservation.id}
+  				{...{reservation}}
+  			/>
+  		).reverse() : []
+      
+  	return (
+  		<div>
+  			{filtered.length !== 0 ?
+  				<List style={{padding: 0, margin: "0 0 calc(10vmin + 56px)"}}>{filtered}</List> :
+  				<PlaceholderText>Nincs egyezés</PlaceholderText>
+  			}
+  		</div>
+  	)
+  }
 }
 
-export default FilteredReservations
+export default withRouter(FilteredReservations)
