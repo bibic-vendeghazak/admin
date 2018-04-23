@@ -9,33 +9,29 @@ import {RESERVATIONS_FS} from '../../../utils/firebase'
 export default class Calendar extends Component {
 
   state = {
-    reservations: null,
+    reservations: {},
     date: null,
     currentDate: moment(),
     mutat: []
   }
 
-  updateURL = params => {
-    if (params.year && params.month) {
-      const {year, month} = params
-      this.setState({
-        currentDate:  moment(`${year}-${month}-01`)
-      })
-    }
+  updateURL = ({year, month}) => {
+    this.setState({currentDate: moment().year(year).month(month-1)})
   }
 
   componentDidMount() {
-    
     this.updateURL(this.props.match.params)
-
-    reservationsRef.on("value", snap => {
-      const reservations = snap.val()
-      reservations && Object.keys(reservations).forEach(reservation => {
-        if(!reservations[reservation].handled){
-          delete reservations[reservation]
-        } 
+    RESERVATIONS_FS.where("handled", "==", true).onSnapshot(snap => {
+      this.setState({reservations: {}})
+      snap.forEach(reservation => {
+        const {from, to, roomId} = reservation.data()
+        this.setState(({reservations}) => ({
+          reservations: {
+            ...reservations,
+            [reservation.id]: {from, to, roomId}
+          }
+        })) 
       })
-      this.setState({reservations})
     })
   }
 
@@ -44,23 +40,13 @@ export default class Calendar extends Component {
     this.updateURL(params)
   }
 
-  changeDate = direction => {
-    this.setState( ({currentDate}) => ({
-      currentDate: !direction ? moment() : currentDate.add(direction, 'month')
-    }))
-  }
+
 
 
   render() {
     const {history} = this.props
-    const reservations = {}
-    const {currentDate} = this.state
-    Object.entries(this.state.reservations || {}).forEach(reservation => {
-      const [key,value] = reservation
-      const {roomId, from, to} = value
-      reservations[key] = {roomId, from, to}
-    })
-
+    const {currentDate, reservations} = this.state
+    
     
     return (
       <div id="calendar-wrapper">
