@@ -5,7 +5,8 @@
  * @param {number} maxChildren the maximum number of children
  * @returns {object} the new pricing, with preserved pricing from the previous state
  */
-module.exports.childCombinations = (old, maxPeople, children) => {
+
+const childCombinations = (old, maxPeople, children) => {
     let combinations = {}
     let combination = Array(children).fill("6-12").join("_")
     const length = combination.length - 1

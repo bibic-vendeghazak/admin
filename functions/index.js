@@ -7,6 +7,7 @@ const overlaps = require('./lib/overlaps')
 const emailTemplate = require("./lib/email")
 
 // Init Firebase
+const prices = require("./lib/prices")
 
 // Database refs
 const roomsRef = admin.database().ref("rooms")
