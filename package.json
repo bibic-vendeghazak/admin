@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "firebase": "^4.10.1",
+    "babel-eslint": "^8.2.3",
     "firebase-admin": "^5.12.0",
     "firebase-functions": "^1.0.1",
     "material-ui": "^0.20.0",
@@ -12,6 +13,7 @@
     "node-sass": "^4.7.2",
     "node-sass-chokidar": "^1.2.2",
     "npm-run-all": "^4.1.2",
+    "prettier": "^1.12.1",
     "query-string": "5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -28,5 +30,9 @@
     "build": "npm run build-css && react-scripts build",
     "deploy": "npm run build && firebase deploy",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-plugin-react": "^7.7.0"
   }
 }
