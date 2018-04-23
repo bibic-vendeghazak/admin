@@ -68,50 +68,8 @@ class App extends Component {
 
   componentDidMount = () => {
     window.innerWidth <=768 && this.setState({isDrawerOpened: false})
-    const db = firebase.database()
-    const reservations = db.ref("reservations")
-    const feedbacksRef = db.ref("feedbacks")
-    const roomsRef = db.ref("rooms")
-    const roomServicesRef = db.ref("roomServices")
-    const serverMessageRef = db.ref("serverMessage")
-    firebase.auth().onAuthStateChanged(user => {
+    AUTH.onAuthStateChanged(user => {
       if(user){
-        db.ref(`admins/${user.uid}`).once("value", snap =>{
-          this.setState({profile: snap.val()})
-        })
-        serverMessageRef.on("value", snap => {
-          const {message, type} = snap.val()
-          message !== "" && this.handleNotification(message, type, "server")
-        })
-        reservations.on("value", snap => {
-          let unHandledReservationCount = 0
-          snap.forEach(reservation => {
-              if (!reservation.val().handled) {
-                unHandledReservationCount++
-              }
-            })
-          this.setState({unHandledReservationCount})
-        })
-        feedbacksRef.on("value", snap => {
-          let unreadFeedbackCount = 0
-          snap.forEach(feedback => {
-            if (!feedback.val().handled) {
-              unreadFeedbackCount+=1
-            }
-          })
-          this.setState({unreadFeedbackCount})
-        })
-
-        roomsRef.on("value", snap => {
-          this.setState({
-            rooms: snap.val()
-          })
-        })
-        roomServicesRef.on("value", snap => {
-          this.setState({
-            roomServices: snap.val()
-          })
-        })
         this.setState({isLoggedIn: true})
       } 
     })
@@ -174,15 +132,21 @@ class App extends Component {
 
   render() {
     const {
-      profile, unHandledReservationCount, unreadFeedbackCount,
+      profile,
       isMenuActive,
       isDrawerOpened, isLoggedIn,
       // Snackbar states
       notificationMessage, notificationType, isNotificationOpen, errorType,
     } = this.state
+
+    
     return (
+      <MyProvider>
       <div className="app">
-        <Notification handleNotificationClose={this.handleNotificationClose} {...{isLoggedIn, notificationMessage, notificationType, isNotificationOpen, errorType}}/> 
+        <Notification
+          handleNotificationClose={this.handleNotificationClose} 
+          {...{isLoggedIn, notificationMessage, notificationType, isNotificationOpen, errorType}}
+          /> 
         {isLoggedIn ?
           <div>
             <AppBar
@@ -190,55 +154,55 @@ class App extends Component {
               style={{position: "fixed"}}
               title={this.renderTitle()}
               iconElementRight={this.renderRightIcon()}
-            />
+              />
             <Sidebar
               handleLogout={this.handleLogout}
-              {...{profile, isMenuActive, isDrawerOpened,unHandledReservationCount, unreadFeedbackCount}}
+              {...{profile, isMenuActive, isDrawerOpened}}
               toggleSidebar={this.toggleSidebar}
-            />
+              />
             <main style={{
               marginLeft: isDrawerOpened && window.innerWidth >= 768 && 256,
               transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'
             }}>
                 <Route
                   path={routes.WELCOME}
-                  component={({match}) =>
-                    <Welcome {...{match, profile}}/>
-                  }
-                />
+                  component={({match}) => <Welcome {...{match, profile}}/>}
+                  />
                 <Route
                   path={routes.CALENDAR+"/:year/:month"}
                   component={Calendar}
-                />
+                  />
                 <Route
                   path={routes.ROOMS}
                   component={Rooms}
-                />
+                  />
                 <Route
-                  path={routes.RESERVATIONS+"/:readState"}
+                  path={routes.RESERVATIONS}
                   component={Reservations}
-                />
+                  />
                 <Route
                   path={routes.FEEDBACKS+"/:readState"}
                   component={Feedbacks}
-                />
+                  />
                 {/* <Route
                   path={routes.STATS}
                   component={({match}) =>
-                    <Stats
-                      {...{match, rooms, feedbacks}}
-                      reservations={handledReservations}
-                    />
-                  }
-                /> */}
+                  <Stats
+                  {...{match, rooms, feedbacks}}
+                  reservations={handledReservations}
+                  />
+                }
+              /> */}
             </main>      
           </div> :
           <Login handleNotification={this.handleNotification}/>
         }
       </div>
+      </MyProvider>
     )
   }
 }
 
-
 export default withRouter(App)
+
+

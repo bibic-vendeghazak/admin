@@ -20,14 +20,14 @@ const dividerStyle = {
 export default class Sidebar extends Component {
 
 	render() {
-		const {profile, unHandledReservationCount,
-			unreadFeedbackCount, handleLogout, isDrawerOpened, toggleSidebar} = this.props
+		const {handleLogout, isDrawerOpened, toggleSidebar} = this.props
 			
 		return (
 			<aside onClick={() => window.innerWidth <= 768 && toggleSidebar()} id="sidebar">
-				<Drawer  open={isDrawerOpened} containerStyle={{height: 'calc(100% - 64px)', top: 64}}>
-				<Profile {...{profile}}/>
-				<Divider style={dividerStyle}/>
+				<Drawer  open={isDrawerOpened} containerStyle={{height: "calc(100% - 64px)", top: 64}}>
+					<Profile/>
+					<Logout {...{handleLogout}}/>
+					<Divider style={dividerStyle}/>
 					<MenuItem
 						primaryText={
 							<a
@@ -58,14 +58,18 @@ export default class Sidebar extends Component {
 						primaryText="Akciós ajánlatok"
 						leftIcon="attach_money"
 					/>	
+					<MyContext.Consumer>
+						{({unHandledReservationCount}) =>
+							<SidebarMenuItem
+								to={routes.RESERVATIONS}
+								primaryText="Foglalások"
+								leftIcon="bookmark_border"
+								count={unHandledReservationCount}
+							/>
+						}
+					</MyContext.Consumer>
 					<SidebarMenuItem
-						to={routes.RESERVATIONS+"/kezeletlen"}
-						primaryText="Foglalások"
-						leftIcon="bookmark_border"
-						count={unHandledReservationCount}
-					/>
-					<SidebarMenuItem
-						to={`${routes.CALENDAR}/${moment().format("YYYY")}/${moment().format("M")}`}
+						to={`${routes.CALENDAR}/${moment().format("YYYY/MM")}`}
 						primaryText="Naptár"
 						leftIcon="date_range"
 					/>	
@@ -84,42 +88,45 @@ export default class Sidebar extends Component {
 						primaryText="Statisztikák"
 						leftIcon="trending_up"
 					/> */}
-					<SidebarMenuItem
-						to={routes.FEEDBACKS+"/olvasatlan"}
-						primaryText="Visszajelzések"
-						leftIcon="feedback"
-						count={unreadFeedbackCount}
-					/>
-				<Logout {...{handleLogout}}/>
+					<MyContext.Consumer>
+						{({unreadFeedbackCount}) => <SidebarMenuItem
+							to={routes.FEEDBACKS+"/olvasatlan"}
+							primaryText="Visszajelzések"
+							leftIcon="feedback"
+							count={unreadFeedbackCount}
+						/>}
+					</MyContext.Consumer>
 				</Drawer>
 			</aside>
 		)}
 }
 
 
-const Profile = ({profile}) => (
-	<div className="profile">
-		<h3>{profile ? profile.name : "Bíbic vendégházak"}</h3>
-		<Avatar className="avatar"
-			src={profile ?
-				 `https://bibic-vendeghazak.github.io/web/assets/images/other/${profile.src}.jpg`:
-				  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"}
-			size={64}
-		/>
-	</div>
+const Profile = () => (
+	<MyContext.Consumer>
+		{({profile: {name, src}}) => 
+			<div className="profile">
+				<h3>{name || "Bíbic vendégházak"}</h3>
+				<Avatar className="avatar"
+					src={src ?
+						`https://bibic-vendeghazak.github.io/web/assets/images/other/${src}.jpg`:
+						"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"}
+					size={48}
+				/>
+			</div>
+		}
+	</MyContext.Consumer>
 )
 
 
 const SidebarMenuItem = ({primaryText, leftIcon, count, to}) => (
-	<Link 
+	<NavLink
+		className="menu-item"
+		activeClassName="menu-active"	
 		style={{textDecoration: "none"}}
 		to={to}>
-		<MenuItem
-			style={{color: "white"}} 
-			primaryText={primaryText}
-			leftIcon={<FontIcon style={{color: "#fff"}} className="material-icons">{leftIcon}</FontIcon>}
-			rightIcon={count ? <Badge primary badgeContent={count.toString()}/> : null}
-			to={to}
-		/>
-	</Link>
+		<FontIcon style={{color: "#fff"}} className="material-icons">{leftIcon}</FontIcon>
+		{primaryText}
+		{count ? <Badge className="menu-badge" primary badgeContent={count.toString()}/> : null}
+	</NavLink>
 )
