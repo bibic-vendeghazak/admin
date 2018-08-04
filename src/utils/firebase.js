@@ -2,6 +2,7 @@ import firebase from "firebase/app"
 import "firebase/database"
 import "firebase/firestore"
 import "firebase/auth"
+import "firebase/storage"
 
 firebase.initializeApp({
 	apiKey: "AIzaSyB4-Y2_RCdrOouJJxUJkBBXGyj4hNdjDs0",
@@ -17,8 +18,8 @@ firestore.settings(settings)
 
 export const DB = firebase.database()
 export const FS = firebase.firestore()
+export const FileStore = firebase.storage()
 export const AUTH = firebase.auth()
-
 
 
 export const RESERVATIONS_FS = FS.collection("reservations")
