@@ -13,4 +13,5 @@ export const STATS = "/statisztikak"
 
 
 export const EDIT = "szerkeszt"
+export const UPLOAD = "feltoltes"
 export const HANDLED = "kezelt"
