@@ -13,7 +13,6 @@ import Edit from "material-ui/svg-icons/image/edit"
 import Delete from "material-ui/svg-icons/action/delete"
 import Save from "material-ui/svg-icons/content/save"
 import Cancel from "material-ui/svg-icons/navigation/cancel"
-import styled from "styled-components"
 
 export default class TextParagraph extends Component {
 
