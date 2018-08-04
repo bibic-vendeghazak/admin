@@ -1,31 +1,30 @@
 import React, {Component} from 'react'
 
+import {
+  Card,
+  CardActions,
+  RaisedButton,
+  TextField
+} from 'material-ui'
 
-import firebase from 'firebase'
-
-
-import Card, { CardActions } from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField/TextField'
+import {ROOMS_DB} from '../../../utils/firebase'
 
 export default class Description extends Component {
-  
+
   state = {
     description: "",
     isEditing: false
   }
 
   componentDidMount() {
-    firebase.database()
-    .ref(`rooms/${this.props.roomId-1}/description`)
-    .on("value", snap => {
-      this.setState({
-        description: snap.val()
+    ROOMS_DB
+      .child(`${this.props.roomId-1}/description`)
+      .on("value", snap => {
+        this.setState({description: snap.val()})
       })
-    })
   }
-  
-  
+
+
   handleOpenEdit = () => {
     this.setState({isEditing: true})
   }
@@ -37,15 +36,17 @@ export default class Description extends Component {
 
 
   handleSubmitDescription = () => {
-    firebase.database()
-      .ref(`rooms/${this.props.roomId-1}/description`)
+    ROOMS_DB
+      .child(`${this.props.roomId-1}/description`)
       .set(this.state.description).then(() => this.handleCloseEdit())
-    
+
   }
 
-  
+
   render() {
-    const {description, isEditing} = this.state
+    const {
+      description, isEditing
+    } = this.state
     return (
       <Card className="room-edit-block">
         <div
@@ -56,41 +57,45 @@ export default class Description extends Component {
             padding: "1em"
           }}
         >
-        {isEditing ?
-          <TextField
-            id="description"
-            floatingLabelText="leírás"
-            fullWidth
-            multiLine
-            value={description}
-            onChange={e => this.handleDescriptionChange(e.target.value)}
-          /> :
-          <p>{description}</p>
-        }
+          {isEditing ?
+            <TextField
+              floatingLabelText="leírás"
+              fullWidth
+              id="description"
+              multiLine
+              onChange={e => this.handleDescriptionChange(e.target.value)}
+              value={description}
+            /> :
+            <p>{description}</p>
+          }
 
         </div>
-        <CardActions style={{display: "flex", justifyContent: "flex-end"}}> 
+        <CardActions style={{
+          display: "flex",
+          justifyContent: "flex-end"
+        }}
+        >
           {isEditing ?
             <div>
               <RaisedButton
-                style={{margin: 12}}
                 label={"Mégse"}
                 onClick={() => this.handleCloseEdit()}
+                style={{margin: 12}}
               />
               <RaisedButton
-                secondary
                 label={"Mentés"}
                 onClick={() => this.handleSubmitDescription()}
+                secondary
               />
             </div> :
             <RaisedButton
-              secondary
               label={"Módosít"}
               onClick={() => this.handleOpenEdit()}
+              secondary
             />
           }
         </CardActions>
       </Card>
-  )
+    )
   }
 }

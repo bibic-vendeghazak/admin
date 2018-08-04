@@ -1,30 +1,28 @@
 import React, {Component} from 'react'
 
-
-import firebase from 'firebase'
-
-import Card from 'material-ui/Card'
-import Toggle from 'material-ui/Toggle'
-import Dialog from 'material-ui/Dialog'
-import RaisedButton from 'material-ui/RaisedButton'
+import {ROOMS_DB} from '../../../utils/firebase'
+import {
+  Card,
+  Toggle,
+  Dialog,
+  RaisedButton
+} from 'material-ui'
 
 export default class Availability extends Component {
-  
+
   state = {
     isAvailable: false,
     isDialogOpen: false
   }
 
   componentDidMount() {
-    const roomAvailabilityRef = firebase.database().ref(`rooms/${this.props.roomId-1}/available`)
+    const roomAvailabilityRef = ROOMS_DB.child(`${this.props.roomId-1}/available`)
     roomAvailabilityRef.on("value", snap => {
-      this.setState({
-        isAvailable: snap.val()
-      })
+      this.setState({isAvailable: snap.val()})
     })
   }
-  
-  
+
+
   handleDialogOpen = () => {
     this.setState({isDialogOpen: true})
   }
@@ -33,19 +31,19 @@ export default class Availability extends Component {
 
 
   handleAvailability = () => {
-    this.setState(({isAvailable}) => ({
-      isAvailable: !isAvailable
-    }), () => {
-      firebase.database().ref(`rooms/${this.props.roomId-1}/available`)
-      .set(this.state.isAvailable).then(() => this.handleDialogClose())
+    this.setState(({isAvailable}) => ({isAvailable: !isAvailable}), () => {
+      ROOMS_DB.child(`${this.props.roomId-1}/available`)
+        .set(this.state.isAvailable).then(() => this.handleDialogClose())
     })
 
   }
 
-  
+
   render() {
     const {roomId} = this.props
-    const {isAvailable, isDialogOpen} = this.state
+    const {
+      isAvailable, isDialogOpen
+    } = this.state
     return (
       <Card className="room-edit-block">
         <div
@@ -57,33 +55,40 @@ export default class Availability extends Component {
           }}
         >
           <p>Szoba {roomId} jelenleg</p>
-          <Dialog 
-            title="Foglalás"
-            modal
-            open={isDialogOpen}
+          <Dialog
             actions={[
               <RaisedButton
                 label="Mégse"
                 onClick={this.handleDialogClose}
               />,
               <RaisedButton
-                style={{marginLeft: 12}}
-                secondary
                 label="Igen"
                 onClick={this.handleAvailability}
+                secondary
+                style={{marginLeft: 12}}
               />
             ]}
-          > Figyelem! A szobafoglalás ezzel <span style={{color: "red", fontWeight: "bold"}}>{isAvailable && "nem"} elérhetővé</span> válik. Biztos folytatja?
+            modal
+            open={isDialogOpen}
+            title="Foglalás"
+          > Figyelem! A szobafoglalás ezzel
+            <span
+              style={{
+                color: "red",
+                fontWeight: "bold"
+              }}
+            >
+              {isAvailable && "nem"} elérhetővé</span> válik. Biztos folytatja?
           </Dialog>
           <Toggle
             label={<div>{!isAvailable && <span style={{fontWeight: "bold"}}>nem</span>} <span style={{fontWeight: isAvailable && "bold"}}>elérhető</span></div>}
             onClick={() => this.handleDialogOpen()}
             style={{width: "auto"}}
             toggled={isAvailable}
-           
+
           />
         </div>
       </Card>
-  )
+    )
   }
 }

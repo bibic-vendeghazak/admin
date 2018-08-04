@@ -1,15 +1,13 @@
-import React, { Component } from 'react'
-
-import firebase from 'firebase'
-
-import Card from 'material-ui/Card'
-import { ListItem } from 'material-ui/List'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField/TextField'
+import React, {Component} from 'react'
 
 
-
-
+import {
+  Card,
+  ListItem,
+  RaisedButton,
+  TextField
+} from 'material-ui'
+import {ROOMS_DB} from '../../../utils/firebase'
 
 
 export default class Population extends Component {
@@ -18,11 +16,16 @@ export default class Population extends Component {
     const {roomId} = this.props
     return (
       <Card className="room-edit-block">
-        <PeopleCount populateDatabase={this.populateDatabase} type="maxPeople" label="Személy" {...{roomId}}/>
+        <PeopleCount
+          label="Személy"
+          populateDatabase={this.populateDatabase}
+          type="maxPeople"
+          {...{roomId}}
+        />
       </Card>
     )
   }
-} 
+}
 
 class PeopleCount extends Component {
   state = {
@@ -30,32 +33,42 @@ class PeopleCount extends Component {
     isEditing: false
   }
 
+
+  componentDidMount() {
+    const {
+      roomId, type
+    } = this.props
+    ROOMS_DB
+      .child(`${roomId-1}/prices/metadata/${type}`).on("value", snap => {
+        this.setState({count: snap.val()})
+      })
+  }
+
   handleOpenEdit = () => this.setState({isEditing: true})
+
   handleCloseEdit = () => this.setState({isEditing: false})
-  
+
   handleChange = count => this.setState({count})
 
   handleSave = () => {
-    const {roomId, type} = this.props
+    const {
+      roomId, type
+    } = this.props
     this.handleCloseEdit()
-    firebase.database()
-    .ref(`rooms/${roomId-1}/prices/metadata/${type}`)
-    .set(parseInt(this.state.count, 10))
-  }
-  
-  componentDidMount() {
-    const {roomId, type} = this.props
-    firebase.database().ref(`rooms/${roomId-1}/prices/metadata/${type}`).on("value", snap => {
-      this.setState({count: snap.val()})
-    })
+    ROOMS_DB
+      .child(`${roomId-1}/prices/metadata/${type}`)
+      .set(parseInt(this.state.count, 10))
   }
 
+
   render() {
-    const {count, isEditing} = this.state
+    const {
+      count, isEditing
+    } = this.state
     const {label} = this.props
     return(
-      <ListItem 
-        disabled 
+      <ListItem
+        disabled
         style={{
           display: "flex",
           flexWrap: "wrap",
@@ -66,26 +79,40 @@ class PeopleCount extends Component {
         <p>{label}</p>
         {isEditing ?
           <TextField
-            style={{flexGrow: 1, margin: "0 1em"}}
             floatingLabelText="személy"
             id={label}
+            onChange={e => this.handleChange(e.target.value)}
+            style={{
+              flexGrow: 1,
+              margin: "0 1em"
+            }}
             type="number"
             value={count}
-            onChange={e => this.handleChange(e.target.value)}
           /> :
-          <p style={{flexGrow: 1, textAlign: "right", margin: ".5em 1em"}}>maximum <span style={{fontWeight: "bold", fontSize: "1.1em"}}>{count}</span> fő</p>
+          <p style={{
+            flexGrow: 1,
+            textAlign: "right",
+            margin: ".5em 1em"
+          }}
+          >maximum
+            <span style={{
+              fontWeight: "bold",
+              fontSize: "1.1em"
+            }}
+            >
+              {count}</span> fő</p>
         }
         {isEditing &&
-          <RaisedButton 
-            style={{margin: "0 12px"}}
+          <RaisedButton
             label="Mégse"
             onClick={() => this.handleCloseEdit()}
+            style={{margin: "0 12px"}}
           />
         }
-        <RaisedButton 
-          secondary 
+        <RaisedButton
           label={isEditing ? "Mentés" : "Módosít"}
           onClick={() => isEditing ? this.handleSave() : this.handleOpenEdit()}
+          secondary
         />
       </ListItem>
     )
