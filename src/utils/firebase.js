@@ -12,12 +12,11 @@ firebase.initializeApp({
   storageBucket: "bibic-vendeghazak-api.appspot.com",
   messagingSenderId: "586582307718"
 })
-const firestore = firebase.firestore()
-const settings = {timestampsInSnapshots: true}
-firestore.settings(settings)
+
+export const FS = firebase.firestore()
+FS.settings({timestampsInSnapshots: true})
 
 export const DB = firebase.database()
-export const FS = firebase.firestore()
 export const FileStore = firebase.storage()
 export const AUTH = firebase.auth()
 
