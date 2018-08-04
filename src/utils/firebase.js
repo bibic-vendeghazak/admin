@@ -5,12 +5,12 @@ import "firebase/auth"
 import "firebase/storage"
 
 firebase.initializeApp({
-	apiKey: "AIzaSyB4-Y2_RCdrOouJJxUJkBBXGyj4hNdjDs0",
-	authDomain: "bibic-vendeghazak-api.firebaseapp.com",
-	databaseURL: "https://bibic-vendeghazak-api.firebaseio.com",
-	projectId: "bibic-vendeghazak-api",
-	storageBucket: "bibic-vendeghazak-api.appspot.com",
-	messagingSenderId: "586582307718"
+  apiKey: "AIzaSyB4-Y2_RCdrOouJJxUJkBBXGyj4hNdjDs0",
+  authDomain: "bibic-vendeghazak-api.firebaseapp.com",
+  databaseURL: "https://bibic-vendeghazak-api.firebaseio.com",
+  projectId: "bibic-vendeghazak-api",
+  storageBucket: "bibic-vendeghazak-api.appspot.com",
+  messagingSenderId: "586582307718"
 })
 const firestore = firebase.firestore()
 const settings = {timestampsInSnapshots: true}
