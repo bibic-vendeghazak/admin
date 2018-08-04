@@ -1,9 +1,9 @@
 import React from "react"
 import {Link} from "react-router-dom"
-import { EDIT } from "../../../utils/routes"
-import Edit from "material-ui/svg-icons/image/edit"
 import {SortableContainer, SortableElement} from "react-sortable-hoc"
-import { GridTile } from "material-ui"
+import {EDIT} from "../../../utils/routes"
+import Edit from "material-ui/svg-icons/image/edit"
+import {GridTile} from "material-ui"
 
 export const SortableItem = SortableElement(({value: [key, {fileName, SIZE_360}], baseURL}) =>
 	<GridTile

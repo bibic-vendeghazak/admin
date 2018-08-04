@@ -1,16 +1,19 @@
 import React, {Component, Fragment} from "react"
-import firebase from "firebase"
-import IconButton from "material-ui/IconButton"
-import Delete from "material-ui/svg-icons/action/delete"
+import {Route, Link, withRouter} from "react-router-dom"
+
 import Close from "material-ui/svg-icons/navigation/close"
 import Upload from "material-ui/svg-icons/file/file-upload"
 import Progress from "material-ui/LinearProgress"
-import Card, { CardActions } from "material-ui/Card"
-import {Paper, RaisedButton} from "material-ui"
-import { colors } from "../../../utils"
-import Subheader from "material-ui/Subheader/Subheader"
+import {
+  Subheader,
+  Paper,
+  FloatingActionButton,
+  RaisedButton,
+  CardActions
+} from "material-ui/"
+import {UPLOAD} from "../../../utils/routes"
+import {FileStore} from "../../../utils/firebase"
 
-export default class UploadPictures extends Component {
   
   state = {
   	progress: 0,

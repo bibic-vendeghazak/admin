@@ -1,25 +1,30 @@
-import React, { Component, Fragment } from "react"
+import React, {Component, Fragment} from "react"
 import {Route, Link} from "react-router-dom"
-import {Card, RaisedButton, Paper, Subheader} from "material-ui"
+import {arrayMove} from "react-sortable-hoc"
+import {DB} from "../../../utils/firebase"
+import {EDIT} from "../../../utils/routes"
+
+import Upload from "./Upload"
+
 import {Section} from ".."
-import CircularProgress from "material-ui/CircularProgress"
-import { EDIT } from "../../../utils/routes"
-import CardMedia from "material-ui/Card/CardMedia"
-import CardText from "material-ui/Card/CardText"
-import TextField from "material-ui/TextField/TextField"
-import CardActions from "material-ui/Card/CardActions"
+import {SortableList} from "./Sort"
+
+import {
+  Card,
+  CardActions,
+  CardMedia,
+  CardText,
+  TextField,
+  CircularProgress,
+  RaisedButton,
+  Paper,
+  Subheader
+} from "material-ui"
+
 import Save from "material-ui/svg-icons/content/save"
 import Cancel from "material-ui/svg-icons/navigation/cancel"
 import Delete from "material-ui/svg-icons/action/delete"
-import Rearrange from "material-ui/svg-icons/editor/format-list-numbered"
-import Upload from "./Upload"
-
-import {arrayMove} from "react-sortable-hoc"
-import { DB } from "../../../utils/firebase"
-
-import {SortableList} from "./Sort"
-
-
+import Empty from 'material-ui/svg-icons/action/find-in-page'
 
 class Gallery extends Component {
 	state = {
