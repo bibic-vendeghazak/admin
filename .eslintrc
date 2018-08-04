@@ -1,54 +1,61 @@
 {
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "node": true
-    },
-    "extends": [
-        "prettier",
-        "prettier/react"
-    ],
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "ecmaVersion": 8,
-        "ecmaFeatures": {
-            "arrowFunctions": true,
-            "classes": true,
-            "experimentalObjectRestSpread": true,
-            "jsx": true
-        },
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react",
-        "prettier",
-        "promise"
-    ],
-    "rules": {
-        "promise/catch-or-return": "error",
-        "prefer-destructuring": ["error", {
-        "array": true,
-        "object": true
-        }, {
-        "enforceForRenamedProperties": false
-        }],
-        "react/jsx-uses-vars": 2,
-        "indent": [
-            "error",
-            "tab"
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "never"
-        ]
-    }    
+  "extends": [
+    "prettier",
+    "prettier/react"
+  ],
+  "parser":"babel-eslint",
+  "rules": {
+    "require-jsdoc":"warn",
+    // "max-len": ["warn", {
+    //   "ignoreTemplateLiterals": true,
+    //   "ignoreStrings": true
+    //   }],
+    "block-spacing":["warn", "never"],
+    "semi": [2, "never"],
+    "no-trailing-spaces":"error",
+    "multiline-comment-style":"error",
+    "space-unary-ops":"error",
+    "no-mixed-spaces-and-tabs":"error",
+    "indent": ["error", 2],
+    "no-multiple-empty-lines":"error",
+    "no-console":["warn", { "allow": ["warn", "error"]}],
+    "object-property-newline":"error",
+    "object-curly-newline":["error", {"minProperties": 2}],
+    "object-curly-spacing":"error",
+    "prefer-template":"warn",
+    "arrow-spacing":"error",
+    "jsx-quotes":"error",
+    "prefer-arrow-callback":"warn",
+    "no-duplicate-imports":"error",
+    "dot-location":["error", "property"],
+    "no-multi-spaces":"error",
+    "radix":"error",
+    "comma-dangle":["error", "never"],
+    "prefer-const":"error",
+    "array-bracket-newline":"error",
+    "react/sort-comp": "error",
+    "react/jsx-max-props-per-line":"error",
+    "react/jsx-first-prop-new-line":"error",
+    "react/jsx-closing-bracket-location": "error",
+    "react/jsx-handler-names":"error",
+    "react/jsx-sort-props":"error",
+    "react/no-deprecated": "warn",
+    "lines-between-class-members":"error"
+  },
+  "parserOptions": {
+    "sourceType":"module",
+    "ecmaVersion": 9,
+    "ecmaFeatures": {
+      "jsx": true,
+      "classes": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "plugins": [
+    "prettier",
+    "react"
+  ]
 }
