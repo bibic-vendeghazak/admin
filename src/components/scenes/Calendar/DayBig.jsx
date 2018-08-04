@@ -10,7 +10,7 @@ import {
 	TableRowColumn,
 } from "material-ui/Table"
 import LinkIcon from "material-ui/svg-icons/content/link"
-import {RESERVATIONS, EDIT, CALENDAR} from "../../../utils/routes"
+import {RESERVATIONS, CALENDAR, HANDLED} from "../../../utils/routes"
 import {DB, RESERVATIONS_FS} from "../../../utils/firebase"
 import { CircularProgress } from "material-ui"
 
@@ -19,7 +19,8 @@ export default class DayBig extends Component {
 
   state = {
   	reservations: {},
-  	date: null
+  	date: null,
+  	hasNoDates: false
   }
 
   handleKeyUp = ({keyCode}) => {
@@ -62,9 +63,9 @@ export default class DayBig extends Component {
   componentWillUnmount() {
   	window.removeEventListener("keyup", this.handleKeyUp, false)
   }
-
-  componentWillReceiveProps = ({match: {params: {year, month, day}}}) => {
-    
+	
+  UNSAFE_componentWillReceiveProps = ({match: {params: {year, month, day}}}) => {
+		
   	this.updateActiveReservations(
   		moment()
   			.year(year)
@@ -74,58 +75,68 @@ export default class DayBig extends Component {
   }
 
   updateActiveReservations = date => {
-    
+  	this.setState({reservations: {}})
   	DB.ref(`reservationDates/${date.clone().format("YYYY/MM/DD")}`)
-  		.once("value").then(snap => {
-  			this.setState({reservations: {}})
-  			snap.forEach(reservation =>   
-  				RESERVATIONS_FS
-  					.doc(reservation.val())
-  					.get()
-  					.then(snap => 
-  						this.setState(({reservations: prevReservations}) => ({
-  							reservations: {
-  								...prevReservations,
-  								[snap.id]: snap.data()
-  							}
-  						}))).then(() => {
-  						this.setState({date: date.clone().format("MMMM DD, dddd")})
-  					}))
-  		}).catch(e => console.error(e))
+  		.once("value")
+  		.then(snap => {
+  			if (snap.exists()) {
+					
+  				this.setState({hasNoDates: false})
+  				snap.forEach(reservation =>
+  					Object.keys(reservation.val()).forEach(reservationId =>
+  						RESERVATIONS_FS
+  							.doc(reservationId).get()
+  							.then(reservation => 
+  								this.setState(({reservations}) => ({
+  									reservations: {
+  										...reservations,
+  										[reservationId]: reservation.data()
+  									}
+  								}))
+  							))	
+  				)
+  			} else this.setState({hasNoDates: true})
+  		})		
+  		.then(() => this.setState({
+  			date: date.clone().format("MMMM DD, dddd")
+  		}))
+  		.catch(e => console.error(e))
   }
 
   
   render() {
-  	const {reservations} = this.state
+  	const {reservations, hasNoDates} = this.state
+  	const reservationKeys = Object.keys(reservations)
   	return (
   		<Card className="day-big">
   			<CardHeader 
   				style={{textTransform: "capitalize"}}
   				title={this.state.date}
   			/>
-  			{Object.keys(reservations).length ?
   				<Table style={{tableLayout: "auto"}}>
   					<TableBody showRowHover displayRowCheckbox={false}>
   						<TableRow>
-  							<TableHeaderColumn colSpan={1}>Szoba</TableHeaderColumn>
-  							<TableHeaderColumn colSpan={2}>Érkezés / Távozás</TableHeaderColumn>
-  							<TableHeaderColumn style={{textAlign: "right"}} colSpan={4}>Foglalás</TableHeaderColumn>
+  							<TableHeaderColumn
+  							style={{width: 48}} 
+
+  						>Szoba</TableHeaderColumn>
+  							<TableHeaderColumn >Érkezés / Távozás</TableHeaderColumn>
+  							<TableHeaderColumn style={{textAlign: "right"}} >Foglalás</TableHeaderColumn>
   						</TableRow>
-  						{Object.keys(reservations).map(key => {
+  						{reservationKeys.length !== 0 ? reservationKeys.map(key => {
   							const {from, to, roomId} = reservations[key]
   							return (
   								<TableRow {...{key}}>
   									<TableRowColumn
-  										colSpan={1}
   										style={{width: 48, textAlign: "center", color: "white"}} 
   										className={`room-day-big room-${roomId}`}
   									>
   										{roomId}
   									</TableRowColumn>
-  									<TableRowColumn colSpan={2}>
-  										{moment(from).format("MMMM D.")} / {moment(to).format("MMMM D.")}
+  									<TableRowColumn>
+  										{moment(from.seconds*1000 || from).format("MMMM D.")} / {moment(to.seconds*1000 || to).format("MMMM D.")}
   									</TableRowColumn>
-  									<TableRowColumn colSpan={4}>
+  									<TableRowColumn >
   										<Link className="reservation-link" 
   											style={{
   												fontWeight: "bold",
@@ -133,17 +144,24 @@ export default class DayBig extends Component {
   												alignItems:"center",
   												justifyContent: "flex-end"
   											}}
-  											to={`${RESERVATIONS}/${key}/${EDIT}`}
+  											to={`${RESERVATIONS}?kezelt=igen&keres=${key}`}
   										>
   											<LinkIcon color="orangered"/>
   										</Link>
   									</TableRowColumn>
   								</TableRow>
   							)
-  						})}
+  					}) : <TableRow>
+  						<TableRowColumn style={{padding: 16, textAlign: "center"}} colSpan={3}>
+  							{hasNoDates ?
+  								"Nincs foglalás." :
+  								<CircularProgress/>
+  							}
+  						</TableRowColumn>
+  					</TableRow>
+  					}
   					</TableBody>
-  				</Table> :
-  				<CircularProgress/>}
+  				</Table>
   		</Card>
   	)
   }

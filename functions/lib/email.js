@@ -1,132 +1,96 @@
-const functions = require('firebase-functions')
-const nodemailer = require("nodemailer")
-const moment = require("./moment")
-const emailTemplates = require("./email.templates")
+"use strict";
 
+const functions = require('firebase-functions');
+const nodemailer = require("nodemailer");
+const templates = require("./templates");
 
 // Init email
-const {email: user, password: pass} = functions.config().gmail
+const { email: user, password: pass } = functions.config().gmail;
 const mailTransport = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {user, pass}
-}) 
+	service: 'gmail',
+	auth: { user, pass }
+});
 
 // Global variables
-const APP_NAME = "Bíbic vendégházak"
-const from = `${APP_NAME} 🏠 <szallasfoglalas@bibicvendeghazak.hu>`
-const replyTo = "szallasfoglalas@bibicvendeghazak.hu"
-const FOOTER = `Üdvözlettel ${APP_NAME}`
+const APP_NAME = "Bíbic vendégházak";
+const adminEmailAddress = "szallasfoglalas@bibicvendeghazak.hu";
+const adminReservationEmail = `${APP_NAME} 🏠 <${adminEmailAddress}>`;
+const FOOTER = `Üdvözlettel ${APP_NAME}`;
 
+/**
+ * 
+ * @param {*} reservation 
+ * @param {*} type One of: created, accepted, deleted, rejected, changed
+ */
+module.exports.sendReservationEmails = (reservation, type) => {
+	let userTextTemplate = null,
+	    htmlTemplate = null;
 
-
-module.exports.reservationCreated = (reservationId, reservation) => {
-	const mail = {
-		from,
-		replyTo,
-		to: reservation.email
+	let userSubject = "";
+	let adminSubject = "";
+	switch (type) {
+		case "created":
+			console.log("Created reservation");
+			userTextTemplate = templates.createdUserText(reservation, FOOTER, "user");
+			userSubject = "Foglalása jóváhagyásra vár 🔔";
+			adminSubject = "Új foglalás 🔔";
+			break;
+		case "accepted":
+			console.log("Accepted reservation");
+			userTextTemplate = templates.acceptedUserText(reservation, FOOTER, "user");
+			htmlTemplate = templates.acceptedHTML(reservation);
+			userSubject = "Foglalását jóváhagytuk 🎉";
+			adminSubject = "Foglalás jóváhagyva 🎉";
+			break;
+		case "deleted":
+			console.log("Deleted reservation");
+			userTextTemplate = templates.deletedUserText(reservation, FOOTER, "user");
+			userSubject = "Foglalását töröltük ❌";
+			adminSubject = "Foglalás törölve ❌";
+			break;
+		case "changed":
+			console.log("Changed reservation");
+			userTextTemplate = templates.changedUserText(reservation, FOOTER, "user");
+			userSubject = "Foglalását módosítottuk ✍";
+			adminSubject = "Foglalás módosítva ✍";
+			break;
 	}
-	mail.subject = `Foglalását rögzítettük 🔔`
-	mail.text = `
-		Tisztelt ${reservation.name}!
 
-		Foglalási kérelmét megkaptuk, az alábbi információkkal:
-		Foglaló telefonszáma: ${reservation.tel}
-		Foglalni kívánt szoba: Szoba ${reservation.roomId}
-		Érkezés: ${moment(reservation.from).format("LLL")}
-		Távozás: ${moment(reservation.to).format("LLL")}
-		Felnőttek száma: ${reservation.adults}
-		Gyerekek száma: ${(reservation.children && reservation.children.length) || "0"}
-		Megjegyzés: ${reservation.message}
-		Foglalási azonosító: ${reservationId}
+	return Promise.all([
+	// To user
+	{
+		replyTo: adminEmailAddress,
+		from: adminReservationEmail,
+		to: reservation.email,
+		text: userTextTemplate,
+		html: htmlTemplate,
+		subject: userSubject
+	},
+	// To admin
+	{
+		replyTo: reservation.email,
+		from: adminReservationEmail,
+		text: templates.adminText(reservation),
+		html: templates.adminHTML(reservation),
+		to: adminEmailAddress,
+		subject: adminSubject
+	}].map(mail => mailTransport.sendMail(mail).then(() => console.log("Email sent to ", mail.to))));
+};
 
-		Mihamarabb értesítjük Önt a további teendőkről.
-
-		${FOOTER}`
-
-	return mailTransport
-		.sendMail(mail)
-		.then(() => console.log("Confirmation sent to ", reservation.email))
-}
-
-
-
-module.exports.reservationAccepted = (reservationId, reservation) => {
-	console.log("Reservation accepted")
-	const mail = {
-		from,
-		replyTo,
-		to: reservation.email
-	}
-	mail.subject = `Foglalását elfogadtuk 🎉`
-	mail.text = `
-		Tisztelt ${reservation.name}!
-
-		Foglalási kérelmét ezennel elfogadtuk, az alábbi információkkal:
-		Foglaló telefonszáma: ${reservation.tel}
-		Foglalni kívánt szoba: Szoba ${reservation.roomId}
-		Érkezés: ${moment(reservation.from).format("LLL")}
-		Távozás: ${moment(reservation.to).format("LLL")}
-		Felnőttek száma: ${reservation.adults}
-		Gyerekek száma: ${(reservation.children && reservation.children.length) || "0"}
-		Megjegyzés: ${reservation.message}
-		Foglalási azonosító: ${reservationId}
-		
-		${FOOTER}`
-
-	mail.html = emailTemplates.reservationAcceptedTemplate(reservationId, reservation)
-
-	return mailTransport
-		.sendMail(mail)
-		.then(() => console.log("Acception sent to ", reservation.email))
-
-}
-
-
-
-module.exports.reservationRejected = (to, name, remove=false) => {
-	console.log(`Reservation ${remove ? "removed" : "rejected"}`)
-
-	const action = remove ? "töröltük" : "visszautasítottuk"
-
-	const mail = { from, replyTo, to }
-	
-	mail.subject = `Foglalását ${action} ❌`
-	mail.text = `
-		Tisztelt ${name}!
-
-		Foglalását ${action}.
-		Sajnáljuk.
-		
-		${FOOTER}`
-
-	return mailTransport
-		.sendMail(mail)
-		.then(() => console.log("Rejection sent to ", to))
-}
-
-
-
-module.exports.reservationChanged = (oldReservation, reservation) => {
-	console.log("Reservation details changed")
-	const mail = {from, replyTo, to: reservation.email}
-	// TODO: Mark changed elements
-	mail.subject = `Foglalás módosítva 🔔`
-	mail.text = `
-		Tisztelt ${reservation.name}!
-
-		Foglalása az alábbiak szerint módosul:
-		Foglaló neve: ${reservation.name}
-		Foglaló telefonszáma: ${reservation.tel}
-		Foglalni kívánt szoba száma: ${reservation.roomId}
-		Érkezés: ${moment(reservation.from).format("LLL")}
-		Távozás: ${moment(reservation.to).format("LLL")}
-		Felnőttek száma: ${reservation.adults}
-		Gyerekek száma: ${(reservation.children && reservation.children.length) || "0"}
-		Megjegyzés: ${reservation.message}
-
-		${FOOTER}`
-
-	return mailTransport
-		.sendMail(mail)
-		.then(() => console.log('Reservation change sent to ', reservation.to))
-  }
+module.exports.sendMessageEmails = snap => Promise.all([
+// To user
+{
+	replyTo: adminEmailAddress,
+	from: adminReservationEmail,
+	to: snap.val().email,
+	text: templates.userMessage(snap.val(), FOOTER),
+	subject: "Üzenetét megkaptuk 👍"
+},
+// To admin
+{
+	replyTo: snap.val().email,
+	from: snap.val().email,
+	text: templates.adminMessage(snap.val()),
+	to: adminEmailAddress,
+	subject: `Új üzenet! 🔔`
+}].map(mail => mailTransport.sendMail(mail).then(() => console.log("Email sent to ", mail.to))));

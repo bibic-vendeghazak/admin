@@ -6,12 +6,15 @@ import {
 	SERVER_MESSAGE_DB,
 	ROOM_SERVICES_DB,
 	RESERVATIONS_FS,
+	RESERVATION_DATES_DB,
 	FEEDBACKS_DB
 } from "../../utils/firebase"
+import moment from "moment"
 
-const MyContext = React.createContext()
 
-export class MyProvider extends Component {
+const Store = React.createContext()
+
+export class Database extends Component {
 
   state = {
   	profile: {
@@ -47,10 +50,22 @@ export class MyProvider extends Component {
   			})
 
   			ROOMS_DB.on("value", snap => {
-  				this.setState({
-  					rooms: snap.val()
-  				})
+  				const rooms = snap.val()
+  				RESERVATION_DATES_DB
+  					.child(moment().format("YYYY/MM/DD"))
+  					.once("value", snap => {
+  						snap.forEach(reservation => {
+  							if (snap.exists) {
+  								Object.keys(snap.val()).map(key => key.substring(1))
+  									.forEach(roomId => {
+  										rooms[roomId-1]["isBooked"] = true
+  									})
+  							}
+  						})
+  					}).then(() => this.setState({rooms}))
+  					.catch(e => {throw new Error(e)})
   			})
+
   			ROOM_SERVICES_DB.on("value", snap => {
   				this.setState({
   					roomServices: snap.val()
@@ -63,12 +78,12 @@ export class MyProvider extends Component {
 
   render() {
   	return (
-  		<MyContext.Provider value={{...this.state}}>
+  		<Store.Provider value={{...this.state}}>
   			{this.props.children}
-  		</MyContext.Provider>
+  		</Store.Provider>
   	)
   }
 }
 
 
-export default MyContext
+export default Store

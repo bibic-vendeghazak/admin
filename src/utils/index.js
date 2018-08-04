@@ -1,3 +1,5 @@
+import moment from "moment"
+
 export const colors = {
 	orange: "#b35d41",
 	lightOrange: "#cc8c78",
@@ -54,5 +56,34 @@ export const parseValue = (value, type) => {
 
 
 
-// NOTE: Fix reservation validation
-export const  isValidReservation = reservation => false
+
+const nameRe = new RegExp(/[\s.áéíóöőúüűÁÉÍÓÖŐÚÜŰa-zA-Z-]/)
+const emailRe = new RegExp(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)
+const telRe = new RegExp(/[0-9-+\s]/)
+
+
+export const valid = {
+	roomId: (roomId=0, roomsLength) => (0 < roomId) && (roomId <= roomsLength),
+	name: name => nameRe.test(name),
+	email: email => emailRe.test(email),
+	tel: tel => telRe.test(tel),
+	address: address => typeof address === "string" && address.length > 0,
+	message: message => typeof message === "string",
+	period: (from, to) => moment(to).startOf("day").diff(moment(from).startOf("day"), "days") >= 1,
+	adults: adults => typeof adults === "number" || adults >= 1,
+	children: children => Array.isArray(children),
+}
+
+
+
+export const  isValidReservation = ({roomId, name, email, tel, address, from, to, message, adults, children}) =>
+	//NOTE: roomsLength is hardcoded!!!!
+	valid.roomId(roomId, 6) &&
+	valid.name(name) &&
+	valid.email(email) &&
+	valid.tel(tel) &&
+	valid.address(address) &&
+	valid.period(from, to) &&
+	valid.message(message) &&
+	valid.adults(adults) &&
+	valid.children(children)

@@ -1,11 +1,14 @@
 .rooms
   display: grid
   justify-content: center
-  margin: 2vmin
+  margin: 2.5vw
   @media (min-width: 640px)
     grid-template-columns: repeat(2, 1fr)
   @media (min-width: 960px)
+    max-width: 960px
+    margin: 2.5vw auto
     grid-template-columns: repeat(3, 1fr)
+      
   
 .inputfile
 	width: 0.1px
@@ -26,7 +29,7 @@
   z-index: 1
 
 .room
-  margin: 2vmin
+  margin: 1rem
   @for $i from 1 through length($rooms)
     &:nth-of-type(#{$i})
       .room-bg::after
@@ -62,37 +65,47 @@
   @media (max-width: 640px)
     margin: 0
 
+.pictures-container
+  display: flex
+  flex-wrap: wrap
+  align-items: flex-start
+  margin: .25em
+  min-height: 128px
+
+.upload-picture
+  position: relative
+  display: flex
+  border: .25em dashed grey
+  box-sizing: border-box
+  width: calc(100% / 3 - .5em)
+  min-height: calc(160px * 2/3)
+  margin: .25em
+  transition: .3s
+  &:hover
+    background: transparentize(grey, .6)
 
 .picture
   position: relative
   cursor: pointer
   margin: .25em
-  max-width: calc(33% - .5em)
+  width: calc(100% / 3 - .5em)
   background-color: black
+  transition: .2s
   &:hover
-    .hover
-      opacity: 1
-  .hover
-    transition: .3s
-    opacity: 0
-    color: $light
-    display: flex
-    justify-content: center
-    align-items: center
-    span
+    opacity: .8
+    &:after
+      content: "Kép törlése"
+      color: white
       text-shadow: 0 0 10px black
-  .edit, .hover
-    position: absolute
-    width: 100%
-    height: 100%
-    top: 0
-    left: 0
-    z-index: 1
-    box-shadow: inset 0 0 20px black
-  .edit
-    background-color: rgba(255,255,255,.5)
-    display: flex
-    justify-content: center
-    align-items: center
+      position: absolute
+      width: 100%
+      height: 100%
+      top: 0
+      left: 0
+      z-index: 1
+      box-shadow: inset 0 0 20px black
+      display: flex
+      justify-content: center
+      align-items: center
   img
     max-width: 100%

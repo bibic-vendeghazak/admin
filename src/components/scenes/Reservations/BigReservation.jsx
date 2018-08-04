@@ -8,7 +8,6 @@ import TextField from "material-ui/TextField/TextField"
 import {RESERVATIONS_FS, AUTH, TIMESTAMP} from "../../../utils/firebase"
 import {ModalDialog} from "../../shared"
 import MenuItem from "material-ui/MenuItem"
-import { RESERVATIONS } from "../../../utils/routes"
 
 class BigReservation extends Component {
 
@@ -44,7 +43,11 @@ class BigReservation extends Component {
   }
     
 
-  handleClose = () => this.props.history.push(RESERVATIONS)
+  handleClose = () => {
+  	const {match: {url}, history} = this.props
+  	const {location: {search}} = history
+  	history.push(url.split("/").slice(0, -2).join("/") + search)
+  }
 
   handleSubmit = () => {
   	const reservation = this.state
@@ -140,7 +143,7 @@ class BigReservation extends Component {
   						textFieldStyle={{maxWidth: 120}}
   						name="from"
   						onChange={(e, date) => this.handleDateChange(date, "from")}
-  						value={moment(from).toDate()}
+  						value={moment(from.seconds*1000 || from).toDate()}
   					/>
   				</div>
   				<div className="dialog-field">
@@ -149,7 +152,7 @@ class BigReservation extends Component {
   						textFieldStyle={{maxWidth: 120}}
   						name="to"
   						onChange={(e, date) => this.handleDateChange(date, "to")}
-  						value={moment(to).toDate()}
+  						value={moment(to.seconds*1000 || to).toDate()}
   					/>
   				</div>
   			</div>

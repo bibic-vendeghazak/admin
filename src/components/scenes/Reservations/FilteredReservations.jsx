@@ -11,24 +11,22 @@ import moment from "moment"
 
 class FilteredReservations extends Component {
   
-  state = {
+  state =  {
   	elrejt: [],
   	keres: "",
-  	tol: moment().subtract(1, "months").toDate(),
-  	ig: moment().add(3, "months").toDate()
+  	tol: null,
+  	ig: null
   }
-
-  componentDidMount() {this.updateFromURL(this.props.location.search)}
-
-  componentWillReceiveProps({location: {search}}) {this.updateFromURL(search)}
-  
-  updateFromURL = search => {
-  	const query = QueryString.parse(search)
-  	Object.keys(query).forEach(key => {
-  		this.setState({[key]: query[key]})
-  	})
-  	if (!query.elrejt) {
-  		this.setState({elrejt: []})
+	
+	
+  static getDerivedStateFromProps(props, state){
+  	let {keres, elrejt, tol, ig} = QueryString.parse(props.location.search)
+  	return {
+  		...state,
+  		keres: keres || "",
+  		elrejt: elrejt || [],
+  		tol: tol || moment().subtract(1, "months").toDate(),
+  		ig: ig || moment().add(3, "months").toDate()
   	}
   }
 
@@ -36,14 +34,21 @@ class FilteredReservations extends Component {
   	!rooms.includes(roomId.toString())
   
 
+	// REVIEW: Firebase new Timestamp
   shouldFilterByDate = (reservationFrom, reservationTo, filterFrom, filterTo) => (
   	moment.range(moment(filterFrom), moment(filterTo))
-  		.overlaps(moment.range(moment(reservationFrom), moment(reservationTo)))
+  		.overlaps(
+  			moment.range(
+  				moment(reservationFrom.seconds*1000 || reservationFrom),
+  				moment(reservationTo.seconds*1000 || reservationTo)
+  			)
+  		)
   )
 
-  shouldFilterBySearch = (name, message, query) => (
+  shouldFilterBySearch = (reservationId, name, message, query) => (
+  	reservationId === query ||
   	message.toLowerCase().includes(query.toLowerCase()) || 
-    name.toLowerCase().includes(query.toLowerCase())
+		name.toLowerCase().includes(query.toLowerCase())
   )
 
   
@@ -52,17 +57,17 @@ class FilteredReservations extends Component {
   	const {keres, elrejt, tol, ig} = this.state
   	const {reservations} = this.props
   	const filtered = reservations ? reservations
-  		.filter(({name, message, from, to, roomId}) => 
-  			this.shouldFilterBySearch(name, message, keres) &&
-      this.shouldFilterByDate(from, to, tol, ig) &&
-      this.shouldFilterByRoom(roomId, elrejt)
+  		.filter(({id, name, message, from, to, roomId}) => 
+  			this.shouldFilterBySearch(id, name, message, keres) &&
+				this.shouldFilterByDate(from, to, tol, ig) &&
+				this.shouldFilterByRoom(roomId, elrejt)
   		).map(reservation => 
   			<Reservation 
   				key={reservation.id}
   				{...{reservation}}
   			/>
   		).reverse() : []
-      
+			
   	return (
   		<div>
   			{filtered.length !== 0 ?

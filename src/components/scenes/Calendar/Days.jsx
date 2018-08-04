@@ -12,8 +12,8 @@ const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reser
 			const value = reservations[key]
 			const {from, to, roomId} = value
 			const currentDay = currentDate.clone().date(day)
-			const dayFrom = moment(from).startOf("day")
-			const dayTo = moment(to).endOf("day")
+			const dayFrom = moment(from.seconds*1000 || from).startOf("day")
+			const dayTo = moment(to.seconds*1000 || to).endOf("day")
 			const dateRange = moment.range(dayFrom, dayTo)
 			if (dateRange.contains(currentDay)) {
 				const reservation = dayReservations[key] = {roomId}
@@ -43,10 +43,10 @@ const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reser
 
 const Day = ({location: {pathname}, reservations, date, isPlaceholder}) => {
 	let rooms = []
-
 	Object.keys(reservations).forEach(key => {
 		const {roomId, from, to} = reservations[key]
-		const reservationState = from && to ? "from-to" : from ? "from" : to && "to"
+		
+		const reservationState = from ? "from" : to && "to"
 		rooms.push(<li {...{key}} className={`reserved room-${roomId} ${reservationState}`}/>)
 	})
 

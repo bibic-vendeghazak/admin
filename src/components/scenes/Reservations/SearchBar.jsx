@@ -6,7 +6,6 @@ import {Chip, DatePicker} from "material-ui"
 import SearchIcon from "material-ui/svg-icons/action/search"
 import FilterIcon from "material-ui/svg-icons/content/filter-list"
 
-import { RESERVATIONS } from "../../../utils/routes"
 import moment from "moment"
 moment.locale("hu-HU")
 class SearchBar extends Component {
@@ -33,16 +32,16 @@ class SearchBar extends Component {
   	window.removeEventListener("keyup", this.handleKeyUp, false)
   }
 
-  componentWillReceiveProps = ({location: {search}}) => {
+  UNSAFE_componentWillReceiveProps = ({location: {search}}) => {
   	this.updateFromURL(search)
   }
 
   updateFromURL = search => {
-  	const {keres, tol, ig, elrejt} = QueryString.parse(search) 
-  	keres && this.setState({keres})
+  	const {keres, tol, ig, elrejt} = QueryString.parse(search)
+  	this.setState({keres: keres || ""})
   	tol && this.setState({tol: moment(tol).toDate()})
   	ig && this.setState({ig: moment(ig).toDate()})
-  	elrejt ? this.setState({elrejt}) : this.setState({elrejt: []})
+  	this.setState({elrejt: elrejt || []})
   }
 
   handleSearchBar = ({target: {name, value}}) => this.setState({[name]: value})
@@ -52,7 +51,7 @@ class SearchBar extends Component {
   	let query = QueryString.parse(this.props.location.search)
   	query.keres = this.state.keres
   	query = QueryString.stringify(query)
-  	this.props.history.push(`${RESERVATIONS}?${query}`)
+  	this.props.history.push(`${this.props.match.url}?${query}`)
   }
 
   handleKeyUp = ({keyCode}) => {
@@ -60,14 +59,14 @@ class SearchBar extends Component {
   	case 13:
   		this.handleSearchClick()
   		break
-  	case 49:
-  	case 50:
-  	case 51:
-  	case 52:
-  	case 53:
-  	case 54:
-  		this.handleRoomToggle((keyCode-48).toString())
-  		break
+  	// case 49:
+  	// case 50:
+  	// case 51:
+  	// case 52:
+  	// case 53:
+  	// case 54:
+  	// 	this.handleRoomToggle((keyCode-48).toString())
+  	// 	break
   	default:
   		break
   	}
@@ -91,8 +90,7 @@ class SearchBar extends Component {
   		query.elrejt = id
   	}
   	query = QueryString.stringify(query)
-
-  	this.props.history.push(`${RESERVATIONS}?${query}`)
+  	this.props.history.push(`${this.props.match.url}?${query}`)
   }
 
   handleDateChange = (name, value) => {
@@ -100,7 +98,7 @@ class SearchBar extends Component {
   	let query = QueryString.parse(this.props.location.search)
   	query[name] = moment(value).format("YYYY-MM-DD")
   	query = QueryString.stringify(query)
-  	this.props.history.push(`${RESERVATIONS}?${query}`)
+  	this.props.history.push(`${this.props.match.url}?${query}`)
   }
 
   render() {

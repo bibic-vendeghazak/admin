@@ -1,4 +1,6 @@
 import React, {Component} from "react"
+import {Link} from "react-router-dom"
+import QueryString from "query-string"
 import {Tabs, Tab} from "material-ui/Tabs"
 import {Route} from "react-router-dom"
 import SearchBar from "./SearchBar"
@@ -6,24 +8,23 @@ import NewReservation from "./NewReservation"
 import FilteredReservations from "./FilteredReservations"
 import BigReservation from "./BigReservation"
 import {TabLabel} from "../../shared"
-import { RESERVATIONS, EDIT } from "../../../utils/routes"
+import { RESERVATIONS, EDIT, HANDLED } from "../../../utils/routes"
 import { RESERVATIONS_FS } from "../../../utils/firebase"
-import MyContext from "../../App/Context"
+import Store from "../../App/Store"
 
-const initialState = {
+const emptyReservations = {
 	handledReservations: [],
 	unHandledReservations: [],
 	unHandledReservationCount: 0,
-	handledReservationCount: 0,
+	handledReservationCount: 0
 }
 
 export default class Reservations extends Component {
 
-  state = initialState
+  state = {...emptyReservations, handledState: false}
 
   
   componentDidMount() {
-  	// NOTE: Add URL parsing
   	this.updateReservations(null, null, [1])
   	window.addEventListener("keyup", this.handleKeyUp, false)
   }
@@ -33,13 +34,19 @@ export default class Reservations extends Component {
 		case 85:
 			this.props.history.push(`${RESERVATIONS}/uj`)
 			break
-		
 		default:
 			break
 		}
 		
 	}
-	
+
+	static getDerivedStateFromProps(props, state) {
+		return {
+			...state,
+			handledState: QueryString.parse(props.location.search).kezelt === "igen"
+		}
+	}
+
 
   updateReservations = (from, to, roomsToShow) => {
   	let query = RESERVATIONS_FS
@@ -64,7 +71,10 @@ export default class Reservations extends Component {
   	query
   		.limit(100)
   		.onSnapshot(snap => {
-  			this.setState(initialState)
+  			this.setState(prevState => ({
+  				...prevState,
+  				...emptyReservations
+  			}))
   			snap.forEach(reservationSnap => {
   				const reservation = reservationSnap.data()
   				const {id} = reservationSnap
@@ -95,22 +105,24 @@ export default class Reservations extends Component {
 
   render() {
   	const {handledReservations, handledReservationCount, 
-  		unHandledReservations, unHandledReservationCount
+  		unHandledReservations, unHandledReservationCount,
+  		handledState
   	} = this.state
   	return (
-  		<MyContext.Consumer>
+  		<Store.Consumer>
   			{({rooms}) =>
   				<div>
-  					<Route exact 
+  					<Route 
   						path={RESERVATIONS}
   						component={() => <SearchBar {...{rooms}}/>}
   					/>
   					<NewReservation/>
-  					<Tabs inkBarStyle={{marginTop: -4, height: 4}}>
+  					<Tabs value={handledState} inkBarStyle={{marginTop: -4, height: 4}}>
   						<Tab value={false}
   							label={
   								<TabLabel
-  									title="Új"
+  									to={`${RESERVATIONS}?kezelt=nem`}
+  									title="Kezeletlen"
   									count={unHandledReservationCount}
   								/>
   							}
@@ -122,7 +134,8 @@ export default class Reservations extends Component {
   						<Tab value
   							label={
   								<TabLabel
-  									title="Elfogadott"
+  									to={`${RESERVATIONS}?kezelt=igen`}
+  									title="Kezelt"
   									count={handledReservationCount}
   								/>
   							}
@@ -137,7 +150,7 @@ export default class Reservations extends Component {
   						render={({match, history}) => <BigReservation {...{match, history, rooms}}/>}
   					/>
   				</div>}
-  		</MyContext.Consumer>
+  		</Store.Consumer>
   	)
   }
 }

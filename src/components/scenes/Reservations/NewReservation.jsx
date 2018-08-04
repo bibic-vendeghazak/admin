@@ -34,14 +34,19 @@ class NewReservationDialog extends Component {
 	state = {
 		isFullReservation: false,
 		reservation: {
+			message: "🤖 admin által felvéve",
 			name: "",
 			roomId: "",
-			tel: "",
-			email: "",
-			adults: 0,
+			tel: "000-000-000",
+			email: "email@email.hu",
+			address: "cím",
+			adults: 1,
 			children: [],
 			from: moment().toDate(),
-			to: moment().toDate()
+			to: moment().add(1, "day").toDate(),
+			handled: true,
+			activeService: "breakfast",
+			price: 1
 		}
 	}
 
@@ -78,7 +83,8 @@ class NewReservationDialog extends Component {
 		this.setState(({reservation}) => ({
 			reservation: {
 				...reservation,
-				[type]: moment(value).unix() * 1000
+				[type]: type==="from" ? moment(value).hours(14).valueOf() : moment(value).hours(10).valueOf(),
+				to: type==="from" ? moment(value).add(1, "day").hours(10).valueOf() : moment(value).hours(10).valueOf()
 			}
 		}))
 	}
@@ -87,7 +93,6 @@ class NewReservationDialog extends Component {
 	handleSubmit = () => {
 		const {reservation} = this.state
 		ADMINS.child(AUTH.currentUser.uid).once("value", snap => {
-			reservation.message = "Foglalás admin által"
 			reservation.timestamp = TIMESTAMP
 			reservation.lastHandledBy = snap.val().name
 			if (isValidReservation(reservation)) {
@@ -115,7 +120,7 @@ class NewReservationDialog extends Component {
 		const {
 			name, tel, email,
 			roomId, adults, children,
-			from, to
+			from, to, message, address, price
 		} = this.state.reservation
 		return (
 			<ModalDialog open autoScrollBodyContent
@@ -175,6 +180,18 @@ class NewReservationDialog extends Component {
 							value={email}
 							floatingLabelText="Foglaló e-mail címe"
 						/>
+						<TextField
+							onChange={this.handleInputChange}
+							name="message"
+							value={message}
+							floatingLabelText="Megjegyzés"
+						/>
+						<TextField
+							onChange={this.handleInputChange}
+							name="address"
+							value={address}
+							floatingLabelText="Foglaló címe"
+						/>
 					</div>
 					<div className="form-group">
 						<TextField
@@ -190,6 +207,14 @@ class NewReservationDialog extends Component {
 								type="number"
 								value={children.length}
 								floatingLabelText="Gyerekek száma"
+							/>
+						</div>
+						<div style={{display: "flex"}}>
+							<TextField
+								onChange={this.handleInputChange}
+								type="price"
+								value={price}
+								floatingLabelText="Ár"
 							/>
 						</div>
 					</div>

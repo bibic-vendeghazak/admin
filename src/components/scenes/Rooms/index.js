@@ -1,6 +1,6 @@
 import React, {Fragment} from "react"
 import {Route} from "react-router-dom"
-import MyContext from "../../App/Context"
+import Store from "../../App/Store"
 
 import Room from "./Room"
 import BigRoom from "./BigRoom"
@@ -8,29 +8,23 @@ import { ROOMS, EDIT } from "../../../utils/routes"
 
 
 
-const Rooms = () => (
-	<MyContext.Consumer>
+const Rooms = () => 
+	<Store.Consumer>
 		{({rooms}) =>
 			<Fragment>
 				<Route
-					path={ROOMS+"/:roomId"+EDIT}
+					path={ROOMS+"/:roomId/"+EDIT}
 					component={BigRoom}
 				/>
-				<Route exact path={ROOMS} render={() => (
+				<Route exact path={ROOMS} render={() => 
 					<ul className="rooms">
-						{rooms.map(({id, available, name}, index) => (
-							<Room
-								key={id}
-								roomId={id}
-								isBooked={true} 
-								{...{available, name}}
-							/>
-						)
+						{rooms.map(({available, name, isBooked, pictures}, index) => 
+							<Room {...{available, name, isBooked, pictures}} key={index} roomId={index}/>
 						)}
-					</ul>)}
+					</ul>}
 				/>
 			</Fragment>}
-	</MyContext.Consumer>
-)
+	</Store.Consumer>
+
 
 export default Rooms

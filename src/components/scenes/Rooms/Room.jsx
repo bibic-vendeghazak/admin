@@ -7,7 +7,7 @@ import {colors} from "../../../utils"
 import {ROOMS, EDIT} from "../../../utils/routes"
 
 
-const Room = ({available, isBooked, roomId, name}) => (
+const Room = ({available, isBooked, roomId, name, pictures}) => (
 	<li className="room">
 		<Card>
 			<CardMedia
@@ -28,21 +28,19 @@ const Room = ({available, isBooked, roomId, name}) => (
 						title={name} 
 						subtitle={
 							<span style={{textShadow: "0 0 5px rgba(0,0,0,.5)", textTransform: "uppercase", color: (isBooked || !available) && colors.red}}>
-								{available ? 
-									`${!isBooked ? "Nem" : ""} foglalt`:
-									"Nem elérhető"}
+								Jelenleg {available ? isBooked ? "foglalt" : "szabad" : "nem foglalható"}
 							</span>
 						}
 					/>
 				}
 			>
 				<img
-					src={`https://bibic-vendeghazak.github.io/web/assets/images/rooms/${roomId === 7 ? 1 : roomId}_0.jpg`}
+					src={pictures ? Object.values(pictures)[0].SIZE_360 : "http://via.placeholder.com/360x240"}
 					alt={name}
 				/>
 			</CardMedia>
 			<CardActions>
-				<Link to={`${ROOMS}/${roomId}${EDIT}`}>
+				<Link to={`${ROOMS}/${roomId+1}/${EDIT}`}>
 					<RaisedButton secondary label="Szerkesztés" />
 				</Link>
 			</CardActions>
