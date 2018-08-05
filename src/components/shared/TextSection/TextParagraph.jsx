@@ -5,7 +5,8 @@ import {
   CardActions,
   RaisedButton,
   TextField,
-  ListItem
+  ListItem,
+  Divider
 } from "material-ui"
 
 import Edit from "material-ui/svg-icons/image/edit"
@@ -41,75 +42,78 @@ export default class TextParagraph extends Component {
     } = this.state
 
     return (
-      <ListItem
-        disabled
-        style={{cursor: "grabbing"}}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "1em"
-          }}
+      <Fragment>
+        <ListItem
+          disabled={isEditing}
+          style={{cursor: "grabbing"}}
         >
-          {isEditing ?
-            <TextField
-              floatingLabelText="bekezdés szövege"
-              fullWidth
-              id="text"
-              multiLine
-              // REVIEW: Seems to be a hacky solution. Try something else...?
-              onChange={this.handleTextChange}
-              value={text || this.props.text}
-            /> :
-            <p
-              onClick={this.handleOpenEdit}
-              style={{
-                cursor: "pointer",
-                userSelect: "none"
-              }}
-            >{this.props.text || "Üres"}</p>
-          }
-
-        </div>
-        <CardActions>
-          {isEditing ?
-            <div>
-              <RaisedButton
-                icon={<Cancel/>}
-                label={"Mégse"}
-                labelPosition="before"
-                onClick={this.handleCloseEdit}
-                style={{marginRight: 6}}
-              />
-              <RaisedButton
-                icon={<Save/>}
-                label={"Mentés"}
-                labelPosition="before"
-                onClick={this.handleSubmitText}
-                secondary
-              />
-            </div> :
-            <Fragment>
-              <RaisedButton
-                icon={<Edit/>}
-                label={window.innerWidth >= 640 && "Módosít"}
-                labelPosition="before"
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "1em"
+            }}
+          >
+            {isEditing ?
+              <TextField
+                floatingLabelText="bekezdés szövege"
+                fullWidth
+                id="text"
+                multiLine
+                // REVIEW: Seems to be a hacky solution. Try something else...?
+                onChange={this.handleTextChange}
+                value={text || this.props.text}
+              /> :
+              <p
                 onClick={this.handleOpenEdit}
-                style={{marginRight: 6}}
-              />
-              <RaisedButton
-                icon={<Delete/>}
-                label={window.innerWidth >= 640 && "Törlés"}
-                labelPosition="before"
-                onClick={this.handleDeleteParagraph}
-                secondary
-              />
-            </Fragment>
-          }
-        </CardActions>
-      </ListItem>
+                style={{
+                  cursor: "pointer",
+                  userSelect: "none"
+                }}
+              >{this.props.text || "Üres"}</p>
+            }
+
+          </div>
+          <CardActions>
+            {isEditing ?
+              <div>
+                <RaisedButton
+                  icon={<Cancel/>}
+                  label={"Mégse"}
+                  labelPosition="before"
+                  onClick={this.handleCloseEdit}
+                  style={{marginRight: 6}}
+                />
+                <RaisedButton
+                  icon={<Save/>}
+                  label={"Mentés"}
+                  labelPosition="before"
+                  onClick={this.handleSubmitText}
+                  secondary
+                />
+              </div> :
+              <Fragment>
+                <RaisedButton
+                  icon={<Edit/>}
+                  label={window.innerWidth >= 640 && "Módosít"}
+                  labelPosition="before"
+                  onClick={this.handleOpenEdit}
+                  style={{marginRight: 6}}
+                />
+                <RaisedButton
+                  icon={<Delete/>}
+                  label={window.innerWidth >= 640 && "Törlés"}
+                  labelPosition="before"
+                  onClick={this.handleDeleteParagraph}
+                  secondary
+                />
+              </Fragment>
+            }
+          </CardActions>
+        </ListItem>
+        <Divider/>
+      </Fragment>
     )
   }
 }
