@@ -29,8 +29,8 @@ export default class TextParagraph extends Component {
 
 
   handleSubmitText = () =>
-    PARAGRAPHS_DB.child(this.props.path)
-      .update({text: this.state.text})
+    PARAGRAPHS_DB.child(`${this.props.path}/text`)
+      .set(this.state.text)
       .then(this.handleCloseEdit)
 
   handleDeleteParagraph = () => PARAGRAPHS_DB.child(this.props.path).remove()
