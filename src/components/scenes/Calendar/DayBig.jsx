@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {Component, Fragment} from "react"
 import {Link} from "react-router-dom"
 import moment from "moment"
 import {RESERVATIONS, CALENDAR} from "../../../utils/routes"
@@ -15,6 +15,7 @@ import {
   TableRowColumn
 } from "material-ui"
 import LinkIcon from "material-ui/svg-icons/content/link"
+import {Tip} from "../../shared"
 
 
 export default class DayBig extends Component {
@@ -116,76 +117,82 @@ export default class DayBig extends Component {
     } = this.state
     const reservationKeys = Object.keys(reservations)
     return (
-      <Card className="day-big">
-        <CardHeader
-          style={{textTransform: "capitalize"}}
-          title={this.state.date}
-        />
-        <Table style={{tableLayout: "auto"}}>
-          <TableBody
-            displayRowCheckbox={false}
-            showRowHover
-          >
-            <TableRow>
-              <TableHeaderColumn
-                style={{width: 48}}
-              >Szoba</TableHeaderColumn>
-              <TableHeaderColumn >Érkezés / Távozás</TableHeaderColumn>
-              <TableHeaderColumn style={{textAlign: "right"}} >Foglalás</TableHeaderColumn>
-            </TableRow>
-            {reservationKeys.length !== 0 ? reservationKeys.map(key => {
-              const {
-                from, to, roomId
-              } = reservations[key]
-              return (
-                <TableRow {...{key}}>
-                  <TableRowColumn
-                    className={`room-day-big room-${roomId}`}
-                    style={{
-                      width: 48,
-                      textAlign: "center",
-                      color: "white"
-                    }}
-                  >
-                    {roomId}
-                  </TableRowColumn>
-                  <TableRowColumn>
-                    {moment(from.seconds*1000 || from).format("MMMM D.")} / {moment(to.seconds*1000 || to).format("MMMM D.")}
-                  </TableRowColumn>
-                  <TableRowColumn >
-                    <Link
-                      className="reservation-link"
+      <Fragment>
+
+        <Card className="day-big">
+          <CardHeader
+            style={{textTransform: "capitalize"}}
+            title={this.state.date}
+          />
+          <Table style={{tableLayout: "auto"}}>
+            <TableBody
+              displayRowCheckbox={false}
+              showRowHover
+            >
+              <TableRow>
+                <TableHeaderColumn
+                  style={{width: 48}}
+                >Szoba</TableHeaderColumn>
+                <TableHeaderColumn >Érkezés / Távozás</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign: "right"}} >Foglalás</TableHeaderColumn>
+              </TableRow>
+              {reservationKeys.length !== 0 ? reservationKeys.map(key => {
+                const {
+                  from, to, roomId
+                } = reservations[key]
+                return (
+                  <TableRow {...{key}}>
+                    <TableRowColumn
+                      className={`room-day-big room-${roomId}`}
                       style={{
-                        fontWeight: "bold",
-                        display: "flex",
-                        alignItems:"center",
-                        justifyContent: "flex-end"
+                        width: 48,
+                        textAlign: "center",
+                        color: "white"
                       }}
-                      to={`${RESERVATIONS}?kezelt=igen&keres=${key}`}
                     >
-                      <LinkIcon color="orangered"/>
-                    </Link>
-                  </TableRowColumn>
-                </TableRow>
-              )
-            }) : <TableRow>
-              <TableRowColumn
-                colSpan={3}
-                style={{
-                  padding: 16,
-                  textAlign: "center"
-                }}
-              >
-                {hasNoDates ?
-                  "Nincs foglalás." :
-                  <CircularProgress/>
-                }
-              </TableRowColumn>
-            </TableRow>
-            }
-          </TableBody>
-        </Table>
-      </Card>
+                      {roomId}
+                    </TableRowColumn>
+                    <TableRowColumn>
+                      {moment(from.seconds*1000 || from).format("MMMM D.")} / {moment(to.seconds*1000 || to).format("MMMM D.")}
+                    </TableRowColumn>
+                    <TableRowColumn >
+                      <Link
+                        className="reservation-link"
+                        style={{
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems:"center",
+                          justifyContent: "flex-end"
+                        }}
+                        to={`${RESERVATIONS}?kezelt=igen&keres=${key}`}
+                      >
+                        <LinkIcon color="orangered"/>
+                      </Link>
+                    </TableRowColumn>
+                  </TableRow>
+                )
+              }) : <TableRow>
+                <TableRowColumn
+                  colSpan={3}
+                  style={{
+                    padding: 16,
+                    textAlign: "center"
+                  }}
+                >
+                  {hasNoDates ?
+                    "Nincs foglalás." :
+                    <CircularProgress/>
+                  }
+                </TableRowColumn>
+              </TableRow>
+              }
+            </TableBody>
+          </Table>
+        </Card>
+        <Tip>
+          Előző nap - ← | Következő nap - → | Esc - Vissza a naptárra
+        </Tip>
+      </Fragment>
     )
   }
 }
