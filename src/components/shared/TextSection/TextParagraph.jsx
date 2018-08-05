@@ -1,12 +1,11 @@
 import React, {Component, Fragment} from "react"
 import {PARAGRAPHS_DB} from "../../../utils/firebase"
 
-
 import {
-  Card,
   CardActions,
   RaisedButton,
-  TextField
+  TextField,
+  ListItem
 } from "material-ui"
 
 import Edit from "material-ui/svg-icons/image/edit"
@@ -30,8 +29,8 @@ export default class TextParagraph extends Component {
 
 
   handleSubmitText = () =>
-    PARAGRAPHS_DB.child(this.props.path)
-      .update({text: this.state.text})
+    PARAGRAPHS_DB.child(`${this.props.path}/text`)
+      .set(this.state.text)
       .then(this.handleCloseEdit)
 
   handleDeleteParagraph = () => PARAGRAPHS_DB.child(this.props.path).remove()
@@ -42,10 +41,9 @@ export default class TextParagraph extends Component {
     } = this.state
 
     return (
-      <Card style={{
-        cursor: "grabbing",
-        "marginBottom": "2.5em"
-      }}
+      <ListItem
+        disabled
+        style={{cursor: "grabbing"}}
       >
         <div
           style={{
@@ -83,7 +81,7 @@ export default class TextParagraph extends Component {
                 label={"Mégse"}
                 labelPosition="before"
                 onClick={this.handleCloseEdit}
-                style={{margin: 12}}
+                style={{marginRight: 6}}
               />
               <RaisedButton
                 icon={<Save/>}
@@ -99,7 +97,7 @@ export default class TextParagraph extends Component {
                 label={window.innerWidth >= 640 && "Módosít"}
                 labelPosition="before"
                 onClick={this.handleOpenEdit}
-                style={{margin: "0 12px"}}
+                style={{marginRight: 6}}
               />
               <RaisedButton
                 icon={<Delete/>}
@@ -111,7 +109,7 @@ export default class TextParagraph extends Component {
             </Fragment>
           }
         </CardActions>
-      </Card>
+      </ListItem>
     )
   }
 }

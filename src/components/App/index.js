@@ -211,17 +211,19 @@ class App extends Component {
                   path={routes.EVENTS}
                 />
                 <Route
-                  component={() => <TextSection
-                    path="history"
-                    title="Bemutatkozás"
-                  />}
+                  component={() =>
+                    <TextSection
+                      path="history"
+                    />
+                  }
                   path={routes.INTRO}
                 />
                 <Route
-                  component={() => <TextSection
-                    path="napraforgo"
-                    title="Tanúsítványok"
-                  />}
+                  component={() =>
+                    <TextSection
+                      path="napraforgo"
+                    />
+                  }
                   path={routes.CERTIFICATES}
                 />
                 <Route
