@@ -6,7 +6,7 @@ import {EDIT} from "../../../utils/routes"
 
 import Upload from "./Upload"
 
-import {Section} from ".."
+import {Section, Loading, Tip} from ".."
 import {SortableList} from "./Sort"
 
 import {
@@ -15,7 +15,6 @@ import {
   CardMedia,
   CardText,
   TextField,
-  CircularProgress,
   RaisedButton,
   Paper,
   Subheader
@@ -24,7 +23,7 @@ import {
 import Save from "material-ui/svg-icons/content/save"
 import Cancel from "material-ui/svg-icons/navigation/cancel"
 import Delete from "material-ui/svg-icons/action/delete"
-import Empty from 'material-ui/svg-icons/action/find-in-page'
+
 
 class Gallery extends Component {
   state = {
@@ -101,6 +100,9 @@ class Gallery extends Component {
           render={() =>
             <Fragment>
               <Subheader>Képgaléria</Subheader>
+              <Tip>
+                A sorrendet "fogd és vidd" módszerrel lehet változtatni. A változtatások automatikusan mentésre kerülnek.
+              </Tip>
               <Paper
                 style={{
                   padding: "1em 2.5em 1em 1em",
@@ -121,18 +123,7 @@ class Gallery extends Component {
                       useWindowAsScrollContainer
                     />
                   </div> :
-                  isEmpty ?
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                    >
-                      <p style={{color: "grey"}}>üres</p>
-                      <Empty color="grey"/>
-                    </div> :
-                    <CircularProgress/>
+                  <Loading isEmpty={isEmpty}/>
                 }
               </Paper>
             </Fragment>
