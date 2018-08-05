@@ -81,7 +81,7 @@ export default class TextParagraph extends Component {
                 label={"Mégse"}
                 labelPosition="before"
                 onClick={this.handleCloseEdit}
-                style={{margin: 12}}
+                style={{marginRight: 6}}
               />
               <RaisedButton
                 icon={<Save/>}
@@ -97,7 +97,7 @@ export default class TextParagraph extends Component {
                 label={window.innerWidth >= 640 && "Módosít"}
                 labelPosition="before"
                 onClick={this.handleOpenEdit}
-                style={{margin: "0 12px"}}
+                style={{marginRight: 6}}
               />
               <RaisedButton
                 icon={<Delete/>}
