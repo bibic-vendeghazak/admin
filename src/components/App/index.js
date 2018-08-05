@@ -185,7 +185,8 @@ class App extends Component {
                     match,
                     profile
                   }}
-                                          />}
+                                          />
+                  }
                   path={routes.WELCOME}
                 />
                 <Route
@@ -197,17 +198,21 @@ class App extends Component {
                   path={routes.ROOMS}
                 />
                 <Route
-                  component={() => <GalleryCard
-                    baseURL={routes.FOODS}
-                    path="foods"
-                                   />}
+                  component={() =>
+                    <GalleryCard
+                      baseURL={routes.FOODS}
+                      path="foods"
+                    />
+                  }
                   path={routes.FOODS}
                 />
                 <Route
-                  component={() => <GalleryCard
-                    baseURL={routes.EVENTS}
-                    path="events"
-                                   />}
+                  component={() =>
+                    <GalleryCard
+                      baseURL={routes.EVENTS}
+                      path="events"
+                    />
+                  }
                   path={routes.EVENTS}
                 />
                 <Route
