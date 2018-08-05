@@ -141,6 +141,45 @@ export const ModalDialog = props => {
   )
 }
 
+export const Tip = ({children}) =>
+  <div
+    style={{
+      margin: "2.5%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }}
+  >
+    <Help color="grey"/>
+    <Subheader
+      style={{
+        fontFamily: "sans-serif",
+        fontStyle: "italic",
+        fontSize: 12
+      }}
+    >
+      Tipp: {children}
+    </Subheader>
+  </div>
+
+export const Loading = ({isEmpty=false}) =>
+  <Section>
+    {
+      isEmpty ?
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <p style={{color: "grey"}}>üres</p>
+          <Empty color="grey"/>
+        </div> :
+        <CircularProgress/>
+    }
+  </Section>
+
 export const Section = styled("div")`
   position: relative
   max-width: 720px
