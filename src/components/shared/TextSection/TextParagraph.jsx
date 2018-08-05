@@ -1,12 +1,11 @@
 import React, {Component, Fragment} from "react"
 import {PARAGRAPHS_DB} from "../../../utils/firebase"
 
-
 import {
-  Card,
   CardActions,
   RaisedButton,
-  TextField
+  TextField,
+  ListItem
 } from "material-ui"
 
 import Edit from "material-ui/svg-icons/image/edit"
@@ -42,10 +41,9 @@ export default class TextParagraph extends Component {
     } = this.state
 
     return (
-      <Card style={{
-        cursor: "grabbing",
-        "marginBottom": "2.5em"
-      }}
+      <ListItem
+        disabled
+        style={{cursor: "grabbing"}}
       >
         <div
           style={{
@@ -111,7 +109,7 @@ export default class TextParagraph extends Component {
             </Fragment>
           }
         </CardActions>
-      </Card>
+      </ListItem>
     )
   }
 }
