@@ -5,7 +5,6 @@ import {Section, Loading, Tip} from ".."
 import {SortableList} from "./Sort"
 
 import {
-  Subheader,
   FloatingActionButton
 } from "material-ui"
 
