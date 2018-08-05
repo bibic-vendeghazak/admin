@@ -113,6 +113,11 @@ export default class Sidebar extends Component {
             primaryText="Rendezvények"
             to={routes.EVENTS}
           />
+          <SidebarMenuItem
+            leftIcon="room_service"
+            primaryText="Szolgáltatásaink"
+            to={routes.SERVICES}
+          />
           <Divider style={dividerStyle}/>
           <Subheader style={{color: "white"}}>Közösségi média</Subheader>
           <MenuItem
