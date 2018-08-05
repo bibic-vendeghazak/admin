@@ -6,9 +6,11 @@ import Pictures from "./Pictures"
 import Prices from "./Prices"
 import Availability from "./Availability"
 import Description from "./Description"
+import GalleryCard from '../../shared/GalleryCard'
 
 import {ROOMS_DB, ROOM_SERVICES_DB} from "../../../utils/firebase"
 import {Subheader} from "material-ui"
+import {ROOMS, EDIT} from "../../../utils/routes"
 
 
 export default class BigRoom extends Component {
@@ -87,7 +89,10 @@ export default class BigRoom extends Component {
         <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>
         <Availability {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szoba képek</Subheader>
-        <Pictures {...{roomId: roomId-1}}/>
+        <GalleryCard
+          baseURL={`${ROOMS}/${roomId}/${EDIT}`}
+          path={`rooms/${roomId}`}
+        />
         <Subheader style={{textAlign: "center"}}>Szoba leírása</Subheader>
         <Description {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szolgáltatások</Subheader>
