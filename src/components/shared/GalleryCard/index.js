@@ -100,9 +100,6 @@ class Gallery extends Component {
           render={() =>
             <Fragment>
               <Subheader>Képgaléria</Subheader>
-              <Tip>
-                A sorrendet "fogd és vidd" módszerrel lehet változtatni. A változtatások automatikusan mentésre kerülnek.
-              </Tip>
               <Paper
                 style={{
                   padding: "1em 2.5em 1em 1em",
@@ -126,6 +123,9 @@ class Gallery extends Component {
                   <Loading isEmpty={isEmpty}/>
                 }
               </Paper>
+              <Tip>
+                A sorrendet "fogd és vidd" módszerrel lehet változtatni. A változtatások automatikusan mentésre kerülnek.
+              </Tip>
             </Fragment>
           }
         />
