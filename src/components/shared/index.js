@@ -1,5 +1,4 @@
 import React, {Component} from "react"
-import {Link} from "react-router-dom"
 import styled from "styled-components"
 
 import {
@@ -68,36 +67,23 @@ export class Post extends Component {
 }
 
 export const TabLabel = ({
-  title, to, count=0
+  title, count=0
 }) => (
-  <Link
-    {...{to}}
-    style={{
-      color: "white",
-      textDecoration: "none",
-      flex: 1,
-      minWidth: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}
+  <div style={{
+    display:"flex",
+    alignItems: "center"
+  }}
   >
-    <div style={{
-      display:"flex",
-      alignItems: "center"
-    }}
-    >
-      <div>{title}</div>
-      <Badge
-        badgeContent={count}
-        primary
-        style={{
-          marginLeft: 12,
-          padding: 12
-        }}
-      />
-    </div>
-  </Link>
+    <div>{title}</div>
+    <Badge
+      badgeContent={count}
+      primary
+      style={{
+        marginLeft: 12,
+        padding: 12
+      }}
+    />
+  </div>
 )
 
 

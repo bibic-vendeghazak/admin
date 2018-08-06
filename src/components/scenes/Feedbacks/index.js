@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {
   Tabs,
   Tab,
@@ -10,20 +10,26 @@ import Feedback from './Feedback'
 import {TabLabel, PlaceholderText} from '../../shared'
 import {FEEDBACKS_DB} from '../../../utils/firebase'
 
+
 const FeedbackList = ({
   styleId, feedbacks
 }) => {
   return (
     feedbacks.length !== 0 ?
-      <List>{feedbacks}</List> :
+      <Fragment>
+        <List>{feedbacks}</List>
+      </Fragment> :
       <PlaceholderText>
-      Nincs {styleId==="read" ? "olvasott" : "olvasatlan"} visszajelzés
+        Nincs {styleId==="read" ? "jóváhagyott" : "jóváhagyásra váró"} visszajelzés
       </PlaceholderText>
   )
 }
 
 export default class Feedbacks extends Component {
-  state = {feedbacks: null}
+  state = {
+    feedbacks: null,
+    accepted: false
+  }
 
   componentDidMount() {
     FEEDBACKS_DB
@@ -32,16 +38,12 @@ export default class Feedbacks extends Component {
       )
   }
 
-  handleChange = readState => {
-    if (readState) {
-      this.props.history.replace("olvasott","olvasatlan")
-    } else {
-      this.props.history.replace("olvasatlan","olvasott")
-    }
-  }
+  handleChange = () => this.setState(({accepted}) => ({accepted: !accepted}))
 
   render() {
-    const {feedbacks} = this.state
+    const {
+      feedbacks, accepted
+    } = this.state
     const unreadFeedbacks = []
     const readFeedbacks = []
     for (const key in feedbacks) {
@@ -64,13 +66,13 @@ export default class Feedbacks extends Component {
           height: 4
         }}
         onChange={this.handleChange}
-        value={this.props.match.params.readState === "olvasott"}
+        value={accepted}
       >
         <Tab
           label={
             <TabLabel
               count={unreadFeedbacks.length}
-              title="Olvasatlan"
+              title="Jóváhagyásra vár"
             />
           }
           value={false}
@@ -84,7 +86,7 @@ export default class Feedbacks extends Component {
           label={
             <TabLabel
               count={readFeedbacks.length}
-              title="Olvasott"
+              title="Jóváhagyva"
             />
           }
           value

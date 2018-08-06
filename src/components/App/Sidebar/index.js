@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {Component, Fragment} from "react"
 import moment from "moment"
 import {NavLink} from "react-router-dom"
 import Store from "../Store"
@@ -65,25 +65,30 @@ export default class Sidebar extends Component {
           <Divider style={dividerStyle}/>
           <Subheader style={{color: "white"}}>Foglalás</Subheader>
           <Store.Consumer>
-            {({unHandledReservationCount}) =>
-              <SidebarMenuItem
-                count={unHandledReservationCount}
-                leftIcon="bookmark_border"
-                primaryText="Foglalások"
-                to={routes.RESERVATIONS}
-              />
+            {({
+              unHandledReservationCount, unreadFeedbackCount
+            }) =>
+              <Fragment>
+                <SidebarMenuItem
+                  count={unHandledReservationCount}
+                  leftIcon="bookmark_border"
+                  primaryText="Foglalások"
+                  to={routes.RESERVATIONS}
+                />
+                <SidebarMenuItem
+                  leftIcon="date_range"
+                  primaryText="Naptár"
+                  to={`${routes.CALENDAR}/${moment().format("YYYY/MM")}`}
+                />
+                <SidebarMenuItem
+                  count={unreadFeedbackCount}
+                  leftIcon="feedback"
+                  primaryText="Visszajelzések"
+                  to={routes.FEEDBACKS}
+                />
+              </Fragment>
             }
           </Store.Consumer>
-          <SidebarMenuItem
-            leftIcon="date_range"
-            primaryText="Naptár"
-            to={`${routes.CALENDAR}/${moment().format("YYYY/MM")}`}
-          />
-          {/* <SidebarMenuItem
-            to={routes.SPECIAL_OFFER}
-            primaryText="Kedvezmények"
-            leftIcon="trending_down"
-          />	 */}
 
 
           <Divider style={dividerStyle}/>
