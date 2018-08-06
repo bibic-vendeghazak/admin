@@ -194,6 +194,10 @@ class App extends Component {
                   path={`${routes.CALENDAR}/:year/:month`}
                 />
                 <Route
+                  component={Feedbacks}
+                  path={routes.FEEDBACKS}
+                />
+                <Route
                   component={Rooms}
                   path={routes.ROOMS}
                 />
