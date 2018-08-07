@@ -62,9 +62,6 @@ export default class TextSection extends Component {
     } = this.state
     return (
       <Section>
-        <Tip>
-          A sorrendet "fogd és vidd" módszerrel lehet változtatni. A változtatások automatikusan mentésre kerülnek.
-        </Tip>
         {paragraphs.length ?
           <SortableList
             distance={10}
@@ -86,6 +83,9 @@ export default class TextSection extends Component {
         >
           <Plus/>
         </FloatingActionButton>
+        <Tip>
+          A sorrendet "fogd és vidd" módszerrel lehet változtatni. A változtatások automatikusan mentésre kerülnek.
+        </Tip>
       </Section>
     )
   }

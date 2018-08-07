@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from "react"
 import {Route, Link, withRouter} from "react-router-dom"
 
-import Close from "material-ui/svg-icons/navigation/close"
 import Upload from "material-ui/svg-icons/file/file-upload"
 import Progress from "material-ui/LinearProgress"
 import {
@@ -13,6 +12,7 @@ import {
 } from "material-ui/"
 import {UPLOAD} from "../../../utils/routes"
 import {FileStore} from "../../../utils/firebase"
+import {Tip} from ".."
 
 
 class UploadPictures extends Component {
@@ -125,6 +125,9 @@ class UploadPictures extends Component {
                   </Link>
                 </CardActions>
               </Paper>
+              <Tip>
+                Egyszerre több kép is feltölthető.
+              </Tip>
             </Fragment>
           }
           exact
@@ -143,14 +146,6 @@ const Picture = ({
     {...{onClick}}
     className="picture"
   >
-    <Close
-      color="white"
-      style={{
-        position: "absolute",
-        right: 0,
-        margin: 16
-      }}
-    />
     <img
       alt=""
       {...{src}}

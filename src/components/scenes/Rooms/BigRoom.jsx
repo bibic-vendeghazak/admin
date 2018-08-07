@@ -2,7 +2,6 @@ import React, {Component} from "react"
 
 import Services from "./Services"
 import Population from "./Population"
-import Pictures from "./Pictures"
 import Prices from "./Prices"
 import Availability from "./Availability"
 import Description from "./Description"
@@ -15,12 +14,6 @@ import {ROOMS, EDIT} from "../../../utils/routes"
 
 export default class BigRoom extends Component {
 
-
-  componentDidMount() {
-    ROOMS_DB.child(this.props.match.params.roomId).on("value", snap => {
-      console.log(snap.val())
-    })
-  }
 
   handleRoomEdit(event) {
     const e = event.target
@@ -84,6 +77,7 @@ export default class BigRoom extends Component {
   render(){
     let {roomId} = this.props.match.params
     roomId = parseInt(roomId, 10)
+
     return(
       <div className="big-room">
         <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>
@@ -91,7 +85,7 @@ export default class BigRoom extends Component {
         <Subheader style={{textAlign: "center"}}>Szoba képek</Subheader>
         <GalleryCard
           baseURL={`${ROOMS}/${roomId}/${EDIT}`}
-          path={`rooms/${roomId}`}
+          path={`rooms/${roomId-1}`}
         />
         <Subheader style={{textAlign: "center"}}>Szoba leírása</Subheader>
         <Description {...{roomId}}/>

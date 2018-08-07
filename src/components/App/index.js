@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {Component, Fragment} from "react"
 import {Route, withRouter} from "react-router-dom"
 import {Database} from "./Store"
 import {AUTH} from "../../utils/firebase"
@@ -22,6 +22,7 @@ import Notification from "../shared/Notification"
 import * as routes from "../../utils/routes"
 import TextSection from "../shared/TextSection"
 import GalleryCard from "../shared/GalleryCard"
+import {Tip} from "../shared"
 
 const initialAppState = {
   isDrawerOpened: true,
@@ -57,7 +58,7 @@ class App extends Component {
 
   handleNotificationClose = () => this.setState({isNotificationOpen: false})
 
-  handleLogout = () => {
+  onLogout = () => {
     AUTH.signOut().then(() => {
       this.handleNotification("Sikeres kijelentkezés", "success")
       this.setState({isLoggedIn: false})
@@ -167,7 +168,7 @@ class App extends Component {
                 title={this.renderTitle()}
               />
               <Sidebar
-                handleLogout={this.handleLogout}
+                handleLogout={this.onLogout}
                 {...{
                   profile,
                   isMenuActive,
@@ -220,6 +221,20 @@ class App extends Component {
                     />
                   }
                   path={routes.EVENTS}
+                />
+                <Route
+                  component={() =>
+                    <Fragment>
+                      <Tip>
+                          Az első három kép fel lesz tüntetve a főoldalon a Szolgáltatásaink szekció alatt.
+                      </Tip>
+                      <GalleryCard
+                        baseURL={routes.SERVICES}
+                        path="services"
+                      />
+                    </Fragment>
+                  }
+                  path={routes.SERVICES}
                 />
                 <Route
                   component={() =>
