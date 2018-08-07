@@ -17,7 +17,14 @@ const FeedbackList = ({
   return (
     feedbacks.length !== 0 ?
       <Fragment>
-        <List>{feedbacks}</List>
+        <List
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: 540,
+            margin: "0 auto"
+          }}
+        >{feedbacks}</List>
       </Fragment> :
       <PlaceholderText>
         Nincs {styleId==="read" ? "jóváhagyott" : "jóváhagyásra váró"} visszajelzés
@@ -72,7 +79,7 @@ export default class Feedbacks extends Component {
           label={
             <TabLabel
               count={unreadFeedbacks.length}
-              title="Jóváhagyásra vár"
+              title="Új"
             />
           }
           value={false}
@@ -86,7 +93,7 @@ export default class Feedbacks extends Component {
           label={
             <TabLabel
               count={readFeedbacks.length}
-              title="Jóváhagyva"
+              title="Jóváhagyott"
             />
           }
           value
