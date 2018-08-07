@@ -67,6 +67,7 @@ export default class TextSection extends Component {
         </Tip>
         {paragraphs.length ?
           <SortableList
+            distance={10}
             items={paragraphs}
             onSortEnd={this.handleSort}
             path={path}

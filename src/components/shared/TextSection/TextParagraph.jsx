@@ -1,18 +1,7 @@
 import React, {Component, Fragment} from "react"
 import {PARAGRAPHS_DB} from "../../../utils/firebase"
 
-import {
-  CardActions,
-  RaisedButton,
-  TextField,
-  ListItem,
-  Divider
-} from "material-ui"
-
-import Edit from "material-ui/svg-icons/image/edit"
-import Delete from "material-ui/svg-icons/action/delete"
-import Save from "material-ui/svg-icons/content/save"
-import Cancel from "material-ui/svg-icons/navigation/cancel"
+import {ListItem, TextField, CardActions, Button, Divider, Card, CardContent, Typography} from "@material-ui/core"
 
 export default class TextParagraph extends Component {
 
@@ -24,7 +13,10 @@ export default class TextParagraph extends Component {
 
   handleOpenEdit = () => this.setState({isEditing: true})
 
-  handleCloseEdit = () => this.setState({isEditing: false})
+  handleCloseEdit = () => this.setState({
+    isEditing: false,
+    text: null
+  })
 
   handleTextChange = ({target: {value: text}}) => this.setState({text})
 
@@ -42,78 +34,65 @@ export default class TextParagraph extends Component {
     } = this.state
 
     return (
-      <Fragment>
-        <ListItem
-          disabled={isEditing}
-          style={{cursor: "grabbing"}}
+      <ListItem style={{cursor: "move"}}>
+        <Card
+          style= {{minWidth: "100%"}}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "1em"
-            }}
-          >
+          <CardContent>
             {isEditing ?
               <TextField
-                floatingLabelText="bekezdés szövege"
                 fullWidth
                 id="text"
-                multiLine
-                // REVIEW: Seems to be a hacky solution. Try something else...?
+                label="bekezdés szövege"
+                multiline
                 onChange={this.handleTextChange}
+                // REVIEW: Seems to be a hacky solution. Try something else...?
                 value={text || this.props.text}
               /> :
-              <p
-                onClick={this.handleOpenEdit}
-                style={{
-                  cursor: "pointer",
-                  userSelect: "none"
-                }}
-              >{this.props.text || "Üres"}</p>
+              <Typography
+                component="p"
+                style={{userSelect: "none"}}
+              >{this.props.text || "Üres"}</Typography>
             }
 
-          </div>
+          </CardContent>
+          <Divider/>
           <CardActions>
             {isEditing ?
-              <div>
-                <RaisedButton
-                  icon={<Cancel/>}
-                  label={"Mégse"}
-                  labelPosition="before"
-                  onClick={this.handleCloseEdit}
-                  style={{marginRight: 6}}
-                />
-                <RaisedButton
-                  icon={<Save/>}
-                  label={"Mentés"}
-                  labelPosition="before"
-                  onClick={this.handleSubmitText}
-                  secondary
-                />
-              </div> :
               <Fragment>
-                <RaisedButton
-                  icon={<Edit/>}
-                  label={window.innerWidth >= 640 && "Módosít"}
-                  labelPosition="before"
-                  onClick={this.handleOpenEdit}
+                <Button
+                  onClick={this.handleCloseEdit}
+                  size="small"
                   style={{marginRight: 6}}
-                />
-                <RaisedButton
-                  icon={<Delete/>}
-                  label={window.innerWidth >= 640 && "Törlés"}
-                  labelPosition="before"
+                >Mégse</Button>
+                <Button
+                  color="secondary"
+                  onClick={this.handleSubmitText}
+                  size="small"
+                >
+                  Mentés
+                </Button>
+              </Fragment> :
+              <Fragment>
+                <Button
+                  onClick={this.handleOpenEdit}
+                  size="small"
+                  style={{marginRight: 6}}
+                >
+                  Módosít
+                </Button>
+                <Button
+                  color="secondary"
                   onClick={this.handleDeleteParagraph}
-                  secondary
-                />
+                  size="small"
+                >
+                Törlés
+                </Button>
               </Fragment>
             }
           </CardActions>
-        </ListItem>
-        <Divider/>
-      </Fragment>
+        </Card>
+      </ListItem>
     )
   }
 }

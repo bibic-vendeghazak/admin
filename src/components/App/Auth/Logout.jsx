@@ -1,21 +1,22 @@
 import React from "react"
 
-import {RaisedButton} from "material-ui"
+import {Button} from "@material-ui/core"
 
 
-const Logout = ({handleLogout}) => (
+const Logout = ({handleLogout}) =>
   <div style={{
     display: "flex",
     justifyContent: "flex-end",
     margin: "1em"
   }}
   >
-    <RaisedButton
-      label="Kijelentkezés"
+    <Button
+      color="secondary"
       onClick={handleLogout}
-      secondary
-    />
+      variant="contained"
+    >
+      Kijelentkezés
+    </Button>
   </div>
-)
 
 export default Logout

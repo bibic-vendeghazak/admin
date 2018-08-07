@@ -1,7 +1,7 @@
 import React from "react"
 import {SortableContainer, SortableElement} from "react-sortable-hoc"
 import TextParagraph from "./TextParagraph"
-import {Paper, List} from "material-ui"
+import {List} from "@material-ui/core"
 
 export const SortableItem = SortableElement(({
   value: [key, {text}], path
@@ -15,18 +15,16 @@ export const SortableItem = SortableElement(({
 export const SortableList = SortableContainer(({
   items, path
 }) =>
-  <Paper style={{padding: 12}}>
-    <List>
-      {items.map((value, index) =>
-        <SortableItem
-          key={index}
-          {...{
-            value,
-            index,
-            path
-          }}
-        />
-      )}
-    </List>
-  </Paper>
+  <List>
+    {items.map((value, index) =>
+      <SortableItem
+        key={index}
+        {...{
+          value,
+          index,
+          path
+        }}
+      />
+    )}
+  </List>
 )
