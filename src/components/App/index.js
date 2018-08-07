@@ -183,11 +183,10 @@ class App extends Component {
               >
                 <Route
                   component={({match}) =>
-                    <Welcome
-                      {...{
-                        match,
-                        profile
-                      }}
+                    <Welcome {...{
+                      match,
+                      profile
+                    }}
                     />
                   }
                   path={routes.WELCOME}
