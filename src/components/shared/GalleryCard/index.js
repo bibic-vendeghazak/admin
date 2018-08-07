@@ -6,7 +6,7 @@ import {EDIT} from "../../../utils/routes"
 
 import Upload from "./Upload"
 
-import {Section, Loading, Tip} from ".."
+import {Loading, Tip} from ".."
 import {SortableList} from "./Sort"
 
 import {
@@ -15,9 +15,7 @@ import {
   CardMedia,
   CardText,
   TextField,
-  RaisedButton,
-  Paper,
-  Subheader
+  RaisedButton
 } from "material-ui"
 
 import Save from "material-ui/svg-icons/content/save"
@@ -99,33 +97,21 @@ class Gallery extends Component {
           path={baseURL}
           render={() =>
             <Fragment>
-              <Subheader>Képgaléria</Subheader>
+              {pictures.length ?
+                <div>
+                  <SortableList
+                    axis="xy"
+                    baseURL={baseURL}
+                    items={pictures}
+                    onSortEnd={this.handleSort}
+                    useWindowAsScrollContainer
+                  />
+                </div> :
+                <Loading isEmpty={isEmpty}/>
+              }
               <Tip>
                 A sorrendet "fogd és vidd" módszerrel lehet változtatni. A változtatások automatikusan mentésre kerülnek.
               </Tip>
-              <Paper
-                style={{
-                  padding: "1em 2.5em 1em 1em",
-                  margin: "1.5% 0",
-                  display: "grid",
-                  justifyItems: "center",
-                  minHeight: 240,
-                  alignItems: "center"
-                }}
-              >
-                {pictures.length ?
-                  <div>
-                    <SortableList
-                      axis="xy"
-                      baseURL={baseURL}
-                      items={pictures}
-                      onSortEnd={this.handleSort}
-                      useWindowAsScrollContainer
-                    />
-                  </div> :
-                  <Loading isEmpty={isEmpty}/>
-                }
-              </Paper>
             </Fragment>
           }
         />
@@ -206,60 +192,55 @@ class GalleryItemEdit extends Component {
     const {baseURL} = this.props
 
     return (
-      <Section>
-        <Card>
-          <CardMedia>
-            <img
-              alt={title}
-              src={SIZE_640}
+      <Card style={{maxWidth: "420px"}}>
+        <CardMedia>
+          <img
+            alt={title}
+            src={SIZE_640}
+          />
+        </CardMedia>
+        <CardText>
+          <TextField
+            floatingLabelText="Kép címe"
+            fullWidth
+            name="title"
+            onChange={this.handleTextChange}
+            value={title}
+          />
+          <TextField
+            floatingLabelText="Kép leírása"
+            fullWidth
+            multiLine
+            name="desc"
+            onChange={this.handleTextChange}
+            value={desc}
+          />
+        </CardText>
+        <CardActions>
+          <RaisedButton
+            icon={<Delete/>}
+            label="Törlés"
+            labelPosition="before"
+            onClick={this.handleDeleteGalleryItem}
+            secondary
+          />
+          <Link to={baseURL}>
+            <RaisedButton
+              icon={<Cancel/>}
+              label="Mégse"
+              labelPosition="before"
+              style={{margin: 12}}
             />
-          </CardMedia>
-          <CardText>
-            <TextField
-              floatingLabelText="Kép címe"
-              fullWidth
-              multiLine
-              name="title"
-              onChange={this.handleTextChange}
-              value={title}
-            />
-            <TextField
-              floatingLabelText="Kép leírása"
-              fullWidth
-              multiLine
-              name="desc"
-              onChange={this.handleTextChange}
-              value={desc}
-            />
-          </CardText>
-          <CardActions>
-            <div>
-              <RaisedButton
-                icon={<Delete/>}
-                label="Törlés"
-                labelPosition="before"
-                onClick={this.handleDeleteGalleryItem}
-                secondary
-              />
-              <Link to={baseURL}>
-                <RaisedButton
-                  icon={<Cancel/>}
-                  label="Mégse"
-                  labelPosition="before"
-                  style={{margin: 12}}
-                />
-              </Link>
-              <RaisedButton
-                icon={<Save/>}
-                label="Mentés"
-                labelPosition="before"
-                onClick={this.handleSubmitText}
-                primary
-              />
-            </div>
-          </CardActions>
-        </Card>
-      </Section>
+          </Link>
+          <RaisedButton
+            icon={<Save/>}
+            label="Mentés"
+            labelPosition="before"
+            onClick={this.handleSubmitText}
+            primary
+          />
+        </CardActions>
+      </Card>
     )
   }
 }

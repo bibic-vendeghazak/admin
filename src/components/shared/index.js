@@ -141,7 +141,8 @@ export const Tip = ({children}) =>
       style={{
         fontFamily: "sans-serif",
         fontStyle: "italic",
-        fontSize: 12
+        fontSize: 10,
+        lineHeight: "10px"
       }}
     >
       Tipp: {children}

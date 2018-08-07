@@ -2,23 +2,18 @@ import React, {Component} from "react"
 
 import Services from "./Services"
 import Population from "./Population"
-import Pictures from "./Pictures"
 import Prices from "./Prices"
 import Availability from "./Availability"
 import Description from "./Description"
+import GalleryCard from '../../shared/GalleryCard'
 
 import {ROOMS_DB, ROOM_SERVICES_DB} from "../../../utils/firebase"
 import {Subheader} from "material-ui"
+import {ROOMS, EDIT} from "../../../utils/routes"
 
 
 export default class BigRoom extends Component {
 
-
-  componentDidMount() {
-    ROOMS_DB.child(this.props.match.params.roomId).on("value", snap => {
-      console.log(snap.val())
-    })
-  }
 
   handleRoomEdit(event) {
     const e = event.target
@@ -82,12 +77,16 @@ export default class BigRoom extends Component {
   render(){
     let {roomId} = this.props.match.params
     roomId = parseInt(roomId, 10)
+
     return(
       <div className="big-room">
         <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>
         <Availability {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szoba képek</Subheader>
-        <Pictures {...{roomId: roomId-1}}/>
+        <GalleryCard
+          baseURL={`${ROOMS}/${roomId}/${EDIT}`}
+          path={`rooms/${roomId-1}`}
+        />
         <Subheader style={{textAlign: "center"}}>Szoba leírása</Subheader>
         <Description {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szolgáltatások</Subheader>
