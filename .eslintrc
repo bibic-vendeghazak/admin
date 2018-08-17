@@ -1,15 +1,17 @@
 {
   "extends": [
     "prettier",
-    "prettier/react"
+    "prettier/react",
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "parser":"babel-eslint",
   "rules": {
-    "require-jsdoc":"warn",
-    // "max-len": ["warn", {
-    //   "ignoreTemplateLiterals": true,
-    //   "ignoreStrings": true
-    //   }],
+    "require-jsdoc": "error",
+    "max-len": ["error", {
+      "ignoreTemplateLiterals": true,
+      "ignoreStrings": true
+      }],
     "block-spacing":["warn", "never"],
     "semi": [2, "never"],
     "no-trailing-spaces":"error",
@@ -18,6 +20,7 @@
     "no-mixed-spaces-and-tabs":"error",
     "indent": ["error", 2],
     "no-multiple-empty-lines":"error",
+    "valid-jsdoc":"warn",
     "no-console":["warn", { "allow": ["warn", "error"]}],
     "object-property-newline":"error",
     "object-curly-newline":["error", {"minProperties": 2}],
@@ -34,12 +37,13 @@
     "prefer-const":"error",
     "array-bracket-newline":"error",
     "react/sort-comp": "error",
-    "react/jsx-max-props-per-line":"error",
+    "react/jsx-max-props-per-line": ["error", { "when": "multiline" }],
     "react/jsx-first-prop-new-line":"error",
     "react/jsx-closing-bracket-location": "error",
     "react/jsx-handler-names":"error",
     "react/jsx-sort-props":"error",
     "react/no-deprecated": "warn",
+    "react/display-name":"off",
     "lines-between-class-members":"error"
   },
   "parserOptions": {
