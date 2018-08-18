@@ -3,7 +3,7 @@
   "presets": [
     ["env", {
       "targets": {
-        "node": "6.11.5"
+        "node": "v8.11.4"
       }
     }]
   ]
