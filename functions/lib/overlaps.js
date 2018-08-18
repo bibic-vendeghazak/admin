@@ -6,9 +6,6 @@ const admin = require('firebase-admin');
 const moment = require('./moment');
 const reservationDatesRef = admin.database().ref("reservationDates");
 
-// Node 6.14 polyfill
-Object.entries = Object.entries || (x => Object.keys(x).map(k => [k, x[k]]));
-
 /**
  * Checks a given month if a room is booked at that time
  * @param {array} date - ([2018,12]) month to check
