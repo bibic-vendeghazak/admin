@@ -1,5 +1,8 @@
 "use strict";
 
+const admin = require('firebase-admin');
+const roomsRef = admin.database().ref("roomsRef");
+
 /**
  * Generates all the possible combination of children.
  * If there is an old price, it is not overriden, otherwise it is 0

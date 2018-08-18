@@ -25,7 +25,9 @@ const reservationRef = functions.firestore.document("reservations/{reservationId
 
 const updateReservationDates = (from, to, roomId, reservationId, shouldDelete = false) => {
   console.log("Updating reservation dates...");
-  for (let day of moment.range(from, moment(to).add(1, "day")).by('day')) {
+  from = moment(from.toDate());
+  to = moment(to.toDate());
+  for (let day of moment.range(from, to).by('day')) {
     let newReservation = null;
     if (!shouldDelete) {
       newReservation = {
