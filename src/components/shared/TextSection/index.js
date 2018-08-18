@@ -2,18 +2,15 @@ import React, {Component} from "react"
 import {arrayMove} from "react-sortable-hoc"
 import {PARAGRAPHS_DB} from "../../../utils/firebase"
 import {Section, Loading, Tip} from ".."
-import {SortableList} from "./Sort"
+import Sort from "../Sort"
+import TextParagraph from "./TextParagraph"
+import {Button} from "@material-ui/core"
+import Add from '@material-ui/icons/ShortTextRounded'
+import {withStore} from "../../App/Store"
 
-import {
-  FloatingActionButton
-} from "material-ui"
-
-import Plus from "material-ui/svg-icons/content/add"
-
-
-export default class TextSection extends Component {
+class TextSection extends Component {
   state = {
-    paragraphs: [],
+    paragraphs: null,
     isEmpty: false
   }
 
@@ -30,23 +27,30 @@ export default class TextSection extends Component {
       })
   }
 
-
   handleSort = ({
     oldIndex, newIndex
   }) => {
     const {paragraphs} = this.state
-    if (paragraphs.length) {
+    const {
+      path, sendNotification
+    } = this.props
+    const newParagraphs = arrayMove(paragraphs, oldIndex, newIndex)
+    if (paragraphs.toString() !== newParagraphs.toString()) {
       Promise
         .all(
-          arrayMove(paragraphs, oldIndex, newIndex).map(([paragraphId], index) =>
-            PARAGRAPHS_DB.child(`${this.props.path}/${paragraphId}`)
+          newParagraphs.map(([paragraphId], index) =>
+            PARAGRAPHS_DB.child(`${path}/${paragraphId}`)
               .update({order: index})
+              .catch(sendNotification)
           ))
-        //TODO: Inform user by notification
-        .then(() => console.log("Saved"))
-        .catch(console.error)
+        .then(() => sendNotification({
+          code: "success",
+          message: "Új sorrend mentve."
+        }))
+        .catch(sendNotification)
     }
   }
+
 
   handleCreateNewParagraph = () =>
     PARAGRAPHS_DB.child(this.props.path)
@@ -54,39 +58,53 @@ export default class TextSection extends Component {
         text: "",
         order: -1
       })
+      .then(() => this.props.sendNotification({
+        code: "success",
+        message: "Új bekezdés hozzáadva"
+      }))
+      .catch(this.props.sendNotification)
 
   render() {
-    const {path} = this.props
     const {
       paragraphs, isEmpty
     } = this.state
+
     return (
       <Section>
-        {paragraphs.length ?
-          <SortableList
-            distance={10}
+        {paragraphs ?
+          <Sort
+            component={TextParagraph}
+            containerStyle={{direction: "column"}}
+            distance={48}
+            helperClass="sort-helper"
             items={paragraphs}
             onSortEnd={this.handleSort}
-            path={path}
+            path={this.props.path}
+            useDragHandle
+            useWindowAsScrollContainer
           /> :
           <Loading isEmpty={isEmpty}/>
         }
-        <FloatingActionButton
+        <Button
+          color="secondary"
           onClick={this.handleCreateNewParagraph}
-          secondary
           style={{
             position: "fixed",
             right: 32,
             bottom: 32
           }}
-          title="Új bekezdés hozzáadása"
+          variant="extendedFab"
         >
-          <Plus/>
-        </FloatingActionButton>
+          <Add/>
+          <span style={{marginLeft: 8}}>Új bekezdés</span>
+        </Button>
         <Tip>
           A sorrendet "fogd és vidd" módszerrel lehet változtatni. A változtatások automatikusan mentésre kerülnek.
         </Tip>
+
       </Section>
     )
   }
 }
+
+export default withStore(TextSection)

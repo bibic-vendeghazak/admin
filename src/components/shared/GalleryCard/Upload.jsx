@@ -1,173 +1,227 @@
-import React, {Component, Fragment} from "react"
+import React, {Component} from "react"
 import {Route, Link, withRouter} from "react-router-dom"
 
-import Upload from "material-ui/svg-icons/file/file-upload"
-import Progress from "material-ui/LinearProgress"
-import {
-  Subheader,
-  Paper,
-  FloatingActionButton,
-  RaisedButton,
-  CardActions
-} from "material-ui/"
 import {UPLOAD} from "../../../utils/routes"
 import {FileStore} from "../../../utils/firebase"
-import {Tip} from ".."
+import {Tip, Modal} from ".."
+import {Grid, Button, Tooltip, GridList, GridListTile, GridListTileBar, IconButton, LinearProgress, Input, InputAdornment} from "@material-ui/core"
 
+import Upload from "@material-ui/icons/CloudUploadRounded"
+import Cancel from '@material-ui/icons/CloseRounded'
+import Store from "../../App/Store"
 
 class UploadPictures extends Component {
 
   state = {
-    progress: 0,
-    filesToUpload: []
+    finished: {},
+    filesToUpload: [],
+    finishedCount: 0
   }
 
-  handleDelete = fileName =>
-    this.setState(({filesToUpload}) => ({filesToUpload: filesToUpload.filter(fileToUpload => fileToUpload.file.name !== fileName)}))
+  componentDidUpdate() {
+    const {filesToUpload, finishedCount} = this.state
+    if (filesToUpload.length !== 0 && filesToUpload.length === finishedCount) {
+      this.setState(() => ({
+        finishedCount: 0,
+        filesToUpload: [],
+        finished: {}
+      }), this.handleClose)
+    }
+  }
+
+
+  handleDelete = name =>
+    this.setState(({filesToUpload}) => ({
+      filesToUpload: filesToUpload.filter(({file: {name: fileName}}) => name !== fileName)
+    }))
 
   handleChange = ({target: {files}}) =>
     Object.values(files).forEach(file => {
       const reader = new FileReader()
       reader.onloadend = () => {
-        this.setState(({filesToUpload}) => ({filesToUpload: filesToUpload.concat({
-          file,
-          src: reader.result
-        })}))
+        this.setState(({filesToUpload}) => ({
+          filesToUpload: filesToUpload.concat({
+            file, src: reader.result
+          })
+        }))
       }
       reader.readAsDataURL(file)
     })
 
-  handleUpload = () => {
-    const {filesToUpload} = this.state
-    const {
-      path, baseURL, history
-    } = this.props
+  handleUpload = () =>
     Promise.all(
-      filesToUpload.map(({file}) =>
+      this.state.filesToUpload.map(({file}) =>
         FileStore
-          .ref(`${path}/${file.name}`)
+          .ref(`${this.props.path}/${file.name}`)
           .put(file)
-          .on("state_changed", snap => {
-            this.setState({progress: 100 * (snap.bytesTransferred / snap.totalBytes)})
-          },
-          console.error,
-            // Go back to the gallery view
-          () => history.push(baseURL)
+          .on("state_changed", ({bytesTransferred}) => {
+            this.setState(({finished}) => ({
+              finished: {
+                ...finished,
+                [file.name] : bytesTransferred
+              }
+            }))
+          }, () => {
+            this.props.sendNotification({
+              code: "error",
+              message: `Sikertelen feltöltés. ${file.name} nem lett feltöltve.`
+            })
+          }, () => {
+            this.props.sendNotification({
+              code: "success",
+              message: `${file.name} néhány másodperc múlva megjelenik a galériában.`
+            })
+            this.setState(({finishedCount}) => ({finishedCount: finishedCount+1}))
+          }
           )
       ))
-      .then(() => this.setState({filesToUpload: []}))
-      .catch(console.error)
-  }
+
+
+  handleClose = () => this.props.history.goBack()
 
 
   render() {
-    const {
-      progress, filesToUpload
-    } = this.state
-    const {baseURL} = this.props
+    const {filesToUpload} = this.state
+    const {baseURL, relativeFAB} = this.props
+
+    let {finished} = this.state
+    finished = Object.values(finished).reduce((acc, size) => acc+size, 0)
+    const remaining = filesToUpload.reduce((acc, {file: {size}}) => acc+size, 0)
+    const progress = Math.round(100 * finished/remaining) || 0
+
+
+    const style = relativeFAB ? {
+      position: "relative",
+      zIndex: 1000
+    } : {
+      position: "fixed",
+      right: 32,
+      bottom: 32,
+      zIndex: 1000
+    }
 
     return (
-      <Fragment>
-        <UploadFAB {...{baseURL}}/>
+      <Grid
+        alignItems="flex-end"
+        container
+        direction="column"
+        justify="flex-end"
+        style={{position: "relative"}}
+      >
         <Route
-          component={() =>
-            <Fragment>
-              <Subheader>Új képek feltöltése</Subheader>
-              <Paper>
-                {progress ?
-                  <Progress
-                    mode="determinate"
-                    value={progress}
-                  /> : null
-                }
-                <div className="pictures-container">
-                  <div className="upload-picture">
-                    <input
-                      accept=".JPG, .JPEG, .jpg, .jpeg, .PNG, .png"
-                      className="inputfile"
+          exact
+          path={`${baseURL}/${UPLOAD}`}
+          render={() =>
+            <Modal
+              error="Hiba. A képeket nem sikerült feltölteni."
+              fullWidth
+              onSubmit={this.handleUpload}
+              remainOpen
+              shouldPrompt
+              submitLabel="Feltöltés"
+              success="A képek feltöltése elkezdődött..."
+              title="Új képek feltöltése"
+            >
+              <Grid
+                container
+                direction="column"
+                spacing={16}
+              >
+                <Grid item>
+                  <Tooltip title="Válassza ki a feltölteni kívánt képeket">
+                    <Input
+                      disableUnderline
+                      fullWidth
                       id="file"
-                      multiple
+                      inputProps={{
+                        accept:".JPG, .JPEG, .jpg, .jpeg, .PNG, .png",
+                        multiple: true
+                      }}
                       name="file"
                       onChange={this.handleChange}
+                      startAdornment={<InputAdornment position="start"><Upload color="disabled"/></InputAdornment>}
+                      style={{padding: 8}}
                       type="file"
                       value=""
                     />
-                    <label
-                      className="file-label"
-                      htmlFor="file"
-                      title="Válassza ki a feltölteni kívánt képeket"
-                    >
-                      <Upload color="grey"/>
-                    </label>
-                  </div>
-                  {filesToUpload.length ?
-                    <Fragment>
-                      {filesToUpload.map(({
-                        file: {name: fileName}, src
-                      }) =>
-                        <Picture
-                          key={fileName}
-                          onClick={() => this.handleDelete(fileName)}
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title={`${progress}% feltöltve`}>
+                    <LinearProgress
+                      value={progress}
+                      variant="determinate"
+                    />
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <GridList
+                    cols={3}
+                  >
+                    {filesToUpload.map(({
+                      file: {name}, src
+                    }) =>
+                      <GridListTile
+                        key={name}
+                      >
+                        <img
+                          alt={name}
                           {...{src}}
                         />
-                      )}
-                    </Fragment> : null}
-                </div>
-                <CardActions>
-                  <RaisedButton
-                    disabled={!filesToUpload.length}
-                    label="Feltöltés"
-                    onClick={this.handleUpload}
-                    secondary
-                  />
-                  <Link to={baseURL}>
-                    <RaisedButton	label="Mégse"/>
-                  </Link>
-                </CardActions>
-              </Paper>
-              <Tip>
-                Egyszerre több kép is feltölthető.
-              </Tip>
-            </Fragment>
+                        <GridListTileBar
+                          actionIcon={
+                            <Tooltip title="Kép törlése">
+                              <IconButton
+                                onClick={() => this.handleDelete(name)}
+                                style={{
+                                  color: "white"
+                                }}
+                              >
+                                <Cancel/>
+                              </IconButton>
+                            </Tooltip>
+
+                          }
+                          title={name}
+                        />
+
+                      </GridListTile>
+                    )}
+                  </GridList>
+                </Grid>
+                <Grid item><Tip>Egyszerre több kép is feltölthető.</Tip></Grid>
+              </Grid>
+            </Modal>
           }
-          exact
-          path={`${baseURL}/${UPLOAD}`}
         />
-      </Fragment>
+        <UploadFAB
+          {...{baseURL, style}}
+        />
+      </Grid>
     )
   }
 }
 
 
-const Picture = ({
-  onClick, src
-}) =>
-  <div
-    {...{onClick}}
-    className="picture"
-  >
-    <img
-      alt=""
-      {...{src}}
-    />
-  </div>
-
-
-const UploadFAB = ({baseURL}) =>
-  <Link
-    style={{
-      position: "fixed",
-      bottom: 0,
-      right: 0,
-      margin: 32
-    }}
+const UploadFAB = ({baseURL, style}) =>
+  <Tooltip
     title="Új képek feltöltése"
-    to={`${baseURL}/${UPLOAD}`}
   >
-    <FloatingActionButton secondary>
+    <Button
+      color="secondary"
+      component={Link}
+      style={style}
+      to={`${baseURL}/${UPLOAD}`}
+      variant="fab"
+    >
       <Upload/>
-    </FloatingActionButton>
-  </Link>
+    </Button>
+  </Tooltip>
 
 
-export default withRouter(UploadPictures)
+const UploadPicturesWithStore = props =>
+  <Store.Consumer>
+    {({sendNotification}) => <UploadPictures {...{sendNotification, ...props}} />}
+  </Store.Consumer>
+export default withRouter(UploadPicturesWithStore)
+
