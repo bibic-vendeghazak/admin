@@ -16,7 +16,7 @@ const reservationDatesRef = admin.database().ref("reservationDates")
 
 // ---------------------------------------------------------------------------------------------------
 // Firestore refs 🏦
-const reservationRef = functions.firestore
+const reservationRef = functions.region('europe-west1').firestore
                           .document("reservations/{reservationId}")
 
 
@@ -67,7 +67,7 @@ exports.reservationCreated = reservationRef.onCreate((snap, {params: {reservatio
   return reservation.email !== "email@email.hu" ? email.sendReservationEmails(reservation, "created") : null
 })
 
-exports.messageIncoming = functions.database
+exports.messageIncoming = functions.region('europe-west1').database
   .ref("messages/{messageId}")
   .onCreate(email.sendMessageEmails)
 
@@ -112,14 +112,14 @@ exports.reservationChanged = reservationRef
 
   
 // Return overlaps in a month 📅
-exports.overlaps = functions.https
+exports.overlaps = functions.region('europe-west1').https
   .onRequest(overlaps.overlaps)
 
 
 
 // ---------------------------------------------------------------------------------------------------
 // Room handling 🏘
-exports.populatePrices = functions.database
+exports.populatePrices = functions.region('europe-west1').database
   .ref("rooms/{roomId}/prices/metadata")
   .onUpdate(prices.populatePrices)
 
@@ -127,20 +127,20 @@ exports.populatePrices = functions.database
 
 // ---------------------------------------------------------------------------------------------------
 // Picture handling 🍱
-exports.generateThumbnail = functions.storage.object()
+exports.generateThumbnail = functions.region('europe-west1').storage.object()
   .onFinalize(pictures.generateThumbnail) 
 
 
-exports.deleteRoomPicture = functions.database
+exports.deleteRoomPicture = functions.region('europe-west1').database
   .ref("rooms/{roomId}/pictures/{pictureId}")
   .onDelete((snap, {params: {roomId}}) => pictures.deletePicture(snap, `rooms/${roomId}`))
 
 
-exports.deleteFoodPicture = functions.database
+exports.deleteFoodPicture = functions.region('europe-west1').database
   .ref("foods/pictures/{pictureId}")
   .onDelete(snap => pictures.deletePicture(snap, "foods"))
 
 
-exports.deleteEventsPicture = functions.database
+exports.deleteEventsPicture = functions.region('europe-west1').database
   .ref("events/pictures/{pictureId}")
   .onDelete(snap => pictures.deletePicture(snap, "events"))

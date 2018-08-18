@@ -18,7 +18,7 @@ const reservationDatesRef = admin.database().ref("reservationDates");
 
 // ---------------------------------------------------------------------------------------------------
 // Firestore refs 🏦
-const reservationRef = functions.firestore.document("reservations/{reservationId}");
+const reservationRef = functions.region('europe-west1').firestore.document("reservations/{reservationId}");
 
 // ---------------------------------------------------------------------------------------------------
 // Helper functions ♿
@@ -63,7 +63,7 @@ exports.reservationCreated = reservationRef.onCreate((snap, { params: { reservat
   return reservation.email !== "email@email.hu" ? email.sendReservationEmails(reservation, "created") : null;
 });
 
-exports.messageIncoming = functions.database.ref("messages/{messageId}").onCreate(email.sendMessageEmails);
+exports.messageIncoming = functions.region('europe-west1').database.ref("messages/{messageId}").onCreate(email.sendMessageEmails);
 
 exports.reservationChanged = reservationRef.onUpdate(({ before, after }, { params: { reservationId } }) => {
   before = before.data();
@@ -100,18 +100,18 @@ exports.reservationDeleted = reservationRef.onDelete((change, { params: { reserv
 });
 
 // Return overlaps in a month 📅
-exports.overlaps = functions.https.onRequest(overlaps.overlaps);
+exports.overlaps = functions.region('europe-west1').https.onRequest(overlaps.overlaps);
 
 // ---------------------------------------------------------------------------------------------------
 // Room handling 🏘
-exports.populatePrices = functions.database.ref("rooms/{roomId}/prices/metadata").onUpdate(prices.populatePrices);
+exports.populatePrices = functions.region('europe-west1').database.ref("rooms/{roomId}/prices/metadata").onUpdate(prices.populatePrices);
 
 // ---------------------------------------------------------------------------------------------------
 // Picture handling 🍱
-exports.generateThumbnail = functions.storage.object().onFinalize(pictures.generateThumbnail);
+exports.generateThumbnail = functions.region('europe-west1').storage.object().onFinalize(pictures.generateThumbnail);
 
-exports.deleteRoomPicture = functions.database.ref("rooms/{roomId}/pictures/{pictureId}").onDelete((snap, { params: { roomId } }) => pictures.deletePicture(snap, `rooms/${roomId}`));
+exports.deleteRoomPicture = functions.region('europe-west1').database.ref("rooms/{roomId}/pictures/{pictureId}").onDelete((snap, { params: { roomId } }) => pictures.deletePicture(snap, `rooms/${roomId}`));
 
-exports.deleteFoodPicture = functions.database.ref("foods/pictures/{pictureId}").onDelete(snap => pictures.deletePicture(snap, "foods"));
+exports.deleteFoodPicture = functions.region('europe-west1').database.ref("foods/pictures/{pictureId}").onDelete(snap => pictures.deletePicture(snap, "foods"));
 
-exports.deleteEventsPicture = functions.database.ref("events/pictures/{pictureId}").onDelete(snap => pictures.deletePicture(snap, "events"));
+exports.deleteEventsPicture = functions.region('europe-west1').database.ref("events/pictures/{pictureId}").onDelete(snap => pictures.deletePicture(snap, "events"));
