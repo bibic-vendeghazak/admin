@@ -1,9 +1,14 @@
 ***Admin dashboard*** ![alt](https://api.travis-ci.org/bibic-vendeghazak/bibic-vendeghazak-admin.svg?branch=master)
 
-[https://bibic-vendeghazak.github.io/web](https://bibic-vendeghazak.github.io/web)
-
-I use ReactJS [<img src="http://balazsorban.com/assets/img/icons/react.svg" width=48>
-](https://facebook.github.io/react/) for the Front End of the Admin Dashboard and Google Firebase [<img src="https://firebase.google.com/_static/images/firebase/touchicon-180.png" width=48>](firebase.google.com) as the Database of the whole site.
+[https://bibic-vendeghazak-api.firebaseapp.com](https://bibic-vendeghazak-api.firebaseapp.com)
+The site requires login, so here is a preview:
 
 
-Website here: [https://bibic-vendeghazak.github.io/web](https://bibic-vendeghazak.github.io/web)
+![](https://raw.githubusercontent.com/bibic-vendeghazak/admin/master/preview/preview-2018-08-20.png)
+It is only available in Hungarian at the moment.
+
+Using:
+- ReactJS [<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png" width=24>
+](https://facebook.github.io/react/) 
+
+- Firebase [<img src="https://firebase.google.com/_static/images/firebase/touchicon-180.png" width=20>](firebase.google.com)
