@@ -69,8 +69,8 @@ const commonFields = ({
 }) =>`
 Foglaló telefonszáma: ${tel}
 Foglalni kívánt szoba száma: ${roomId}
-Érkezés: ${moment(from).utcOffset(2).format("LLL")}
-Távozás: ${moment(to).utcOffset(2).format("LLL")}
+Érkezés: ${moment(from.toDate()).format("LLL")}
+Távozás: ${moment(to.toDate()).format("LLL")}
 Felnőttek száma: ${adults}
 Gyerekek (0-6): ${children.filter(child => child === "0-6").length}
 Gyerekek (6-12): ${children.filter(child => child === "6-12").length}
