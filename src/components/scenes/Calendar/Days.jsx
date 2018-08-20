@@ -1,18 +1,25 @@
-import React from 'react'
-import {Link, withRouter} from 'react-router-dom'
-import moment from 'moment'
+import React from "react"
+import PropTypes from 'prop-types'
+import {Link, withRouter} from "react-router-dom"
+import moment from "moment"
+import {routes, toRoute} from "../../../utils"
+import {Tooltip} from "@material-ui/core"
 
 
-const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reservations, handleDayClick}) => {
+const Days = ({
+  location, isPlaceholder = false, from = 0, to, currentDate, reservations
+}) => {
   const days = []
-  for (let day = from+1; day <= to; day++) {
-    let dayReservations = {}
-    Object.keys(reservations).forEach(key => {
-      const value = reservations[key]
-      const {from, to, roomId} = value
+  for (let day = from + 1; day <= to; day++) {
+    const dayReservations = {}
+    Object.entries(reservations).forEach(([
+      key, {
+        from, to, roomId
+      }
+    ]) => {
       const currentDay = currentDate.clone().date(day)
-      const dayFrom = moment(from).startOf('day')
-      const dayTo = moment(to).endOf('day')
+      const dayFrom = moment(from.seconds*1000 || from).startOf("day")
+      const dayTo = moment(to.seconds*1000 || to).endOf("day")
       const dateRange = moment.range(dayFrom, dayTo)
       if (dateRange.contains(currentDay)) {
         const reservation = dayReservations[key] = {roomId}
@@ -20,7 +27,7 @@ const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reser
           reservation,
           {
             from: currentDay.isSame(dayFrom, "day"),
-            to: currentDay.isSame(dayTo, 'day')
+            to: currentDay.isSame(dayTo, "day")
           }
         )
       }
@@ -31,9 +38,9 @@ const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reser
         date={currentDate.clone().date(day)}
         {...{
           location,
-          key: day, isPlaceholder,
-          reservations: dayReservations,
-          handleDayClick
+          key: day,
+          isPlaceholder,
+          reservations: dayReservations
         }}
       />
     )
@@ -41,42 +48,39 @@ const Days = ({location, isPlaceholder = false, from = 0, to, currentDate, reser
   return days
 }
 
-const Day = ({location: {pathname}, reservations, date, isPlaceholder, handleDayClick}) => {
-  let rooms = []  
-  Object.entries(reservations).forEach(reservation => {
-    const [key,value] = reservation
-    const {roomId, from, to} = value
-    rooms.push(
-      <li key={key} className={`reserved room-${roomId} ${from && to ? "from-to" : from ? "from" : to && "to"}`}/>
-    )
-  })
-
-  const handleClick = () => {
-    handleDayClick({
-      date, dayReservations: Object.keys(reservations)
-    })
-  }
-  
-  const isToday = moment().isSame(date,'day')
-  const year = date.format("YYYY")
-  const month = date.format("MM")
-  const day = date.format("DD")
+const Day = ({
+  reservations, date, isPlaceholder
+}) => {
+  reservations = Object.values(reservations)
   return (
-    <li
-        onClick={handleClick}
-        className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
-        >
-      {/* <Link 
-        className={`day ${isToday && "today"} day${isPlaceholder && "-placeholder"}`}
-        to={pathname+"/"+year+"/"+month+"/"+day} 
-        style={{textDecoration: "none"}}> */}
-          <p>{date.format('D')}</p>
-          <ul className="reserved-list">
-            {rooms}
-          </ul>
-      {/* </Link> */}
+    <li className={`day-tile ${isPlaceholder ? "placeholder" : ""}`}>
+      <p className={moment().isSame(date, "day") ? "today" : ""}>
+        {date.clone().format("D")}
+      </p>
+      {reservations.length ?
+        <Tooltip title={`Foglalva: ${reservations.map(({roomId}) => roomId).join(", ")}`}>
+          <Link to={toRoute(routes.CALENDAR, date.clone().format("YYYY/MM/DD"))}>
+            <ul className="reserved-list">
+              {reservations.map(({
+                roomId, from, to
+              }) =>
+                <li
+                  className={`room-${roomId} ${from ? "from" : to && "to"}`}
+                  key={roomId}
+                />
+              )}
+            </ul>
+          </Link>
+        </Tooltip>
+        : null}
     </li>
   )
+}
+
+Day.propTypes = {
+  reservations: PropTypes.object,
+  date: PropTypes.object,
+  isPlaceholder: PropTypes.bool
 }
 
 export default withRouter(Days)

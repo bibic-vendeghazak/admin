@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
-import firebase from 'firebase'
 
-import RaisedButton from 'material-ui/RaisedButton'
+
+import {Button, CardHeader, Card, CardActions, CardContent, Divider, TextField} from '@material-ui/core'
+
+import {AUTH} from '../../../utils/firebase'
+import {withStore} from '../Store'
 
 const initialState = {
   email: "",
@@ -9,52 +12,100 @@ const initialState = {
 }
 
 
-export default class Login extends Component {
+class Login extends Component {
+
   state = initialState
+
   handleLogin = () => {
-    const {email, password} = this.state
+    const {
+      email, password
+    } = this.state
     if (email !== "" && password !== "") {
-      firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.handleNotification("Sikeres bejelentkezés.", "success")
-        this.setState(initialState)
-      })
-      .catch(({message, code}) => this.props.handleNotification(message, "error", code))
+      AUTH.signInWithEmailAndPassword(email, password)
+        .then(() => this.setState(initialState))
+        .catch(this.props.sendNotification)
     }
   }
 
   handleEnterPress = ({key}) => key === 'Enter' && this.handleLogin()
 
-  handleEmailInput = e => this.setState({email: e.target.value})
-  handlePasswordInput = e => this.setState({password: e.target.value})
+  handleInputChange = ({target: {
+    name, value
+  }}) => this.setState({[name]: value})
 
   render() {
     return (
-        <header>
-          <div id="login-wrapper">
-            <div id="login-title">
-              <a href="https://balazsorban44.github.io/bibic-vendeghazak" target="_blank" rel="noopener noreferrer"><img src={"https://bibic-vendeghazak.github.io/web/assets/images/other/logo-brown.png"} alt="Bíbic vendégházak logo"/></a>
-              <h2>Admin kezelőfelület</h2>
+      <Card
+        raised
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 340
+        }}
+      >
+        <CardHeader
+          subheader="🔒 • ADMIN KEZELŐFELÜLET"
+          title={
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between"
+              }}
+            >
+              Bíbic vendégházak
+              <a href="https://bibic-vendeghazak-api.firebaseapp.com">
+                <img
+                  alt="Bíbic vendégházak logo"
+                  src="https://bibic-vendeghazak.github.io/web/assets/images/other/logo-brown.png"
+                  style={{marginBottom: -24}}
+                  width={48}
+                />
+              </a>
             </div>
-            <div id="login-form">
-              <input
-                id="email"
-                onKeyPress={this.handleEnterPress}
-                onChange={this.handleEmailInput}
-                type="email"
-                placeholder="E-mail cím"
-              />
-              <input
-                id="password"
-                onKeyPress={this.handleEnterPress}
-                onChange={this.handlePasswordInput}
-                type="password"
-                placeholder="Jelszó"
-              />
-            </div>
-            <RaisedButton secondary label="Bejelentkezés" onClick={this.handleLogin}/> 
-          </div>
-        </header>
-        )
+          }
+        />
+        <CardContent
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <TextField
+            fullWidth
+            label="e-mail"
+            name="email"
+            onChange={this.handleInputChange}
+            onKeyPress={this.handleEnterPress}
+            style={{marginBottom: 12}}
+            type="email"
+          />
+          <TextField
+            fullWidth
+            label="jelszó"
+            name="password"
+            onChange={this.handleInputChange}
+            onKeyPress={this.handleEnterPress}
+            type="password"
+          />
+        </CardContent>
+        <Divider/>
+        <CardActions>
+          <Button
+            color="secondary"
+            onClick={this.handleLogin}
+            variant="contained"
+          >
+            Bejelentkezés
+          </Button>
+        </CardActions>
+      </Card>
+    )
   }
 }
+
+
+export default withStore(Login)

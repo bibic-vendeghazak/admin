@@ -1,88 +1,107 @@
 import React, {Component} from 'react'
 
-import firebase from 'firebase'
+import {
+  Card,
+  Switch,
+  List,
+  CardContent,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography
+} from '@material-ui/core'
 
-
-import Card from 'material-ui/Card'
-import Toggle from 'material-ui/Toggle'
-import List, {ListItem} from 'material-ui/List'
+import Store from '../../App/Store'
+import {ROOM_SERVICES_DB} from '../../../utils/firebase'
 
 
 class Service extends Component {
-  
-  state = {
-    isAvailable: false
-  }
+
+  state = {isAvailable: false}
 
   componentDidMount() {
-    const roomServiceRef = firebase.database().ref(`roomServices/${this.props.serviceKey}`)
+    const roomServiceRef = ROOM_SERVICES_DB.child(`${this.props.serviceKey}`)
     const inRoomRef = roomServiceRef.child("inRoom")
     inRoomRef.on("value", snap => {
-      this.setState({
-        isAvailable: Object.values(snap.val()).some(e => e===this.props.roomId)
-      })
+      this.setState({isAvailable: Object.values(snap.val()).some(e => e===this.props.roomId)})
     })
   }
 
   componentWillUnmount() {
-    const roomServiceRef = firebase.database().ref(`roomServices/${this.props.serviceKey}`)
+    const roomServiceRef = ROOM_SERVICES_DB.child(`${this.props.serviceKey}`)
     const inRoomRef = roomServiceRef.child("inRoom")
     inRoomRef.off()
   }
-  
+
   handleClick = serviceKey => {
-    const roomServiceRef = firebase.database().ref(`roomServices/${serviceKey}`)
+    const roomServiceRef = ROOM_SERVICES_DB.child(`${serviceKey}`)
     const inRoomRef = roomServiceRef.child("inRoom")
-      if (this.state.isAvailable) {
-        inRoomRef.once("value", snap => {
-          const inRoom = snap.val()
-          Object.keys(inRoom).forEach(room => {
-            if (inRoom[room] === this.props.roomId) {
-              inRoomRef.child(room).remove()
-            }
-          })
+    const {roomId, sendNotification} = this.props
+    const success = {
+      code: "success",
+      message: "Mentve."
+    }
+    if (this.state.isAvailable) {
+      inRoomRef.once("value", snap => {
+        const inRoom = snap.val()
+        Object.keys(inRoom).forEach(room => {
+          if (inRoom[room] === roomId) {
+            inRoomRef.child(room).remove()
+              .then(() => sendNotification(success))
+              .catch(sendNotification)
+          }
         })
-      } else {
-        inRoomRef.push().set(this.props.roomId)
-      }
+      })
+    } else {
+      inRoomRef.push().set(roomId)
+        .then(() => sendNotification(success))
+        .catch(sendNotification)
+    }
   }
 
-  
+
   render() {
-    const {serviceKey, name} = this.props
+    const {
+      serviceKey, name
+    } = this.props
     const {isAvailable} = this.state
     return (
-    <ListItem 
-    onClick={() => this.handleClick(serviceKey)}
-    rightIcon={
-      <Toggle
-        style={{width: "auto"}}
-        label={isAvailable ? "Van": "Nincs"}
-        toggled={isAvailable}
-      />
-    }
-    >
-      <div style={{display: "flex", alignItems: "center"}}>
-        <img width={24} style={{padding: "0 8px"}} alt={serviceKey} src={`https://bibic-vendeghazak.github.io/web/assets/icons/services/${serviceKey}.svg`}/>
-        <p>{name}</p>
-      </div>
-    </ListItem>
-  )
+      <ListItem
+        button
+        onClick={() => this.handleClick(serviceKey)}
+      >
+        <ListItemIcon>
+          <img
+            alt={serviceKey}
+            src={`https://bibic-vendeghazak.github.io/web/assets/icons/services/${serviceKey}.svg`}
+            width={24}
+          />
+        </ListItemIcon>
+        <ListItemText>{name}</ListItemText>
+        <Typography>{isAvailable ? "Van": "Nincs"}</Typography>
+        <Switch
+          checked={isAvailable}
+          onClick={() => this.handleClick(serviceKey)}
+        />
+      </ListItem>
+    )
   }
 }
 
 class Services extends Component {
-  state = {
-    services: null
-  }
+  state = {services: null}
+
   componentDidMount() {
     const {roomId} = this.props
     const services = {}
-    firebase.database().ref("roomServices").once("value").then(data => {
+    ROOM_SERVICES_DB.once("value").then(data => {
       data.forEach(roomService => {
-        const {name, inRoom} = roomService.val()
+        const {
+          name, inRoom
+        } = roomService.val()
         services[roomService.key] = {
-          name, isAvailable: Object.values(inRoom).includes(roomId)
+          name,
+          isAvailable: Object.values(inRoom).includes(roomId)
         }
       })
       this.setState({services})
@@ -93,19 +112,33 @@ class Services extends Component {
     const {roomId} = this.props
     const {services} = this.state
     return (
-      <Card className="room-edit-block">
-        <List className="room-services">
-          {services && Object.keys(services).map(serviceKey => {
-            const service = services[serviceKey]
-            return(
-              <Service 
-                key={serviceKey} 
-                style={{flexGrow: 1}} 
-                {...{...service, serviceKey, roomId}}
-              />
-            )
-          })}
-        </List>
+      <Card>
+        <CardContent>
+          <Store.Consumer>
+            {({sendNotification}) =>
+              <List
+                dense
+                disablePadding
+              >
+                {services && Object.keys(services).map(serviceKey => {
+                  const service = services[serviceKey]
+                  return(
+                    <Service
+                      key={serviceKey}
+                      style={{flexGrow: 1}}
+                      {...{
+                        ...service,
+                        serviceKey,
+                        roomId,
+                        sendNotification
+                      }}
+                    />
+                  )
+                })}
+              </List>
+            }
+          </Store.Consumer>
+        </CardContent>
       </Card>
     )
   }

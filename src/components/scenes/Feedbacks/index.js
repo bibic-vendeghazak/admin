@@ -1,80 +1,107 @@
-import React, {Component} from 'react'
-import firebase from 'firebase'
-import {Tabs, Tab} from 'material-ui/Tabs'
-import {List} from 'material-ui/List'
+import React, {Component, Fragment} from 'react'
+import {
+  Tabs,
+  Tab,
+  List
+} from 'material-ui'
 
 import Feedback from './Feedback'
 
 import {TabLabel, PlaceholderText} from '../../shared'
+import {FEEDBACKS_DB} from '../../../utils/firebase'
 
-const FeedbackList = ({styleId, feedbacks}) => {
+
+const FeedbackList = ({
+  styleId, feedbacks
+}) => {
   return (
     feedbacks.length !== 0 ?
-    <List>{feedbacks}</List> : 
-    <PlaceholderText>
-      Nincs {styleId==="read" ? "olvasott" : "olvasatlan"} visszajelzés
-    </PlaceholderText>
+      <Fragment>
+        <List
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: 540,
+            margin: "0 auto"
+          }}
+        >{feedbacks}</List>
+      </Fragment> :
+      <PlaceholderText>
+        Nincs {styleId==="read" ? "jóváhagyott" : "jóváhagyásra váró"} visszajelzés
+      </PlaceholderText>
   )
 }
 
 export default class Feedbacks extends Component {
-  state = {feedbacks: null}
+  state = {
+    feedbacks: null,
+    accepted: false
+  }
 
   componentDidMount() {
-    firebase.database()
-      .ref("feedbacks")
-      .on("value", snap => 
+    FEEDBACKS_DB
+      .on("value", snap =>
         this.setState({feedbacks: snap.val()})
       )
   }
-  
-  handleChange = readState => {
-    if (readState) {
-      this.props.history.replace("olvasott","olvasatlan")
-    } else {
-      this.props.history.replace("olvasatlan","olvasott")
-    }
-  }
+
+  handleChange = () => this.setState(({accepted}) => ({accepted: !accepted}))
 
   render() {
-    const {feedbacks} = this.state
+    const {
+      feedbacks, accepted
+    } = this.state
     const unreadFeedbacks = []
     const readFeedbacks = []
-    for (let key in feedbacks) {
+    for (const key in feedbacks) {
       const feedback = feedbacks[key]
-      const feedbackComponent = <Feedback key={key} feedbackId={key} feedback={feedback}/>
-      !feedback.handled ? 
-      unreadFeedbacks.push(feedbackComponent) : 
-      readFeedbacks.push(feedbackComponent)
+      const feedbackComponent =
+        <Feedback
+          feedback={feedback}
+          feedbackId={key}
+          key={key}
+        />
+      !feedback.handled ?
+        unreadFeedbacks.push(feedbackComponent) :
+        readFeedbacks.push(feedbackComponent)
     }
-    
+
     return (
       <Tabs
-        inkBarStyle={{marginTop: -4, height: 4}}
-        value={this.props.match.params.readState === "olvasott"}
+        inkBarStyle={{
+          marginTop: -4,
+          height: 4
+        }}
         onChange={this.handleChange}
+        value={accepted}
       >
         <Tab
-          value={false}
-          label={
-            <TabLabel 
-              title="Olvasatlan" 
-              count={unreadFeedbacks.length}
-            />
-          }
-        >
-          <FeedbackList styleId="unread" feedbacks={unreadFeedbacks}/>
-        </Tab>
-        <Tab 
-          value 
           label={
             <TabLabel
-              title="Olvasott"
-              count={readFeedbacks.length}
+              count={unreadFeedbacks.length}
+              title="Új"
             />
           }
+          value={false}
         >
-          <FeedbackList styleId="read" feedbacks={readFeedbacks}/>
+          <FeedbackList
+            feedbacks={unreadFeedbacks}
+            styleId="unread"
+          />
+        </Tab>
+        <Tab
+          label={
+            <TabLabel
+              count={readFeedbacks.length}
+              title="Jóváhagyott"
+            />
+          }
+          value
+        >
+          <FeedbackList
+            feedbacks={readFeedbacks}
+            styleId="read"
+          />
         </Tab>
       </Tabs>
     )

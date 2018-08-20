@@ -1,23 +1,19 @@
-import React, { Component } from 'react'
-import firebase from "firebase"
+import React, {Component} from "react"
 
-import Services from './Services'
-import Population from './Population'
-import Pictures from './Pictures'
-import Prices from './Prices'
-import Availability from './Availability'
-import Description from './Description'
+import Services from "./Services"
+import Population from "./Population"
+import Prices from "./Prices"
+import Availability from "./Availability"
+import Description from "./Description"
+import Gallery from '../../shared'
 
-import Subheader from 'material-ui/Subheader'
+import {ROOMS_DB, ROOM_SERVICES_DB} from "../../../utils/firebase"
+import {Subheader} from "material-ui"
+import {ROOMS, EDIT} from "../../../utils/routes"
+
 
 export default class BigRoom extends Component {
-  
 
-  componentDidMount() {
-    firebase.database().ref("rooms"+this.props.match.params.roomId).on("value", snap => {
-      console.log(snap.val())
-    })
-  }
 
   handleRoomEdit(event) {
     const e = event.target
@@ -30,21 +26,22 @@ export default class BigRoom extends Component {
       let {inRoom} = roomServices[dataType]
 
       inRoom.includes(id) ? inRoom = inRoom.filter(e => e !== id) : inRoom.push(id)
-      firebase.database().ref(`/roomServices/${dataType}/inRoom`).set(inRoom)
+      ROOM_SERVICES_DB.child(`${dataType}/inRoom`).set(inRoom)
     } else if(dataType.includes("max-people")) {
       dataType = dataType.replace("max-people ","")
       let {value} = e
       value = parseInt(value,10) || 0
-      firebase.database().ref(`/rooms/${id-1}/${dataType}`).set(value)
+      ROOMS_DB.child(`${id-1}/${dataType}`).set(value)
     }
     // NOTE: Update firebase
   }
 
   populatePrices(){
     const {id} = this.state
-    const dbRef = firebase.database()
-    const roomRef = dbRef.ref(`rooms/${id-1}`)
-    let {prices, maxAdults, maxChildren} = this.state
+    const roomRef = ROOMS_DB.child(id-1)
+    const {
+      prices, maxAdults, maxChildren
+    } = this.state
     Object.keys(prices).forEach(key => {
       for (let i = 0; i < maxAdults; i++) {
         for (let j = 0; j <= maxChildren; j++) {
@@ -62,7 +59,9 @@ export default class BigRoom extends Component {
       // Remove rest of the prices.
       const priceType = prices[key]
       Object.keys(priceType).forEach(key => {
-        const {adults, children} = priceType[key]
+        const {
+          adults, children
+        } = priceType[key]
         if (adults > maxAdults || children > maxChildren) {
           delete priceType[key]
         }
@@ -76,13 +75,18 @@ export default class BigRoom extends Component {
   }
 
   render(){
-    const {roomId} = this.props.match.params
+    let {roomId} = this.props.match.params
+    roomId = parseInt(roomId, 10)
+
     return(
       <div className="big-room">
         <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>
         <Availability {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szoba képek</Subheader>
-        <Pictures {...{roomId}}/>
+        <Gallery
+          baseURL={`${ROOMS}/${roomId}/${EDIT}`}
+          path={`rooms/${roomId-1}`}
+        />
         <Subheader style={{textAlign: "center"}}>Szoba leírása</Subheader>
         <Description {...{roomId}}/>
         <Subheader style={{textAlign: "center"}}>Szolgáltatások</Subheader>

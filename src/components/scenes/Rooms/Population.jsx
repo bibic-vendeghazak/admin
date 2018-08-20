@@ -1,96 +1,105 @@
-import React, { Component } from 'react'
-
-import firebase from 'firebase'
-
-import Card from 'material-ui/Card'
-import List, { ListItem } from 'material-ui/List'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField/TextField'
+import React, {Component, Fragment} from 'react'
 
 
+import {
+  Card,
+  Button,
+  TextField,
+  Typography,
+  Grid,
+  CardContent,
+  CardActions
+} from '@material-ui/core'
+import {ROOMS_DB} from '../../../utils/firebase'
 
-
-
+import {Tip} from '../../shared'
 
 export default class Population extends Component {
 
-  render() {
-    const {roomId} = this.props
-    return (
-      <Card className="room-edit-block">
-        <List disabled>
-          <PeopleCount populateDatabase={this.populateDatabase} type="maxAdults" label="Felnőtt" {...{roomId}}/>
-          <PeopleCount populateDatabase={this.populateDatabase} type="maxChildren" label="Gyerek" {...{roomId}}/>
-        </List>
-      </Card>
-    )
-  }
-} 
-
-class PeopleCount extends Component {
   state = {
     count: 0,
     isEditing: false
   }
 
+
+  componentDidMount() {
+    ROOMS_DB
+      .child(`${this.props.roomId-1}/prices/metadata/maxPeople`).on("value", snap => {
+        this.setState({count: snap.val()})
+      })
+  }
+
   handleOpenEdit = () => this.setState({isEditing: true})
+
   handleCloseEdit = () => this.setState({isEditing: false})
-  
-  handleChange = count => this.setState({count})
+
+  handleChange = ({target: {value}}) => this.setState({count: value})
 
   handleSave = () => {
-    const {roomId, type} = this.props
-    this.handleCloseEdit()
-    firebase.database()
-    .ref(`rooms/${roomId-1}/${type}`)
-    .set(parseInt(this.state.count, 10))
-  }
-  
-  componentDidMount() {
-    const {roomId, type} = this.props
-    firebase.database().ref(`rooms/${roomId-1}/${type}`).on("value", snap => {
-      this.setState({count: snap.val()})
-    })
+    this.props.openDialog({
+      title: "FIGYELEM!",
+      content: "Ha az új maximális fők száma nagyobb mint a korábbi, ez az ártáblázatban új opciók létrejöttéhez vezet. Ha kevesebb, a jelenlegi árak TÖRLŐDNEK az adatbázisból!",
+      submitLabel: "Módósít"
+    },
+    () => ROOMS_DB
+      .child(`${this.props.roomId-1}/prices/metadata/maxPeople`)
+      .set(parseInt(this.state.count, 10))
+      .then(this.handleCloseEdit),
+    "Módosítva. Az ártáblázat ennek megfelelően hamarosan frissül."
+    )
   }
 
+
   render() {
-    const {count, isEditing} = this.state
-    const {label} = this.props
+    const {
+      count, isEditing
+    } = this.state
     return(
-      <ListItem 
-        disabled 
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          alignItems: "baseline"
-        }}
-      >
-        <p>{label}</p>
-        {isEditing ?
-          <TextField
-            style={{flexGrow: 1, margin: "0 1em"}}
-            floatingLabelText="személy"
-            id={label}
-            type="number"
-            value={count}
-            onChange={e => this.handleChange(e.target.value)}
-          /> :
-          <p style={{flexGrow: 1, textAlign: "right", margin: ".5em 1em"}}>maximum <span style={{fontWeight: "bold", fontSize: "1.1em"}}>{count}</span> fő</p>
-        }
-        {isEditing &&
-          <RaisedButton 
-            style={{margin: "0 12px"}}
-            label="Mégse"
-            onClick={() => this.handleCloseEdit()}
-          />
-        }
-        <RaisedButton 
-          secondary 
-          label={isEditing ? "Mentés" : "Módosít"}
-          onClick={() => isEditing ? this.handleSave() : this.handleOpenEdit()}
-        />
-      </ListItem>
+      <Fragment>
+        <Card>
+          <CardContent>
+            <Grid
+              container
+              justify="space-between"
+            >
+              <Typography>Maximum</Typography>
+              {isEditing ?
+                <TextField
+                  label="személy"
+                  onChange={this.handleChange}
+                  type="number"
+                  value={count}
+                /> :
+                <Typography><span style={{fontWeight: "bold", margin: 4}}>{count}</span> fő</Typography>
+              }
+            </Grid>
+          </CardContent>
+          <CardActions>
+            <Grid
+              container
+              justify="flex-end"
+            >
+              {isEditing &&
+          <Button
+            onClick={this.handleCloseEdit}
+            variant="outlined"
+          >
+          Mégse
+          </Button>
+              }
+              <Button
+                color="secondary"
+                onClick={() => isEditing ? this.handleSave() : this.handleOpenEdit()}
+                style={{marginLeft: 12}}
+                variant="contained"
+              >
+                {isEditing ? "Mentés" : "Módosít"}
+              </Button>
+            </Grid>
+          </CardActions>
+        </Card>
+        <Tip>A maximum személyek megváltoztatása módosítja az ártáblázatot.</Tip>
+      </Fragment>
     )
   }
 }

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="122" viewBox="0 0 300 122">
+    <g fill="none" fill-rule="evenodd">
+        <g fill="#482c29">
+            <ellipse cx="211.417" cy="23.725" fill-opacity=".5" rx="2.362" ry="2.373"/>
+            <ellipse cx="60.236" cy="58.127" fill-opacity=".5" rx="2.362" ry="2.373"/>
+            <ellipse cx="211.417" cy="100.833" fill-opacity=".6" rx="2.362" ry="2.373"/>
+            <ellipse cx="296.457" cy="54.569" fill-opacity=".6" rx="3.543" ry="3.559"/>
+            <ellipse cx="2.362" cy="75.922" fill-opacity=".6" rx="2.362" ry="2.373"/>
+            <ellipse cx="151.181" cy="3.559" fill-opacity=".4" rx="3.543" ry="3.559"/>
+            <ellipse cx="99.213" cy="113.882" rx="1.181" ry="1.186"/>
+            <ellipse cx="239.764" cy="65.245" fill-opacity=".5" rx="4.724" ry="4.745"/>
+            <ellipse cx="269.291" cy="16.608" fill-opacity=".5" rx="2.362" ry="2.373"/>
+            <ellipse cx="24.803" cy="26.098" fill-opacity=".7" rx="4.724" ry="4.745"/>
+            <ellipse cx="67.323" cy="100.833" fill-opacity=".6" rx="4.724" ry="4.745"/>
+            <ellipse cx="272.244" cy="114.475" fill-opacity=".5" rx="6.496" ry="6.525"/>
+        </g>
+        <path fill="#482c29" stroke-opacity=".7" stroke="#482c29" fill-opacity=".4" stroke-width="2.36" d="M186.831 37.22c18.911 18.995 18.911 49.79 0 68.784-18.911 18.994-49.572 18.994-68.483 0-11.239-11.288-15.799-26.743-13.68-41.413a30.065 30.065 0 0 1-8.452-5.98c-11.762-11.814-11.762-30.967 0-42.78 11.762-11.814 30.831-11.814 42.593 0a30.216 30.216 0 0 1 5.637 7.833c14.945-2.547 30.85 1.972 42.385 13.557zm-42.385-13.556c-9.558 1.629-18.722 6.148-26.098 13.557a48.5 48.5 0 0 0-13.68 27.37c11.17 5.287 24.908 3.294 34.141-5.98 9.415-9.456 11.294-23.614 5.637-34.947z"/>
+        <path stroke-opacity=".7" stroke="#482c29" fill-opacity=".4" stroke-linecap="round" stroke-width="3.539" d="M152.362 28.47c15.965 1.456 27.503 7.414 34.612 17.877M97.868 22.768c5.943-8.052 14.387-11.362 25.332-9.93"/>
+        <g transform="translate(129.921 78.294)">
+            <ellipse cx="2.362" cy="2.373" fill="#482c29" rx="2.362" ry="2.373"/>
+            <ellipse cx="44.882" cy="2.373" fill="#482c29" rx="2.362" ry="2.373"/>
+            <path stroke-opacity=".7" stroke="#482c29" stroke-linecap="round" stroke-width="2.36" d="M15.354 21.843c5.422-5.313 10.545-5.766 15.37-1.358"/>
+        </g>
+        <path stroke-opacity=".6" stroke="#482c29" fill-opacity=".4" stroke-linecap="round" stroke-width="3.539" d="M94.155 28.49c-.77.911-1.154 1.912-1.154 3.001"/>
+    </g>
+</svg>

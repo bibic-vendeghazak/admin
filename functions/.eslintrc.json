@@ -1,7 +1,8 @@
 {
   "parserOptions": {
     // Required for certain syntax usages
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "plugins": [
     "promise"
@@ -10,7 +11,8 @@
   "rules": {
     // Removed rule "disallow the use of console" from recommended eslint rules
     "no-console": "off",
-
+    "no-trailing-spaces":"error",
+    "semi":"error",
     // Removed rule "disallow multiple spaces in regular expressions" from recommended eslint rules
     "no-regex-spaces": "off",
 

@@ -1,53 +1,73 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
-import {Card, CardActions, CardMedia, CardTitle} from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
+import React from "react"
+import {Link} from "react-router-dom"
+import {Button, Card, CardActions, CardMedia, Typography, Grid, Tooltip} from "@material-ui/core"
+import empty from '../../../assets/empty-state.svg'
+import {routes, toRoute} from "../../../utils"
 
-import {colors} from '../../../utils'
-import {ROOMS, EDIT} from '../../../utils/routes'
-
-
-const Room = ({available, isBooked, roomId, name}) => (
-  <li className="room">
-   <Card>
-    <CardMedia
-      className="room-bg"
-      overlay={
-        <CardTitle 
-          style={{
-            padding: 8
-          }}
-          titleStyle={{
-            lineHeight: 1,
-            fontSize: "1.1em"
-          }}
-          subtitleStyle={{
-            fontSize: ".8em"
-          }}
-          className="room-title"
-          title={name} 
-          subtitle={
-            <span style={{textShadow: "0 0 5px rgba(0,0,0,.5)", textTransform: "uppercase", color: (isBooked || !available) && colors.red}}>
-              {available ? 
-                `${!isBooked ? "Nem" : ""} foglalt`:
-                "Nem elérhető"}
-            </span>
-          }
-        />
+const Room = ({
+  unavailable, isBooked, id, name, pictures
+}) => (
+  <Card style={{margin: 8}}>
+    <Tooltip
+      title={
+        unavailable ?
+          "A szoba nem elérhető foglalásra." :
+          isBooked ?
+            "A szobában jelenleg tartózkodnak." :
+            "A szoba jelenleg üres."
       }
     >
-      <img
-        src={`https://bibic-vendeghazak.github.io/web/assets/images/rooms/${roomId === 7 ? 1 : roomId}_0.jpg`}
-        alt={name}
+      <CardMedia
+        image={pictures ? Object.values(pictures).find(({order}) => !order).SIZE_640 : empty}
+        style={{paddingTop: '56.25%'}} // 16:9
       />
-    </CardMedia>
+    </Tooltip>
     <CardActions>
-      <Link to={`${ROOMS}/${roomId}${EDIT}`}>
-        <RaisedButton secondary label="Szerkesztés" />
-      </Link>
+      <Grid
+        alignItems="center"
+        container
+        justify="space-between"
+      >
+        <Grid
+          alignItems="baseline"
+          container
+          item
+          xs={6}
+        >
+          <Typography variant="body2">{name} •</Typography>
+          <Typography
+            color={unavailable || isBooked ? "error" : "textPrimary"}
+            style={{
+              fontStyle: "italic",
+              marginLeft: 4
+            }}
+            variant="body1"
+          >
+            {unavailable ?
+              "blokkolva" :
+              isBooked ?
+                "foglalt" :
+                "szabad"
+            }
+          </Typography>
+        </Grid>
+        <Grid
+          container
+          item
+          justify="flex-end"
+          xs={6}
+        >
+          <Button
+            component={Link}
+            to={toRoute(routes.ROOMS, id)}
+            variant="outlined"
+          >
+          Részletek
+          </Button>
+        </Grid>
+      </Grid>
     </CardActions>
   </Card>
-  </li>
 )
 
 export default Room

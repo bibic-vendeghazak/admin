@@ -1,96 +1,104 @@
 import React, {Component} from 'react'
 
+import {
+  Card,
+  CardActions,
+  Button,
+  TextField,
+  CardContent, Grid, Typography
+} from "@material-ui/core"
 
-import firebase from 'firebase'
-
-
-import Card, { CardActions } from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField/TextField'
+import {ROOMS_DB} from '../../../utils/firebase'
 
 export default class Description extends Component {
-  
+
   state = {
     description: "",
     isEditing: false
   }
 
   componentDidMount() {
-    firebase.database()
-    .ref(`rooms/${this.props.roomId-1}/description`)
-    .on("value", snap => {
-      this.setState({
-        description: snap.val()
+    ROOMS_DB
+      .child(`${this.props.roomId-1}/description`)
+      .on("value", snap => {
+        this.setState({description: snap.val()})
       })
-    })
   }
-  
-  
-  handleOpenEdit = () => {
-    this.setState({isEditing: true})
-  }
+
+
+  handleOpenEdit = () => this.setState({isEditing: true})
 
   handleCloseEdit = () => this.setState({isEditing: false})
 
-
   handleDescriptionChange = description => this.setState({description})
 
-
   handleSubmitDescription = () => {
-    firebase.database()
-      .ref(`rooms/${this.props.roomId-1}/description`)
+    ROOMS_DB
+      .child(`${this.props.roomId-1}/description`)
       .set(this.state.description).then(() => this.handleCloseEdit())
-    
+      .then(() => this.props.sendNotification({
+        code: "success",
+        message: "A leírás sikeresen frissítve lett."
+      }))
+      .catch(this.props.sendNotification)
+
   }
 
-  
-  render() {
-    const {description, isEditing} = this.state
-    return (
-      <Card className="room-edit-block">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "1em"
-          }}
-        >
-        {isEditing ?
-          <TextField
-            id="description"
-            floatingLabelText="leírás"
-            fullWidth
-            multiLine
-            value={description}
-            onChange={e => this.handleDescriptionChange(e.target.value)}
-          /> :
-          <p>{description}</p>
-        }
 
-        </div>
-        <CardActions style={{display: "flex", justifyContent: "flex-end"}}> 
+  render() {
+    const {
+      description, isEditing
+    } = this.state
+    return (
+      <Card>
+        <CardContent>
           {isEditing ?
-            <div>
-              <RaisedButton
-                style={{margin: 12}}
-                label={"Mégse"}
-                onClick={() => this.handleCloseEdit()}
-              />
-              <RaisedButton
-                secondary
-                label={"Mentés"}
-                onClick={() => this.handleSubmitDescription()}
-              />
-            </div> :
-            <RaisedButton
-              secondary
-              label={"Módosít"}
-              onClick={() => this.handleOpenEdit()}
-            />
+            <TextField
+              fullWidth
+              id="description"
+              label="leírás"
+              multiline
+              onChange={e => this.handleDescriptionChange(e.target.value)}
+              value={description}
+            /> :
+            <Typography>{description}</Typography>
           }
+        </CardContent>
+        <CardActions>
+          <Grid
+            container
+            justify="flex-end"
+          >
+            {isEditing ?
+              [
+                <Button
+                  key="0"
+                  onClick={this.handleCloseEdit}
+                  style={{marginRight: 16}}
+                  variant="outlined"
+                >
+                  Mégse
+                </Button>,
+                <Button
+                  color="secondary"
+                  key="1"
+                  onClick={this.handleSubmitDescription}
+                  variant="contained"
+                >
+                  Mentés
+                </Button>
+              ] :
+              <Button
+                color="secondary"
+                onClick={this.handleOpenEdit}
+                variant="contained"
+              >
+                Módosít
+              </Button>
+            }
+          </Grid>
         </CardActions>
       </Card>
-  )
+    )
   }
 }

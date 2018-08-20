@@ -1,240 +1,165 @@
-import React, {Component} from 'react'
-import {Route, withRouter, Link} from 'react-router-dom'
-import firebase from 'firebase/app'
+import React, {Fragment} from "react"
+import {Route, Redirect, Switch} from "react-router-dom"
+import {withStore} from "./Store"
+import Sidebar from "./Sidebar"
+import NoMatch from "./NoMatch"
+import Login from "./Auth/Login"
+import Rooms from "../scenes/Rooms"
+import Reservations from "../scenes/Reservations"
+import Calendar from "../scenes/Calendar"
+// import Feedbacks from "../scenes/Feedbacks"
+
+import {routes, toRoute, colors} from "../../utils"
+import {Tip, Paragraphs, Gallery} from "../shared"
 
 
-import AppBar from 'material-ui/AppBar'
-import IconButton from 'material-ui/IconButton'
-import FontIcon from 'material-ui/FontIcon'
+import {withStyles} from '@material-ui/core/styles'
+import Menu from '@material-ui/icons/MenuRounded'
 
-import Sidebar from './Sidebar'
-import Login from './Auth/Login'
+import {
+  Drawer, AppBar, Toolbar,
+  IconButton, Hidden
+} from '@material-ui/core'
+import {Title, RightAction} from "./Toolbar"
+import Dialog from "./Dialog"
+import Notification from "./Notification"
 
-import Welcome from '../scenes/Welcome'
-import Rooms from '../scenes/Rooms'
-import Reservations from '../scenes/Reservations'
-import Calendar from '../scenes/Calendar'
-import Stats from '../scenes/Stats'
-import Feedbacks from '../scenes/Feedbacks'
-import Notification from '../shared/Notification'
-import * as routes from '../../utils/routes';
+const drawerWidth = 240
 
-const initialAppState = {
-  isDrawerOpened: true,
-  isLoggedIn: false,
-  title:"",
-  // Notification state
-  isNotificationOpen: false,
-  notificationMessage: "",
-  notificationType: "",
-  errorType: ""
-}
-
-
-class App extends Component {
-  
-  state = initialAppState
-
-  toggleSidebar = () => {
-    this.setState(({isDrawerOpened}) => (
-      {isDrawerOpened: !isDrawerOpened})
-    )
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    minHeight: "100vh",
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+    width: '100%'
+  },
+  appBar: {
+    position: 'fixed',
+    marginLeft: drawerWidth,
+    backgroundColor: theme.palette.primary.dark,
+    [theme.breakpoints.up('md')]: {width: `calc(100% - ${drawerWidth}px)`}
+  },
+  navIconHide: {[theme.breakpoints.up('md')]: {display: 'none'}},
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    backgroundColor: theme.palette.primary.main,
+    width: drawerWidth
+  },
+  content: {
+    flexGrow: 1,
+    [theme.breakpoints.up('md')]: {marginLeft: drawerWidth},
+    backgroundColor: colors.grey
   }
+})
 
-  handleNotification = (notificationMessage, notificationType, errorType) => {
-    
-    this.setState({
-      isNotificationOpen: true,
-      notificationType,
-      notificationMessage,
-      errorType
-    })
-  }
-
-  handleNotificationClose = () => this.setState({isNotificationOpen: false})
-
-  handleLogout = () => {
-    firebase.auth().signOut().then(() => {
-      this.handleNotification("Sikeres kijelentkezés", "success")
-      this.setState({isLoggedIn: false})
-    })
-  }
-  
-
-  componentDidMount = () => {
-    window.innerWidth <=768 && this.setState({isDrawerOpened: false})
-    const db = firebase.database()
-    const reservationsRef = db.ref("reservations")
-    const feedbacksRef = db.ref("feedbacks")
-    const roomsRef = db.ref("rooms")
-    const roomServicesRef = db.ref("roomServices")
-    const serverMessageRef = db.ref("serverMessage")
-    firebase.auth().onAuthStateChanged(user => {
-      if(user){
-        db.ref(`admins/${user.uid}`).once("value", snap =>{
-          this.setState({profile: snap.val()})
-        })
-        serverMessageRef.on("value", snap => {
-          const {message, type} = snap.val()
-          message !== "" && this.handleNotification(message, type, "server")
-        })
-        reservationsRef.on("value", snap => {
-          let unreadReservationCount = 0
-          snap.forEach(reservation => {
-            if (reservation.val().metadata.handled) {
-              unreadReservationCount+=1
-            }
-          })
-          this.setState({unreadReservationCount})
-        })
-        feedbacksRef.on("value", snap => {
-          let unreadFeedbackCount = 0
-          snap.forEach(feedback => {
-            if (!feedback.val().handled) {
-              unreadFeedbackCount+=1
-            }
-          })
-          this.setState({unreadFeedbackCount})
-        })
-
-        roomsRef.on("value", snap => {
-          this.setState({
-            rooms: snap.val()
-          })
-        })
-        roomServicesRef.on("value", snap => {
-          this.setState({
-            roomServices: snap.val()
-          })
-        })
-        this.setState({isLoggedIn: true})
-      } 
-    })
-  }
-
-  renderTitle = () => {
-    switch("/"+this.props.location.pathname.split("/")[1]) {
-      case routes.ROOMS:
-        return "Szobák"
-      case routes.SPECIAL_OFFER:
-        return "Akciós ajánlatok"
-      case routes.CALENDAR:
-        return "Naptár"
-      case routes.RESERVATIONS:
-        return "Foglalások"
-      case routes.FEEDBACKS:
-        return "Visszajelzések"
-      case routes.FOODS:
-        return "Ételek"
-      case routes.STATS:
-        return "Statisztikák"
-      default:
-        return "Admin kezelőfelület"
-    }
-  }
-
-  renderRightIcon = () => {
-    let iconName, iconText= ""
-    const {pathname} = this.props.location
-    const iconPath = "/"+pathname.split("/")[1]
-    if (iconPath === routes.ROOMS && pathname.includes("szerkeszt")) {
-      iconName = "close"
-      iconText = "Bezárás"
-    } else if(iconPath === routes.CALENDAR) {
-      iconName = "close"
-      iconText = "Bezárás"
-    }
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          color: "#fff"
-        }}>
-        <p>{iconText}</p>
-        <Link to={iconPath}>
-          <IconButton>
-            <FontIcon 
-              color="#fff" 
-              className="material-icons">
-              {iconName}
-            </FontIcon>
-          </IconButton>
-        </Link>
-      </div>
-    )
-  }
-
-
-  render() {
-    const {
-      profile, unreadReservationCount, unreadFeedbackCount,
-      isMenuActive,
-      isDrawerOpened, isLoggedIn,
-      // Snackbar states
-      notificationMessage, notificationType, isNotificationOpen, errorType,
-    } = this.state
-    
-    return (
-      <div className="app">
-        <Notification handleNotificationClose={this.handleNotificationClose} {...{isLoggedIn, notificationMessage, notificationType, isNotificationOpen, errorType}}/> 
-        {isLoggedIn ?
-          <div>
-            <AppBar
-              onLeftIconButtonClick={() => this.toggleSidebar()}
-              style={{position: "fixed"}}
-              title={this.renderTitle()}
-              iconElementRight={this.renderRightIcon()}
+const App = ({
+  isLoggedIn, handleDrawerToggle, mobileOpen,
+  classes, theme
+}) =>
+  <div>
+    {isLoggedIn ?
+      <div className={classes.root}>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              aria-label="Open drawer"
+              className={classes.navIconHide}
+              color="inherit"
+              onClick={handleDrawerToggle}
+            >
+              <Menu/>
+            </IconButton>
+            <Title/>
+            <RightAction/>
+          </Toolbar>
+        </AppBar>
+        <Hidden mdUp>
+          <Drawer
+            // Better open performance on mobile.
+            ModalProps={{keepMounted: true}}
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            classes={{paper: classes.drawerPaper}}
+            onClose={handleDrawerToggle}
+            open={mobileOpen}
+            variant="temporary"
+          >
+            <Sidebar/>
+          </Drawer>
+        </Hidden>
+        <Hidden
+          implementation="css"
+          smDown
+        >
+          <Drawer
+            classes={{paper: classes.drawerPaper}}
+            open
+            variant="permanent"
+          >
+            <Sidebar/>
+          </Drawer>
+        </Hidden>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Switch>
+            <Route component={() => <Redirect to={routes.RESERVATIONS}/>} exact path="/" />
+            <Route
+              component={Reservations}
+              path={routes.RESERVATIONS}
             />
-            <Sidebar
-              handleLogout={this.handleLogout}
-              {...{profile, isMenuActive, isDrawerOpened,unreadReservationCount, unreadFeedbackCount}}
-              toggleSidebar={this.toggleSidebar}
+            <Route
+              component={Calendar}
+              path={toRoute(routes.CALENDAR, ":year",":month")}
             />
-            <main style={{
-              marginLeft: isDrawerOpened && window.innerWidth >= 768 && 256,
-              transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'
-            }}>
-                <Route
-                  path={routes.WELCOME}
-                  component={({match}) =>
-                    <Welcome {...{match, profile}}/>
-                  }
-                />
-                <Route
-                  path={routes.CALENDAR}
-                  component={Calendar}
-                />
-                <Route
-                  path={routes.ROOMS}
-                  component={Rooms}
-                />
-                <Route
-                  path={routes.RESERVATIONS+"/:readState"}
-                  component={Reservations}
-                />
-                <Route
-                  path={routes.FEEDBACKS+"/:readState"}
-                  component={Feedbacks}
-                />
-                {/* <Route
-                  path={routes.STATS}
-                  component={({match}) =>
-                    <Stats
-                      {...{match, rooms, feedbacks}}
-                      reservations={handledReservations}
-                    />
-                  }
-                /> */}
-            </main>      
-          </div> :
-          <Login handleNotification={this.handleNotification}/>
-        }
+            {/* REVIEW: Implement with material v1.x
+              <Route
+                component={Feedbacks}
+                path={routes.FEEDBACKS}
+              />
+            */}
+            <Route
+              component={Paragraphs}
+              path={routes.INTRO}
+            />
+            <Route
+              component={Rooms}
+              path={routes.ROOMS}
+            />
+            <Route
+              component={Paragraphs}
+              path={routes.CERTIFICATES}
+            />
+            <Route
+              component={Gallery}
+              path={routes.EVENTS}
+            />
+            <Route
+              component={props =>
+                <Fragment>
+                  <Gallery {...props}/>
+                  <Tip>
+                    Az első három kép fel lesz tüntetve a főoldalon a
+                    Szolgáltatásaink szekció alatt.
+                  </Tip>
+                </Fragment>
+              }
+              path={routes.SERVICES}
+            />
+            <Route
+              component={Gallery}
+              path={routes.FOODS}
+            />
+            <Route component={NoMatch}/>
+          </Switch>
+        </main>
       </div>
-    )
-  }
-}
+      : <Login/>
+    }
+    <Dialog/>
+    <Notification/>
+  </div>
 
 
-export default withRouter(App)
+export default withStyles(styles, {withTheme: true})(withStore(App))

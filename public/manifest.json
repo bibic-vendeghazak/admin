@@ -1,5 +1,5 @@
 {
-    "name": "B\u00edbic vend\u00e9gh\u00e1zak",
+    "name": "B\u00edbic vend\u00e9gh\u00e1zak admin",
     "icons": [
         {
             "src": "./android-chrome-192x192.png",
@@ -12,8 +12,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#ededed",
+    "background_color": "#ededed",
     "display": "standalone",
     "orientation": "portrait"
 }

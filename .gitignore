@@ -5,9 +5,14 @@ node_modules
 db
 main.css
 build
+.history
+functions/lib
+functions/index.js
 
 # misc
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
+
+service-account-credentials.json

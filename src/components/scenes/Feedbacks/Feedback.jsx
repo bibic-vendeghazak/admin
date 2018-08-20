@@ -1,76 +1,80 @@
-import React, {Component} from 'react'
-import firebase from 'firebase'
-import moment from 'moment'
+import React, {Component} from "react"
+import moment from "moment"
+import {AUTH, FEEDBACKS_DB, getAdminName} from "../../../utils/firebase"
 
-import {ListItem} from 'material-ui/List'
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import Read from 'material-ui/svg-icons/content/drafts'
-import Unread from 'material-ui/svg-icons/content/mail'
-
+import {ListItem} from "material-ui/List"
+import {Card, CardActions, CardText, CardTitle} from "material-ui/Card"
+import {Divider, FlatButton} from "material-ui"
 
 export default class Feedback extends Component {
 
   state = {
-    adminName: ""
-  }
-
-  markRead = isRead => {
-    const feedbackRef = firebase.database().ref(`feedbacks/${this.props.feedbackId}`)
-    feedbackRef.update({"handled": isRead})
-    feedbackRef.child('lastHandledBy').set(firebase.auth().currentUser.uid)
+    adminName: null,
+    loggedInAdminName: ""
   }
 
   componentDidMount() {
-    const db = firebase.database()
-    db.ref(`feedbacks/${this.props.feedbackId}/lastHandledBy`).on('value', snap => {
-      db.ref(`admins/${snap.val()}`).on("value", snap => snap.val() && this.setState({adminName: snap.val().name}))
-    })
+    FEEDBACKS_DB
+      .child(`${this.props.feedbackId}/lastHandledBy`)
+      .on("value", snap => this.setState({adminName: snap.val()}))
+    getAdminName(AUTH.currentUser.uid)
+      .then(snap => this.setState({loggedInAdminName: snap.val()}))
+  }
+
+  handleMarkAccepted = () => {
+    FEEDBACKS_DB.child(this.props.feedbackId)
+      .update({
+        handled: true,
+        lastHandledBy: this.state.loggedInAdminName
+      })
+  }
+
+  handleDeleteFeedback = () => {
+    FEEDBACKS_DB.child(this.props.feedbackId).remove()
   }
 
   render() {
-    const {feedback: {rating, roomId, handled, message, timestamp}} = this.props
+    const {feedback: {
+      handled, message, timestamp
+    }} = this.props
     const {adminName} = this.state
     return (
-      <ListItem disabled style={{padding: ".5em 5vw"}}>
+      <ListItem disabled>
         <Card>
-          <CardHeader
-            style={{paddingBottom: 8}}
-            title={`Szoba ${roomId}`}
-            subtitle={<div style={{display: "flex"}}>{
-              Array(5).map((e,i) => (
-                // REVIEW: Fix stars
-                <span key={i} className={`feedback-star ${i < Math.floor(rating) ?  "full" : "blank"}`}></span>
-              ))
-            }</div>}
-          />
-          <CardText style={{padding: "0 1em"}}>
+          <CardTitle
+            actAsExpander
+            showExpandableButton
+            subtitle={`jóváhagyta • ${adminName || "Még senki" }`}
+            title={`${message.split(" ").slice(0, 3).join(" ")}...`}
+          >
+          </CardTitle>
+          <CardText expandable>
             {message}
+            <p style={{
+              color: "grey",
+              fontSize: 12
+            }}
+            >
+              {moment(timestamp).format("YYYY. MMMM DD. HH:mm")}
+            </p>
           </CardText>
-          <p style={{margin: 12, textAlign: "center", fontSize: ".8em"}}>Visszajelzést utoljára kezelte: {adminName === "" ? "Még senki": adminName}</p>
-
+          <Divider/>
           <CardActions>
-            <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end"}}>
-              {handled ?
-                <RaisedButton
-                  label="Olvasatlan"
-                  icon={<Unread/>}
-                  labelPosition="before"
-                  onClick={() => this.markRead(false)}
-                /> :
-                <RaisedButton secondary
-                  label="Olvasott"
-                  icon={<Read/>}
-                  labelPosition="before"
-                  onClick={() => this.markRead(true)}
+            {!handled &&
+                <FlatButton
+                  label="Jóváhagy"
+                  onClick={() => this.handleOpenDialog("isSubmit")}
                 />
-              }
-                <p style={{marginTop: "1em", color: "#ccc", fontSize: ".8em", fontStyle: "italic"}}>Visszajelzés beküldve: {moment(timestamp).format("YYYY. MMMM DD. HH:mm")}</p>
-            </div>
+            }
+            <FlatButton
+              label="Töröl"
+              onClick={() => this.handleOpenDialog("isDelete")}
+              secondary
+            />
           </CardActions>
+          >
         </Card>
       </ListItem>
     )
   }
 }
-  

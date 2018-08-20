@@ -3,26 +3,33 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "firebase": "^4.10.1",
-    "material-ui": "^0.20.0",
-    "moment": "^2.20.1",
-    "moment-range": "^3.1.1",
-    "node-sass-chokidar": "^0.0.3",
-    "npm-run-all": "^4.1.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.1",
+    "@material-ui/core": "^1.5.0",
+    "@material-ui/icons": "^2.0.2",
+    "firebase": "^5.4.0",
+    "moment": "^2.22.2",
+    "moment-range": "^4.0.1",
+    "qrcode-react": "^0.1.16",
+    "query-string": "6",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "react-sortable-hoc": "^0.8.3",
+    "styled-components": "^3.4.2",
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
-    "build-css": "node-sass-chokidar --include-path ./src/styles/sass src/styles/sass/main.sass src/styles/main.css",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src/styles/sass src/styles/sass/main.sass src/styles/main.css -w -r",
-    "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build": "npm run build-css && react-scripts build",
-    "deploy": "npm run build && firebase deploy",
-    "eject": "react-scripts eject"
+    "analyze": "source-map-explorer build/static/js/main.*",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "npm run build && firebase deploy --only hosting"
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-react": "^7.11.1",
+    "source-map-explorer": "^1.6.0"
   }
 }

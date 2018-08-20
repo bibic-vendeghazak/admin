@@ -1,368 +1,246 @@
-import React, {Component} from 'react'
-import ReactDOM from 'react-dom'
-import firebase from 'firebase'
-import moment from 'moment'
+import React, {Component, Fragment} from "react"
+import {Route, Link} from "react-router-dom"
+import moment from "moment"
 
-import FloatingActionButton from 'material-ui/FloatingActionButton'
-import FlatButton from 'material-ui/FlatButton'
-import Booking from 'material-ui/svg-icons/action/bookmark-border'
-import TextField from 'material-ui/TextField'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
-import DatePicker from 'material-ui/DatePicker'
-import TimePicker from 'material-ui/TimePicker'
-import {Stepper, Step, StepLabel} from 'material-ui/Stepper'
-import StepContent from 'material-ui/Stepper/StepContent'
+import {RESERVATIONS_FS, TIMESTAMP, AUTH, ADMINS} from "../../../utils/firebase"
 
-import {ModalDialog} from '../../shared'
-import {validateEmail, validateName, validateTel} from '../../../utils'
+import {
+  FloatingActionButton,
+  Toggle,
+  DatePicker,
+  TextField
+} from "material-ui"
+import Booking from "material-ui/svg-icons/action/bookmark-border"
+
+import {Modal} from "../../shared"
+import {isValidReservation} from "../../../utils"
+import {RESERVATIONS} from "../../../utils/routes"
 
 
-export default class NewReservation extends Component {
-
-  state = {
-    open: false
-  }
-
-  openNewReservation = () => this.setState({open: true})
-  closeNewReservation = () => this.setState({open: false})
-
-  render() {
-    const {open} = this.state
-    return (
-      <div>
-        <NewReservationDialog {...{open}}
-          closeNewReservation={this.closeNewReservation}
-        />
-        <NewReservationFAB openNewReservation={this.openNewReservation}/>
-      </div>
-    )
-  }
-}
+const NewReservation = () => (
+  <Fragment>
+    <Route
+      exact
+      path={`${RESERVATIONS}/uj`}
+      render={({history}) => <NewReservationDialog {...{history}}/>}
+    />
+    <Link to={`${RESERVATIONS}/uj`}>
+      <NewReservationFAB/>
+    </Link>
+  </Fragment>
+)
 
 class NewReservationDialog extends Component {
 
   state = {
-    onSubmitDisabled: false, 
-    name: "",
-    email: "",
-    tel: "",
-    message: null,
-    roomId: 3,
-    adults: 1,
-    children: 0,
-    from: null,
-    to: null,
-    stepIndex: 0,
-    focusedField: null,
-    errorType: "",
-    errorMessage: ""
+    isFullReservation: false,
+    reservation: {
+      message: "🤖 admin által felvéve",
+      name: "",
+      roomId: "",
+      tel: "000-000-000",
+      email: "email@email.hu",
+      address: "cím",
+      adults: 1,
+      children: [],
+      from: moment().toDate(),
+      to: moment().add(1, "day").toDate(),
+      handled: true,
+      activeService: "breakfast",
+      price: 1
+    }
   }
 
-  submitNewReservation = () => {
-    // this.props.submitNewReservation()
-    let {
-      name, email, tel, message, 
-      roomId, adults, children,
-      from, to
-    } = this.state
-    message = message || "Nincs üzenet"
-    const reservationsRef = firebase.database().ref("reservations")
-    reservationsRef.push().then(snap => {
-      const {key} = snap
-      const metadata = {roomId, from: moment(from).unix()*1000, to: (moment(to).unix()*1000), handled: false}
-      const details = {name, email, tel, message, adults, children}
-      reservationsRef.child(key).set({
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        lastHandledBy: firebase.auth().currentUser.uid,
-        metadata, details
-      }).then(() => this.props.closeNewReservation())
+  componentDidMount() {
+    window.addEventListener("keyup", this.handleKeyUp, false)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("keyup", this.handleKeyUp, false)
+  }
+
+  handleKeyUp = ({keyCode}) => {
+    switch (keyCode) {
+    case 27:
+      this.handleClose()
+      break
+    case 13:
+      this.handleSubmit()
+      break
+    default:
+      break
+    }
+  }
+
+  handleInputChange = ({target: {
+    name, value
+  }}) => {
+    this.setState(({reservation}) => ({reservation: {
+      ...reservation,
+      [name]: parseInt(value, 10) || value
+    }}))
+  }
+
+  handleDateChange = (type, value) => {
+    this.setState(({reservation}) => ({reservation: {
+      ...reservation,
+      [type]: type==="from" ? moment(value).hours(14).valueOf() : moment(value).hours(10).valueOf(),
+      to: type==="from" ? moment(value).add(1, "day").hours(10).valueOf() : moment(value).hours(10).valueOf()
+    }}))
+  }
+
+
+  handleSubmit = () => {
+    const {reservation} = this.state
+    ADMINS.child(AUTH.currentUser.uid).once("value", snap => {
+      reservation.timestamp = TIMESTAMP
+      reservation.lastHandledBy = snap.val().name
+      if (isValidReservation(reservation)) {
+        RESERVATIONS_FS
+          .doc(`${moment(reservation.from).format("YYYYMMDD")}-sz${reservation.roomId}`)
+          .set(reservation)
+          .then(this.handleClose)
+          .catch(console.error)
+
+      } else {
+        // NOTE: Add notifications on invalid reservation
+        console.log("Invalid reservation", this.state.reservation)
+      }
     })
   }
 
-  focusChange = focusedField => this.setState({focusedField})
+  handleClose = () => this.props.history.push(RESERVATIONS)
 
-  handleValueChange = (value, type) => {
-    const {focusedField} = this.state
-    let isValid = false
-    let errorMessage
-    switch(focusedField) {
-      case "email":
-        isValid = validateEmail(value)
-        errorMessage = "Érvénytelen E-mail"
-        break
-      case "name":
-        isValid = validateName(value)
-        errorMessage = "Érvénytelen név"
-        break
-      case "tel":
-        isValid = validateTel(value)
-        errorMessage = "Érvénytelen név"
-        break
-      default:
-       isValid = true
-       errorMessage = ""
-    }
-    
-    this.setState({
-      [type]: type === "number" ? parseInt(value, 10) : value
-    })
-
-    if (isValid) {
-      this.setState({
-        errorType: "",
-        errorMessage: ""
-      })
-    } else {
-      this.setState({
-         errorType: focusedField,
-         errorMessage
-      })
-    }
-    
-  }
-
-
-  handleNext = () => {
-    const {stepIndex} = this.state
-    stepIndex < 5 && this.setState({stepIndex: stepIndex + 1})
-  }
-
-  handlePrev = () => {
-    const {stepIndex} = this.state
-    stepIndex > 0 && this.setState({stepIndex: stepIndex - 1})
-  }
-
-  // NOTE: Admin can change reservations in past. 
-  // Check out the corresponding DatePicker.
-  shouldDisableFromDate = date => moment(date).unix() < moment().startOf("day").unix()
-  shouldDisableToDate = date => !this.state.from || moment(date).unix() < moment(this.state.from).unix()
-
-  renderActions = (isLast) => {
-    const {stepIndex} = this.state
-    return(
-      <div>
-        <div>
-          {stepIndex!==0 &&
-            <FlatButton
-              label="Vissza"
-              disabled={stepIndex === 0}
-              onClick={this.handlePrev}
-              style={{marginRight: 12}}
-            />
-          }
-          {!isLast &&
-            <FlatButton
-              label="Következő"
-              disabled={stepIndex === 5}
-              onClick={this.handleNext}
-            />
-          }
-        </div>
-      </div>
-    )
-  }
-
+  handleComplexityChange = () =>
+    this.setState(({isFullReservation}) => ({isFullReservation: !isFullReservation}))
 
   render() {
-    const {open, closeNewReservation} = this.props
+    const {isFullReservation} = this.state
     const {
-      onSubmitDisabled,
-      name, email, tel, 
-      message, from, to,
-      stepIndex, 
-      errorType, errorMessage, focusedField
-    } = this.state
-
-    return ReactDOM.createPortal(
-      <ModalDialog 
-        autoScrollBodyContent={window.innerWidth <= 768}
-        contentStyle={{
-          marginTop: -16,
-          width: window.innerWidth <= 960 ? "95%" : 768,
-          maxWidth: 'none'
-        }}
-        onCancel={closeNewReservation}
+      name, tel, email,
+      roomId, adults, children,
+      from, to, message, address, price
+    } = this.state.reservation
+    return (
+      <Modal
+        autoScrollBodyContent
+        contentStyle={{width: "90%"}}
+        onCancel={this.handleClose}
+        onSubmit={this.handleSubmit}
+        open
         submitLabel="Foglalás felvétele"
-        onSubmit={this.submitNewReservation}
-        {...{open, onSubmitDisabled}}
       >
-        <Stepper 
-          orientation="vertical"
-          activeStep={stepIndex}
-        >
-        <Step>
-            <StepLabel>Kapcsolat információ</StepLabel>
-            <StepContent>
-              <TextField
-                id="name"
-                hintText="Kovács József"
-                floatingLabelText="Név"
-                defaultValue={name}
-                onChange={(e,value) => this.handleValueChange(value, "name")}
-                onFocus={() => this.focusChange("name")}
-                errorText={errorType === focusedField && errorMessage}
-                // onBlur={() => this.validate("name", name)}
-                />
-              <TextField
-                id="email"
-                type="email"
-                hintText="kovacs.jozsef@email.hu"
-                floatingLabelText="E-mail cím"
-                defaultValue={email}
-                onChange={(e,value) => this.handleValueChange(value, "email")}
-                onFocus={() => this.focusChange("email")}
-                errorText={errorType === focusedField && errorMessage}
-                // onBlur={() => this.validate("email", email)}
-                />
-              <TextField
-                id="tel"
-                type="tel"
-                hintText="+36301234567"
-                floatingLabelText="Telefonszám"
-                defaultValue={tel}
-                onChange={(e,value) => this.handleValueChange(value, "tel")}
-                onFocus={() => this.focusChange("tel")}
-                errorText={errorType === focusedField && errorMessage}
-                // onBlur={() => this.validate("tel", tel)}
-              />
-              {this.renderActions()}
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Dátumok</StepLabel>
-            <StepContent>
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-
-                <DatePicker autoOk
-                  // Uncomment this for new Users, so they cannot reserve a room in the past. 
-                  // shouldDisableDate={this.shouldDisableFromDate}
-                  onChange={(e, date) => this.handleValueChange(date, "from")}
-                  defaultDate={from || new Date()}
-                  hintText="Érkezés"  
-                />
-                <TimePicker
-                  minutesStep={30}
-                  format="24hr"
-                />
-              </div>
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-              <DatePicker autoOk
-                // shouldDisableDate={this.shouldDisableToDate}
-                onChange={(e, date) => this.handleValueChange(date, "to")}
-                defaultDate={to || new Date()}
-                hintText="Távozás"  
-                />
-                <TimePicker
-                  minutesStep={30}
-                  format="24hr"
-                />
-              </div>
-              {this.renderActions()}
-            </StepContent>
-          </Step>
-          
-          <Step>
-            <StepLabel>Szobák</StepLabel>
-            <StepContent>
-              <DropDown 
-                type="roomId"
-                hintText="Szoba"
-                options={["1","2","3","4","5","6"]}
-                handleValueChange={(value, key) => this.handleValueChange(value, key, "number")} 
-              />
-              {this.renderActions()}
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Személyek</StepLabel>
-            <StepContent>
-              <DropDown 
-                type="adults"
-                handleValueChange={(value, key) => this.handleValueChange(value, key, "number")} 
-                hintText="Felnőtt" 
-                options={["1","2","3"]}
-                />
-              <DropDown
-                type="children"
-                handleValueChange={(value, key) => this.handleValueChange(value, key, "number")} 
-                hintText="Gyerek" 
-                options={["0","1","2"]}
-              />
-              {this.renderActions()}
-            </StepContent>
-          </Step>
-
-          <Step>
-            <StepLabel>Egyéb üzenet</StepLabel>
-            <StepContent>
+        <div className="new-reservation-header">
+          <label htmlFor="complexity-change">
+            {isFullReservation ? "Teljes" : "Egyszerű"}
+          </label>
+          <Toggle
+            id="complexity-change"
+            onToggle={this.handleComplexityChange}
+            value={isFullReservation}
+          />
+        </div>
+        <div className="form-group">
+          <TextField
+            floatingLabelText="Foglaló neve"
+            name="name"
+            onChange={this.handleInputChange}
+            value={name}
+          />
+          <TextField
+            floatingLabelText="Szobaszám"
+            name="roomId"
+            onChange={this.handleInputChange}
+            type="number"
+            value={roomId}
+          />
+        </div>
+        <div className="form-group">
+          <DatePicker
+            autoOk
+            floatingLabelText="Érkezés"
+            onChange={(e, date) => this.handleDateChange("from", date)}
+            value={moment(from).toDate()}
+          />
+          <DatePicker
+            autoOk
+            floatingLabelText="Távozás"
+            onChange={(e, date) => this.handleDateChange("to", date)}
+            value={moment(to).toDate()}
+          />
+        </div>
+        {isFullReservation && <Fragment>
+          <div className="form-group">
             <TextField
-                id="message"
-                multiLine
-                floatingLabelText="Egyéb üzenet"
-                value={message || ""}
-                onChange={(e,value) => this.handleValueChange(value, "message")}
-                errorText={errorMessage}
-                // onBlur={() => this.validate("tel", tel)}
+              floatingLabelText="Foglaló telefonszáma"
+              name="tel"
+              onChange={this.handleInputChange}
+              value={tel}
+            />
+            <TextField
+              floatingLabelText="Foglaló e-mail címe"
+              name="email"
+              onChange={this.handleInputChange}
+              value={email}
+            />
+            <TextField
+              floatingLabelText="Megjegyzés"
+              name="message"
+              onChange={this.handleInputChange}
+              value={message}
+            />
+            <TextField
+              floatingLabelText="Foglaló címe"
+              name="address"
+              onChange={this.handleInputChange}
+              value={address}
+            />
+          </div>
+          <div className="form-group">
+            <TextField
+              floatingLabelText="Felnőttek száma"
+              name="adults"
+              onChange={this.handleInputChange}
+              type="number"
+              value={adults}
+            />
+            <div style={{display: "flex"}}>
+              <TextField
+                floatingLabelText="Gyerekek száma"
+                onChange={this.handleChildrenChange}
+                type="number"
+                value={children.length}
               />
-              {this.renderActions()}
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Kész</StepLabel>
-            <StepContent>
-              {this.renderActions(true)}
-            </StepContent>
-          </Step>
-        </Stepper>
-      </ModalDialog>, document.querySelector(".modal-root"))
+            </div>
+            <div style={{display: "flex"}}>
+              <TextField
+                floatingLabelText="Ár"
+                onChange={this.handleInputChange}
+                type="price"
+                value={price}
+              />
+            </div>
+          </div>
+        </Fragment>}
+      </Modal>
+    )
   }
 }
 
+
 export const NewReservationFAB = ({openNewReservation}) => (
-  <div 
-  className="new-reservation-btn">
-  <FloatingActionButton 
-    title="Foglalás felvétele"
-    onClick={openNewReservation}
-    secondary
+  <div
+    className="new-reservation-btn"
+  >
+    <FloatingActionButton
+      onClick={openNewReservation}
+      secondary
+      title="Foglalás felvétele"
     >
-    <Booking/>
-  </FloatingActionButton>
+      <Booking/>
+    </FloatingActionButton>
   </div>
 )
 
-class DropDown extends Component {
 
-  state = {values: []}
-
-  handleChange = (event, index, values) => {
-    this.setState({values}, () =>{
-      this.props.handleValueChange(this.state.values, this.props.type)
-    })
-  }
-  menuItems(values) {
-    return this.props.options.map(option => (
-        <MenuItem
-          key={option}
-          checked={values && values.indexOf(option) > -1}
-          value={option}
-          primaryText={option}
-        />
-      ))
-  }
-
-  render() {
-    const {values} = this.state
-    const {hintText} = this.props
-    return (
-      <SelectField
-        value={values}
-        onChange={this.handleChange}
-        {...{hintText}}
-      >
-        {this.menuItems(values)}
-      </SelectField>
-    );
-  }
-}
+export default NewReservation

@@ -1,51 +1,58 @@
-import React, {Component} from 'react'
-import Room from './Room'
-import {Route} from 'react-router-dom'
-import BigRoom from './BigRoom'
-import firebase from 'firebase'
-import { ROOMS, EDIT } from '../../../utils/routes';
+import React, {Fragment} from "react"
+import {Route} from "react-router-dom"
+import {withStore} from "../../App/Store"
+
+import Room from "./Room"
+import EditRoom from "./EditRoom"
+import {routes, toRoute} from "../../../utils"
+import {Grid} from "@material-ui/core"
+import {Loading} from "../../shared"
 
 
-
-export default class Rooms extends Component {
-  
-  state = {
-    rooms: []
-  }
-
-  componentDidMount() {
-    firebase.database().ref("rooms").on("value", snap => {
-      this.setState({
-        rooms: snap.val(), 
-      })
-    })
-    firebase.database().ref("roomServices").on("value", snap => {
-      this.setState({roomServices: snap.val()})
-    })
-  }
-
-
-
-  render() {
-    return (
-      <div>
-        <Route path={ROOMS+"/:roomId"+EDIT} component={BigRoom}/>
-        <Route exact path={ROOMS} render={() => (
-          <ul className="rooms">
-            {this.state.rooms.map(({id, available, name}, index) => (
+const Rooms = ({
+  rooms, roomPictures
+}) =>
+  <Fragment>
+    <Route
+      exact
+      path={routes.ROOMS}
+      render={() =>
+        <Grid
+          container
+          style={{
+            padding: 8,
+            maxWidth: 960
+          }}
+        >
+          {rooms.length ? rooms.map(({
+            key, unavailable, name, isBooked, id
+          }) =>
+            <Grid
+              item
+              key={key}
+              lg={4}
+              sm={6}
+              xs={12}
+            >
               <Room
-                key={id}
-                roomId={id}
-                isBooked={true} 
-                {...{available, name}}
+                pictures={roomPictures[id] ? roomPictures[id] : null}
+                {...{
+                  unavailable,
+                  name,
+                  isBooked,
+                  id
+                }}
               />
-              )
-            )}
-          </ul>
-        )
-          
-        }/>
-      </div>
-    )
-  }
-}
+            </Grid>) : <Loading/>
+          }
+        </Grid>
+      }
+    />
+    <Route
+      component={EditRoom}
+      path={toRoute(routes.ROOMS, ":roomId")}
+    />
+  </Fragment>
+
+
+export default withStore(Rooms)

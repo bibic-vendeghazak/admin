@@ -1,8 +1,27 @@
 .profile
-    padding: 1em
-    display: flex
-    align-items: center
-    h3, h4
-        color: white
-.avatar
-    margin-left: 1em
+	padding: .25em .25em .25em .75em
+	display: flex
+	align-items: center
+	justify-content: space-between
+
+.menu-item
+	display: flex
+	align-items: center
+	padding: 12px 16px
+	color: $light
+	transition: .3s
+	.material-icons
+		margin-right: 32px
+	
+.menu-active, .menu-item:hover,
+	background-color: $accent-color-dark
+	
+.menu-badge
+	display: flex !important
+	padding: 0 !important
+	span
+		position: relative !important
+		margin-left: 16px
+.menu-active
+	position: relative
+	z-index: 100

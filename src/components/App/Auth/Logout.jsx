@@ -1,17 +1,14 @@
-import React from 'react'
+import React from "react"
+import {Button} from "@material-ui/core"
+import {withStore} from "../Store"
 
-import RaisedButton from 'material-ui/RaisedButton'
-
-
-const Logout = ({handleLogout}) => (
-  <RaisedButton fullWidth secondary 
-    style={{
-      position: "absolute",
-      bottom: 0
-    }}
-    label="Kijelentkezés"
+const Logout = ({handleLogout}) =>
+  <Button
+    color="secondary"
     onClick={handleLogout}
-  />
-)
+    variant="contained"
+  >
+    Kijelentkezés
+  </Button>
 
-export default Logout
+export default withStore(Logout)

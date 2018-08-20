@@ -1,23 +1,22 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {BrowserRouter as Router} from 'react-router-dom'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import React from "react"
+import ReactDOM from "react-dom"
+import {BrowserRouter as Router} from "react-router-dom"
+import {MuiThemeProvider as Material} from '@material-ui/core/styles'
+import {Database} from "./components/App/Store"
 
-import {muiTheme} from './utils'
-import './utils/moment'
-import './utils/firebase'
-import './styles/main.css'
-import App from './components/App'
+
+import {theme} from "./utils"
+import "./utils/moment"
+import "./utils/firebase"
+import App from "./components/App"
 
 ReactDOM.render(
-  <MuiThemeProvider 
-    muiTheme={getMuiTheme(muiTheme)}
-    children={
+  <Material theme={theme}>
+    <Database>
       <Router>
         <App/>
       </Router>
-  }
-  />,
-  document.querySelector('#root')
+    </Database>
+  </Material>,
+  document.querySelector("#root")
 )

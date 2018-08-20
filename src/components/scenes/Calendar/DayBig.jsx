@@ -1,79 +1,132 @@
-import React, {Component} from 'react'
-import moment from 'moment'
+import React, {Component, Fragment} from "react"
+import moment from "moment"
+import {routes, toRoute} from "../../../utils"
+import {RESERVATIONS_FS} from "../../../utils/firebase"
 
-import {Card, CardHeader} from 'material-ui/Card'
 import {
+  Card,
   Table,
-  TableBody,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table'
+  TableBody
+} from "@material-ui/core"
+import {Tip, Loading} from "../../shared"
 
+import TableHead from '../Reservations/TableHead'
+import FilteredReservations, {EmptyTableBody} from '../Reservations/TableBody'
 
 export default class DayBig extends Component {
 
-  constructor(props){
-    super(props);
-    this.handleKeyUp = this.handleKeyUp.bind(this)
+  state = {
+    reservations: [],
+    date: null,
+    noReservation: false
   }
 
-  handleClick = () => this.props.closeBigDay()
+  componentDidMount() {
+    const {
+      year, month, day
+    } = this.props.match.params
+    this.fetchReservations(moment([year, month, day].join("-")))
 
 
-  handleKeyUp = ({keyCode}) => {
-    keyCode === 27 && this.handleClick()
-  }
-
-  componentDidMount(){
     window.addEventListener("keyup", this.handleKeyUp, false)
   }
+
 
   componentWillUnmount() {
     window.removeEventListener("keyup", this.handleKeyUp, false)
   }
-  
+
+
+  /**
+   * @param {moment} date Which day's reservations should be fetched
+   * @returns {null} -
+   */
+  fetchReservations = date => {
+    date = date.endOf("day").toDate()
+    this.setState({reservations: []})
+    RESERVATIONS_FS
+    // .where("from", "<=", date.toDate())
+      .where("to", ">=", date)
+      .limit(100)
+      .get()
+      .then(snap => {
+        if (snap.empty) {
+          this.setState({
+            noReservation: true,
+            reservations: []
+          })
+        } else {
+          const reservations = []
+          snap.forEach(reservation => {
+            const from = moment(reservation.data().from.toDate())
+            const to = moment(reservation.data().to.toDate())
+            if (moment(date).isBetween(from, to)) {
+              reservations.push({
+                key: reservation.id,
+                ...reservation.data()
+              })
+            }
+          })
+          this.setState({
+            reservations,
+            noReservation: !reservations.length
+          })
+        }
+      })
+  }
+
+  handleKeyUp = ({keyCode}) => {
+
+    const {
+      year, month, day
+    } = this.props.match.params
+
+    const date = moment([year, month, day].join("-"))
+    const newDate = date.clone()
+      .add((keyCode === 39 ? 1 : -1), "day")
+
+    switch (keyCode) {
+    // ESC will return to the month view
+    case 27:
+      this.props.history.push(toRoute(routes.CALENDAR, date.clone().format("YYYY/MM")))
+      break
+      // <- or -> will jump to the corresponding day
+    case 37:
+    case 39:
+      this.fetchReservations(newDate)
+      this.props.history.push(toRoute(routes.CALENDAR, newDate.clone().format("YYYY/MM/DD")))
+      break
+    default:
+      break
+    }
+  }
+
+
   render() {
-    const {date} = this.props
-    let {reservations} = this.props
-    reservations = Object.entries(reservations).sort((a,b) => a[1].metadata.roomId - b[1].metadata.roomId)
-    
+    const {
+      reservations, noReservation
+    } = this.state
     return (
-      <Card className="day-big">
-        <CardHeader style={{textTransform: "capitalize"}} title={date.format('MMMM DD, dddd')}/>
-        <Table 
-          bodyStyle={{
-            overflowX:'visible',
-            minWidth: 880
-          }} 
-          style={{tableLayout: "auto"
-          }}>
-          <TableBody showRowHover displayRowCheckbox={false}>
-          <TableRow>
-            <TableHeaderColumn style={{textAlign: "center"}}>Szoba</TableHeaderColumn>
-            <TableHeaderColumn colSpan={4} style={{textAlign: "center"}}>Foglaló neve</TableHeaderColumn>
-            <TableHeaderColumn colSpan={3} style={{textAlign: "center"}}>E-mail</TableHeaderColumn>
-            <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Telefon</TableHeaderColumn>
-            <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Érkezés</TableHeaderColumn>
-            <TableHeaderColumn colSpan={2} style={{textAlign: "center"}}>Távozás</TableHeaderColumn>
-          </TableRow>
-            {reservations.map(([key, {
-              metadata: {roomId, from, to},
-              details: {name, email, tel}
-            }]) => (
-              <TableRow {...{key}}>
-                <TableRowColumn style={{textAlign: "center", color: "white"}} className={`room-day-big room-${roomId}`}>{roomId}</TableRowColumn>
-                <TableRowColumn colSpan={4} style={{textAlign: "center"}}>{name}</TableRowColumn>
-                <TableRowColumn colSpan={3} style={{textAlign: "center"}}><a href={`mailto:${email}`}>{email}</a></TableRowColumn>
-                <TableRowColumn colSpan={2} style={{textAlign: "center"}}><a href={`tel:${tel}`}>{tel}</a></TableRowColumn>
-                <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(from).format('MMMM D.')}</TableRowColumn>
-                <TableRowColumn colSpan={2} style={{textAlign: "center", textTransform: "capitalize"}}>{moment(to).format('MMMM D.')}</TableRowColumn>
-              </TableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </Card>
+      <Fragment>
+        <Card>
+          <Table>
+            <TableHead/>
+            <TableBody>
+              {reservations.length ?
+                <FilteredReservations
+                  handledReservations={reservations}
+                  unhandledReservations={[]}
+                /> :
+                <EmptyTableBody title={<Loading isEmpty={noReservation}/>}/>
+              }
+            </TableBody>
+
+          </Table>
+        </Card>
+        <Tip>
+          Előző nap - ← | Következő nap - → | Esc - Vissza a naptárra
+        </Tip>
+      </Fragment>
     )
   }
 }
