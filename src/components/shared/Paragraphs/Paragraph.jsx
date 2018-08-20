@@ -79,9 +79,20 @@ class TextParagraph extends Component {
     const {
       value, isEditing
     } = this.state
-    const {text} = this.props.item
+    const {
+      item: {text}, itemProps
+    } = this.props
+    const {
+      style, props
+    } = itemProps
     return (
-      <Card style={{margin: "8px 16px"}}>
+      <Card
+        {...props}
+        style={{
+          margin: "8px 16px",
+          ...style
+        }}
+      >
         <CardContent>
           <CardHeader action={<DragHandle/>}/>
           {isEditing ?

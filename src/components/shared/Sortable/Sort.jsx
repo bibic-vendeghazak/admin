@@ -3,24 +3,36 @@ import {SortableContainer, SortableElement} from "react-sortable-hoc"
 import {ListSubheader, Grid} from "@material-ui/core"
 
 const SortableItem = SortableElement(({
-  Component, ...props
-}) => <Grid item><Component {...props}/></Grid>)
+  Component, itemProps, ...props
+}) =>
+  <Grid item>
+    <Component
+      {...{
+        itemProps,
+        ...props
+      }}
+    />
+  </Grid>
+)
 
 const Sort = SortableContainer(({
-  containerStyle, items, path, component, title
+  containerProps, itemProps, items, path, component, title
 }) =>
-  <Grid container {...containerStyle}>
+  <Grid {...containerProps}>
     {title && <ListSubheader>{title}</ListSubheader>}
     {items.map(([key, values], index) =>
       <SortableItem
         Component={component}
-        index={index}
         item={{
           key,
           ...values
         }}
         key={key}
-        path={path}
+        {...{
+          itemProps,
+          path,
+          index
+        }}
       />
     )}
   </Grid>

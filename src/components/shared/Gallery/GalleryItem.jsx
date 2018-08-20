@@ -1,15 +1,15 @@
 import React from "react"
 import {Link} from "react-router-dom"
-import {EDIT} from "../../../utils/routes"
+import {routes, toRoute} from "../../../utils"
 import {Button, Paper, Tooltip} from "@material-ui/core"
 import Edit from "@material-ui/icons/EditRounded"
 
 const GalleryItem = ({
   item: {
-    key, fileName, SIZE_360
+    key, fileName, SIZE_360, title
   }, path
 }) =>
-  <Tooltip title={fileName}>
+  <Tooltip title={title || fileName}>
     <Paper
       elevation={2}
       style={{
@@ -48,7 +48,7 @@ const GalleryItem = ({
         <Button
           component={Link}
           mini
-          to={`${path}/${key}/${EDIT}`}
+          to={toRoute(path, key, routes.EDIT)}
           variant="fab"
         >
           <Edit/>

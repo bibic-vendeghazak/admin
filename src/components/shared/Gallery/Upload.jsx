@@ -1,14 +1,14 @@
 import React, {Component} from "react"
-import {Route, Link, withRouter} from "react-router-dom"
+import {Route, Link} from "react-router-dom"
 
-import {UPLOAD} from "../../../utils/routes"
+import {routes, toRoute} from "../../../utils"
 import {FileStore} from "../../../utils/firebase"
 import {Tip, Modal} from ".."
 import {Grid, Button, Tooltip, GridList, GridListTile, GridListTileBar, IconButton, LinearProgress, Input, InputAdornment} from "@material-ui/core"
 
 import Upload from "@material-ui/icons/CloudUploadRounded"
 import Cancel from '@material-ui/icons/CloseRounded'
-import Store from "../../App/Store"
+import {withStore} from "../../App/Store"
 
 class UploadPictures extends Component {
 
@@ -19,7 +19,9 @@ class UploadPictures extends Component {
   }
 
   componentDidUpdate() {
-    const {filesToUpload, finishedCount} = this.state
+    const {
+      filesToUpload, finishedCount
+    } = this.state
     if (filesToUpload.length !== 0 && filesToUpload.length === finishedCount) {
       this.setState(() => ({
         finishedCount: 0,
@@ -31,19 +33,16 @@ class UploadPictures extends Component {
 
 
   handleDelete = name =>
-    this.setState(({filesToUpload}) => ({
-      filesToUpload: filesToUpload.filter(({file: {name: fileName}}) => name !== fileName)
-    }))
+    this.setState(({filesToUpload}) => ({filesToUpload: filesToUpload.filter(({file: {name: fileName}}) => name !== fileName)}))
 
   handleChange = ({target: {files}}) =>
     Object.values(files).forEach(file => {
       const reader = new FileReader()
       reader.onloadend = () => {
-        this.setState(({filesToUpload}) => ({
-          filesToUpload: filesToUpload.concat({
-            file, src: reader.result
-          })
-        }))
+        this.setState(({filesToUpload}) => ({filesToUpload: filesToUpload.concat({
+          file,
+          src: reader.result
+        })}))
       }
       reader.readAsDataURL(file)
     })
@@ -52,15 +51,13 @@ class UploadPictures extends Component {
     Promise.all(
       this.state.filesToUpload.map(({file}) =>
         FileStore
-          .ref(`${this.props.path}/${file.name}`)
+          .ref(toRoute("galleries", this.props.path, file.name))
           .put(file)
           .on("state_changed", ({bytesTransferred}) => {
-            this.setState(({finished}) => ({
-              finished: {
-                ...finished,
-                [file.name] : bytesTransferred
-              }
-            }))
+            this.setState(({finished}) => ({finished: {
+              ...finished,
+              [file.name] : bytesTransferred
+            }}))
           }, () => {
             this.props.sendNotification({
               code: "error",
@@ -82,8 +79,9 @@ class UploadPictures extends Component {
 
   render() {
     const {filesToUpload} = this.state
-    const {baseURL, relativeFAB} = this.props
-
+    const {
+      path, relativeFAB
+    } = this.props
     let {finished} = this.state
     finished = Object.values(finished).reduce((acc, size) => acc+size, 0)
     const remaining = filesToUpload.reduce((acc, {file: {size}}) => acc+size, 0)
@@ -109,8 +107,7 @@ class UploadPictures extends Component {
         style={{position: "relative"}}
       >
         <Route
-          exact
-          path={`${baseURL}/${UPLOAD}`}
+          path={toRoute(path, routes.UPLOAD)}
           render={() =>
             <Modal
               error="Hiba. A képeket nem sikerült feltölteni."
@@ -173,9 +170,7 @@ class UploadPictures extends Component {
                             <Tooltip title="Kép törlése">
                               <IconButton
                                 onClick={() => this.handleDelete(name)}
-                                style={{
-                                  color: "white"
-                                }}
+                                style={{color: "white"}}
                               >
                                 <Cancel/>
                               </IconButton>
@@ -195,7 +190,10 @@ class UploadPictures extends Component {
           }
         />
         <UploadFAB
-          {...{baseURL, style}}
+          {...{
+            path,
+            style
+          }}
         />
       </Grid>
     )
@@ -203,7 +201,9 @@ class UploadPictures extends Component {
 }
 
 
-const UploadFAB = ({baseURL, style}) =>
+const UploadFAB = ({
+  path, style
+}) =>
   <Tooltip
     title="Új képek feltöltése"
   >
@@ -211,7 +211,7 @@ const UploadFAB = ({baseURL, style}) =>
       color="secondary"
       component={Link}
       style={style}
-      to={`${baseURL}/${UPLOAD}`}
+      to={toRoute(path, routes.UPLOAD)}
       variant="fab"
     >
       <Upload/>
@@ -219,9 +219,5 @@ const UploadFAB = ({baseURL, style}) =>
   </Tooltip>
 
 
-const UploadPicturesWithStore = props =>
-  <Store.Consumer>
-    {({sendNotification}) => <UploadPictures {...{sendNotification, ...props}} />}
-  </Store.Consumer>
-export default withRouter(UploadPicturesWithStore)
+export default withStore(UploadPictures)
 

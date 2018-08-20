@@ -22,6 +22,7 @@ export const AUTH = firebase.auth()
 
 
 export const RESERVATIONS_FS = FS.collection("reservations")
+export const GALLERIES_DB = DB.ref("galleries")
 export const FEEDBACKS_DB = DB.ref("feedbacks")
 export const ADMINS = DB.ref("admins")
 export const ROOMS_DB = DB.ref("rooms")
@@ -33,3 +34,7 @@ export const RESERVATION_DATES_DB = DB.ref("reservationDates")
 export const PARAGRAPHS_DB = DB.ref("paragraphs")
 
 export const TIMESTAMP = firebase.firestore.FieldValue.serverTimestamp()
+
+export const getAdminName = uid => ADMINS
+  .child(`${uid}/name`)
+  .once("value")
