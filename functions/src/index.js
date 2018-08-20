@@ -28,13 +28,13 @@ const updateReservationDates = (from, to, roomId, reservationId, shouldDelete=fa
   console.log("Updating reservation dates...")
   from = moment(from.toDate())
   to = moment(to.toDate())
-  for (let day of moment.range(from, to).by('day')) {
+  for (let day of moment.range(from, to.clone().add(1, "day")).by('day')) {
     let newReservation = null
     if (!shouldDelete) {
       newReservation = {
         from: day.isSame(from, "day"),
         to: day.isSame(to, "day")
-      } 
+      }
     }
     reservationDatesRef
       .child(`${day.clone().format("YYYY/MM/DD")}/r${roomId}/${reservationId}`)
