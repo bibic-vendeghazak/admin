@@ -3,9 +3,10 @@ import React, {Component} from 'react'
 import {
   Card,
   CardActions,
-  RaisedButton,
-  TextField
-} from 'material-ui'
+  Button,
+  TextField,
+  CardContent, Grid, Typography
+} from "@material-ui/core"
 
 import {ROOMS_DB} from '../../../utils/firebase'
 
@@ -25,20 +26,21 @@ export default class Description extends Component {
   }
 
 
-  handleOpenEdit = () => {
-    this.setState({isEditing: true})
-  }
+  handleOpenEdit = () => this.setState({isEditing: true})
 
   handleCloseEdit = () => this.setState({isEditing: false})
 
-
   handleDescriptionChange = description => this.setState({description})
-
 
   handleSubmitDescription = () => {
     ROOMS_DB
       .child(`${this.props.roomId-1}/description`)
       .set(this.state.description).then(() => this.handleCloseEdit())
+      .then(() => this.props.sendNotification({
+        code: "success",
+        message: "A leírás sikeresen frissítve lett."
+      }))
+      .catch(this.props.sendNotification)
 
   }
 
@@ -48,52 +50,53 @@ export default class Description extends Component {
       description, isEditing
     } = this.state
     return (
-      <Card className="room-edit-block">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "1em"
-          }}
-        >
+      <Card>
+        <CardContent>
           {isEditing ?
             <TextField
-              floatingLabelText="leírás"
               fullWidth
               id="description"
-              multiLine
+              label="leírás"
+              multiline
               onChange={e => this.handleDescriptionChange(e.target.value)}
               value={description}
             /> :
-            <p>{description}</p>
+            <Typography>{description}</Typography>
           }
-
-        </div>
-        <CardActions style={{
-          display: "flex",
-          justifyContent: "flex-end"
-        }}
-        >
-          {isEditing ?
-            <div>
-              <RaisedButton
-                label={"Mégse"}
-                onClick={() => this.handleCloseEdit()}
-                style={{margin: 12}}
-              />
-              <RaisedButton
-                label={"Mentés"}
-                onClick={() => this.handleSubmitDescription()}
-                secondary
-              />
-            </div> :
-            <RaisedButton
-              label={"Módosít"}
-              onClick={() => this.handleOpenEdit()}
-              secondary
-            />
-          }
+        </CardContent>
+        <CardActions>
+          <Grid
+            container
+            justify="flex-end"
+          >
+            {isEditing ?
+              [
+                <Button
+                  key="0"
+                  onClick={this.handleCloseEdit}
+                  style={{marginRight: 16}}
+                  variant="outlined"
+                >
+                  Mégse
+                </Button>,
+                <Button
+                  color="secondary"
+                  key="1"
+                  onClick={this.handleSubmitDescription}
+                  variant="contained"
+                >
+                  Mentés
+                </Button>
+              ] :
+              <Button
+                color="secondary"
+                onClick={this.handleOpenEdit}
+                variant="contained"
+              >
+                Módosít
+              </Button>
+            }
+          </Grid>
         </CardActions>
       </Card>
     )

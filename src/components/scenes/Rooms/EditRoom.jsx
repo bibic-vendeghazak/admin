@@ -5,14 +5,15 @@ import Population from "./Population"
 import Prices from "./Prices"
 import Availability from "./Availability"
 import Description from "./Description"
-import Gallery from '../../shared'
+import {Gallery} from '../../shared'
 
 import {ROOMS_DB, ROOM_SERVICES_DB} from "../../../utils/firebase"
-import {Subheader} from "material-ui"
-import {ROOMS, EDIT} from "../../../utils/routes"
+
+import {Typography, Grid} from "@material-ui/core"
+import Store from "../../App/Store"
 
 
-export default class BigRoom extends Component {
+export default class EditRoom extends Component {
 
 
   handleRoomEdit(event) {
@@ -70,32 +71,65 @@ export default class BigRoom extends Component {
     roomRef.child("/prices").set(prices)
   }
 
-  handleChange(e) {
-    this.props.handleRoomEdit(e)
-  }
-
   render(){
     let {roomId} = this.props.match.params
     roomId = parseInt(roomId, 10)
-
     return(
-      <div className="big-room">
-        <Subheader style={{textAlign: "center"}}>Szoba állapota</Subheader>
-        <Availability {...{roomId}}/>
-        <Subheader style={{textAlign: "center"}}>Szoba képek</Subheader>
-        <Gallery
-          baseURL={`${ROOMS}/${roomId}/${EDIT}`}
-          path={`rooms/${roomId-1}`}
-        />
-        <Subheader style={{textAlign: "center"}}>Szoba leírása</Subheader>
-        <Description {...{roomId}}/>
-        <Subheader style={{textAlign: "center"}}>Szolgáltatások</Subheader>
-        <Services {...{roomId}}/>
-        <Subheader style={{textAlign: "center"}}>Lakók száma</Subheader>
-        <Population {...{roomId}}/>
-        <Subheader style={{textAlign: "center"}}>Ártáblázat</Subheader>
-        <Prices {...{roomId}}/>
-      </div>
+      <Store.Consumer>
+        {({
+          sendNotification, openDialog
+        }) =>
+          <Grid
+            container
+            direction="column"
+            style={{
+              maxWidth: 540,
+              margin: "16px auto"
+            }}
+          >
+            <Section
+              title="Szoba állapota"
+            >
+              <Availability
+                {...{
+                  roomId,
+                  openDialog
+                }}
+              />
+            </Section>
+            <Section title="Szoba képek"><Gallery relativeFAB/></Section>
+            <Section title="Szoba leírása">
+              <Description {...{
+                roomId,
+                sendNotification
+              }}
+              />
+            </Section>
+            <Section title="Szolgáltatások"><Services {...{roomId}}/></Section>
+            <Section title="Fekhely">
+              <Population
+                {...{
+                  roomId,
+                  openDialog
+                }}
+              />
+            </Section>
+            <Section title="Ártáblázat"><Prices {...{roomId}}/></Section>
+          </Grid>
+        }
+      </Store.Consumer>
     )
   }
 }
+
+
+const Section = ({
+  title, children
+}) =>
+  <Grid
+    item
+    style={{margin: 8}}
+  >
+    <Typography variant="subheading">{title}</Typography>
+    {children}
+  </Grid>

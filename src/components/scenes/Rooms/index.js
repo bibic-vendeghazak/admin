@@ -1,30 +1,58 @@
 import React, {Fragment} from "react"
 import {Route} from "react-router-dom"
-import Store from "../../App/Store"
+import {withStore} from "../../App/Store"
 
 import Room from "./Room"
-import BigRoom from "./BigRoom"
-import { ROOMS, EDIT } from "../../../utils/routes"
+import EditRoom from "./EditRoom"
+import {routes, toRoute} from "../../../utils"
+import {Grid} from "@material-ui/core"
+import {Loading} from "../../shared"
 
 
+const Rooms = ({
+  rooms, roomPictures
+}) =>
+  <Fragment>
+    <Route
+      exact
+      path={routes.ROOMS}
+      render={() =>
+        <Grid
+          container
+          style={{
+            padding: 8,
+            maxWidth: 960
+          }}
+        >
+          {rooms.length ? rooms.map(({
+            key, unavailable, name, isBooked, id
+          }) =>
+            <Grid
+              item
+              key={key}
+              lg={4}
+              sm={6}
+              xs={12}
+            >
+              <Room
+                pictures={roomPictures[id] ? roomPictures[id] : null}
+                {...{
+                  unavailable,
+                  name,
+                  isBooked,
+                  id
+                }}
+              />
+            </Grid>) : <Loading/>
+          }
+        </Grid>
+      }
+    />
+    <Route
+      component={EditRoom}
+      path={toRoute(routes.ROOMS, ":roomId")}
+    />
+  </Fragment>
 
-const Rooms = () => 
-	<Store.Consumer>
-		{({rooms}) =>
-			<Fragment>
-				<Route
-					path={ROOMS+"/:roomId/"+EDIT}
-					component={BigRoom}
-				/>
-				<Route exact path={ROOMS} render={() => 
-					<ul className="rooms">
-						{rooms.map(({available, name, isBooked, pictures}, index) => 
-							<Room {...{available, name, isBooked, pictures}} key={index} roomId={index}/>
-						)}
-					</ul>}
-				/>
-			</Fragment>}
-	</Store.Consumer>
 
-
-export default Rooms
+export default withStore(Rooms)

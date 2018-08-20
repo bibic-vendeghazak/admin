@@ -1,69 +1,45 @@
 import React, {Component} from "react"
 import moment from "moment"
-import {DB, ADMINS, AUTH, FEEDBACKS_DB} from "../../../utils/firebase"
+import {AUTH, FEEDBACKS_DB, getAdminName} from "../../../utils/firebase"
 
 import {ListItem} from "material-ui/List"
 import {Card, CardActions, CardText, CardTitle} from "material-ui/Card"
 import {Divider, FlatButton} from "material-ui"
-import {ModalDialog} from "../../shared"
 
 export default class Feedback extends Component {
 
   state = {
     adminName: null,
-    isDelete: false,
-    isSubmit: false
+    loggedInAdminName: ""
   }
 
   componentDidMount() {
-    DB.ref(`feedbacks/${this.props.feedbackId}/lastHandledBy`).on("value", snap => {
-      if (snap.exists() && snap.val() !== "") {
-        ADMINS.child(snap.val())
-          .on("value", snap => snap.val() && this.setState({adminName: snap.val().name}))
-      }
-    })
+    FEEDBACKS_DB
+      .child(`${this.props.feedbackId}/lastHandledBy`)
+      .on("value", snap => this.setState({adminName: snap.val()}))
+    getAdminName(AUTH.currentUser.uid)
+      .then(snap => this.setState({loggedInAdminName: snap.val()}))
   }
 
   handleMarkAccepted = () => {
-    const feedbackRef = DB.ref(`feedbacks/${this.props.feedbackId}`)
-    feedbackRef.update({"handled": true})
-    feedbackRef.child("lastHandledBy").set(AUTH.currentUser.uid)
-    this.handleCloseDialog()
+    FEEDBACKS_DB.child(this.props.feedbackId)
+      .update({
+        handled: true,
+        lastHandledBy: this.state.loggedInAdminName
+      })
   }
 
   handleDeleteFeedback = () => {
     FEEDBACKS_DB.child(this.props.feedbackId).remove()
-    this.handleCloseDialog()
   }
-
-  handleCloseDialog = () => this.setState({
-    isDelete: false,
-    isSubmit: false
-  })
-
-  handleOpenDialog = type => this.setState({[type]: true})
 
   render() {
     const {feedback: {
       handled, message, timestamp
     }} = this.props
-    const {
-      adminName, isDelete, isSubmit
-    } = this.state
+    const {adminName} = this.state
     return (
       <ListItem disabled>
-        <ModalDialog
-          onCancel={this.handleCloseDialog}
-          onSubmit={this.handleMarkAccepted}
-          open={isSubmit}
-          title="Biztos jóváhagyja?"
-        />
-        <ModalDialog
-          onCancel={this.handleCloseDialog}
-          onSubmit={this.handleDeleteFeedback}
-          open={isDelete}
-          title="Biztos törölni szeretné?"
-        />
         <Card>
           <CardTitle
             actAsExpander

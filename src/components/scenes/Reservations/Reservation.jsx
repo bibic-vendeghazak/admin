@@ -1,241 +1,393 @@
-import React, {Component} from "react"
+import React, {Component, Fragment} from "react"
 import moment from "moment"
-import QueryString from "query-string"
-import {Link, withRouter} from "react-router-dom"
+import {Link} from "react-router-dom"
 
-import {
-  List,
-  ListItem,
-  Subheader,
-  RaisedButton
-} from "material-ui"
+import QRCode from 'qrcode-react'
+import Address from '@material-ui/icons/LocationCityRounded'
+import Done from "@material-ui/icons/DoneRounded"
+import Edit from "@material-ui/icons/EditRounded"
+import Delete from "@material-ui/icons/DeleteRounded"
+import From from "@material-ui/icons/FlightLandRounded"
+import To from "@material-ui/icons/FlightTakeoffRounded"
+import Tel from "@material-ui/icons/CallRounded"
+import Email from "@material-ui/icons/EmailRounded"
+import Message from "@material-ui/icons/MessageRounded"
+import Home from "@material-ui/icons/HomeRounded"
+import Adult from "@material-ui/icons/PeopleRounded"
+import Person from "@material-ui/icons/PersonRounded"
+import Child from "@material-ui/icons/ChildCareRounded"
+import Money from "@material-ui/icons/AttachMoneyRounded"
+import Service from "@material-ui/icons/RoomServiceRounded"
 
+import {Tip, Background} from '../../shared'
 
-import Done from "material-ui/svg-icons/action/done"
-import Edit from "material-ui/svg-icons/image/edit"
-import Delete from "material-ui/svg-icons/action/delete"
-import From from "material-ui/svg-icons/action/flight-land"
-import To from "material-ui/svg-icons/action/flight-takeoff"
-import Reject from "material-ui/svg-icons/content/redo"
-import Tel from "material-ui/svg-icons/communication/call"
-import Email from "material-ui/svg-icons/communication/email"
-import Message from "material-ui/svg-icons/communication/message"
-import Home from "material-ui/svg-icons/action/home"
-import Adult from "material-ui/svg-icons/social/people"
-import Child from "material-ui/svg-icons/places/child-care"
-import Money from "material-ui/svg-icons/editor/attach-money"
+import {RESERVATIONS_FS, AUTH, getAdminName, TIMESTAMP} from "../../../utils/firebase"
+import {routes, colors, toRoute} from "../../../utils"
+import {Card, Button, CardActions, Hidden, Divider, CardContent, ListItem, Typography, ListItemIcon, ListItemText, Grid, Tooltip} from "@material-ui/core"
 
-import {AUTH, RESERVATIONS_FS, TIMESTAMP, ADMINS} from "../../../utils/firebase"
-import {Post, ModalDialog} from "../../shared"
-import {RESERVATIONS, EDIT} from "../../../utils/routes"
-
-class Reservation extends Component {
+export default class Reservation extends Component {
 
   state = {
-    isDeleting: false,
-    reservation: {
-      name: "",
-      email: "",
-      tel: "",
-      message: "",
-      adults: 1,
-      children: [],
-      roomId: null,
-      from: null,
-      to: null,
-      handled: null,
-      timestamp: null
-    }
+    email: "",
+    name: "",
+    tel: "",
+    message: "",
+    handled: false,
+    from:  moment(),
+    to: moment(),
+    roomId: null,
+    adults: 1,
+    children: [],
+    timestamp: moment(),
+    price: 1,
+    address: "",
+    lastHandledBy: ""
   }
-
 
   componentDidMount() {
-    this.setState({reservation: this.props.reservation})
+    RESERVATIONS_FS
+      .doc(this.props.match.params.reservationId)
+      .onSnapshot(snap => this.setState(snap.data()))
+
+
+    getAdminName(AUTH.currentUser.uid).then(admin => this.setState({admin: admin.val()}))
+
   }
 
-  handleReservation = handled => {
-    ADMINS.child(AUTH.currentUser.uid)
-      .once("value", snap => {
+
+  handleAccept = () =>
+    this.props.openDialog(
+      {title: "Biztos jóváhagyja ezt a foglalást?"},
+      () => RESERVATIONS_FS.doc(this.props.match.params.reservationId)
+        .update({
+          handled: true,
+          lastHandledBy: this.state.admin,
+          timestamp: TIMESTAMP
+        }),
+      "Foglalás jóváhagyva. A foglaló értesítve lett.",
+      () => this.props.history.push(routes.RESERVATIONS)
+    )
+
+  handleDelete = () =>
+    this.props.openDialog(
+      {title: "Biztos törölni akarja ezt a foglalást?"},
+      () =>
         RESERVATIONS_FS
-          .doc(this.props.reservation.id)
-          .update({
-            handled,
-            lastHandledBy: snap.val().name,
-            timestamp: TIMESTAMP
-          })
-          .catch(console.error)
-      })
-  }
+          .doc(this.props.match.params.reservationId)
+          .delete(),
+      "Foglalás törölve. A foglaló értesítve lett.",
+      () => this.props.history.push(routes.RESERVATIONS)
+    )
 
-  openDeleteReservation = () => this.setState({isDeleting: true})
-
-  handleCancelDelete = () => this.setState({isDeleting: false})
-
-  handleDeleteReservation = () => RESERVATIONS_FS
-    .doc(this.props.reservation.id)
-    .delete()
-    .catch(console.error)
 
   render() {
-
     const {
-      isDeleting,
-      reservation: {
-        id,
-        name, email, tel, message, adults, children,
-        price=0,
-        roomId, from, to, handled,
-        timestamp,
-        lastHandledBy
-      }
+      email, name, tel, message, handled, from, to, roomId, adults, children, price, address, timestamp, lastHandledBy, id, activeService
     } = this.state
-
-    const expanded = this.props.location.search.includes(id)
-    const handledStatus = QueryString.parse(this.props.location.search).kezelt || "nem"
+    const {reservationId} = this.props.match.params
     return (
-      <ListItem
-        disabled
-        style={{
-          margin: "0 auto",
-          padding: 0
-        }}
+      <div
+        style={{margin: 32}}
       >
-        <Post
-          {...{expanded}}
-          rightText={
-            <p style={{
-              margin: "-2.5em 2.5em 0 0",
-              textAlign: "right",
-              color: "#aaa",
-              fontSize: ".8em",
-              fontStyle: "italic"
-            }}
-            >{!lastHandledBy ? "Foglalás dátuma" : `módosítva (${lastHandledBy})`}<br/> {moment(timestamp ? moment.unix(timestamp.seconds) : undefined).format("YYYY. MMMM DD. HH:mm:ss")}</p>}
-          subtitle={`Szoba ${roomId}`}
-          title={`${name} (${moment(to && (to.seconds*1000 || to)).diff(moment(from && (from.seconds*1000 || from)), "days")+1} nap)`}
-        >
-
-          <List style={{
-            display: "flex",
-            flexWrap: "wrap"
-          }}
-          >
-            <Subheader>A foglaló adatai</Subheader>
-            <ListItem
-              disabled
-              leftIcon={<Email/>}
-              primaryText={<a href={`mailto:${email}`}>{email}</a>}
-              secondaryText="e-mail"
-            />
-            <ListItem
-              disabled
-              leftIcon={<Tel/>}
-              primaryText={<a href={`tel:${tel}`}>{tel}</a>}
-              secondaryText="telefonszám"
-            />
-            <ListItem
-              disabled
-              leftIcon={<Message/>}
-              primaryText={message}
-              secondaryText="üzenet"
-              style={{flexGrow: 1}}
-            />
-            <Subheader>A foglalás részletei</Subheader>
-            <ListItem
-              disabled
-              leftIcon={<Home/>}
-              primaryText={roomId}
-              secondaryText="szoba"
-            />
-            <ListItem
-              disabled
-              leftIcon={<Adult/>}
-              primaryText={adults}
-              secondaryText="felnőtt"
-            />
-            <ListItem
-              disabled
-              leftIcon={<Child/>}
-              primaryText={(children && children.length) || "0"}
-              secondaryText="gyerek"
-            />
-            <ListItem
-              disabled
-              leftIcon={<Money/>}
-              primaryText={
-                (price)
-                  .toLocaleString("hu-HU", {
-                    style: "currency",
-                    currency: "HUF",
-                    maximumFractionDigits: 0,
-                    minimumFractionDigits: 0
-                  })}
-              secondaryText="fizetni"
-            />
-            <ListItem
-              disabled
-              leftIcon={<From/>}
-              primaryText={moment(from && (from.seconds*1000 || from)).format("MMMM D. HH:mm")}
-              secondaryText="érkezés"
-            />
-            <ListItem
-              disabled
-              leftIcon={<To/>}
-              primaryText={moment(to && (to.seconds*1000 || to)).format("MMMM D. HH:mm")}
-              secondaryText="távozás"
-            />
-          </List>
-          <div style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-evenly",
-            alignItems: "flex-end"
-          }}
-          >
-            <div style={{
-              display: window.innerWidth <= 768 && "flex",
-              flexGrow: 1
-            }}
+        <Card>
+          <CardContent>
+            <Grid
+              container
+              justify="space-between"
             >
-              {!handled &&
-                <RaisedButton
-                  icon={<Done/>}
-                  label={window.innerWidth >= 640 && "Elfogad"}
-                  labelPosition="before"
-                  onClick={() => this.handleReservation(true)}
-                  primary
-                />
-              }
-              <Link to={`${RESERVATIONS}/${id}/${EDIT}?kezelt=${handledStatus}`}>
-                <RaisedButton
-                  icon={<Edit/>}
-                  label={window.innerWidth >= 640 && "Szerkeszt"}
-                  labelPosition="before"
-                  style={{margin: "0 12px"}}
-                />
-              </Link>
-              <RaisedButton
-                icon={handled ? <Reject/> : <Delete/>}
-                label={window.innerWidth >= 640 && (handled ? "Visszavon" : "Törlés")}
-                labelPosition="before"
-                onClick={() => handled ? this.handleReservation(false) : this.openDeleteReservation()}
-                secondary
-              />
-            </div>
+              <Typography
+                color="textSecondary"
+                gutterBottom
+              >
+                #{id}
+              </Typography>
+              <Tooltip title="Utoljára módosította • Módosítás dátuma">
+                <Typography
+                  align="right"
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  {`${lastHandledBy !== "" ? `${lastHandledBy} • ` : ""} ${moment((timestamp || moment()).toDate()).fromNow()}`}
+                </Typography>
+              </Tooltip>
+            </Grid>
+            <Typography>Személyi adatok</Typography>
+            <Grid container>
+              <Grid
+                container
+                item
+                lg={9}
+              >
 
-            <ModalDialog
-              children="Biztosan törölni szeretné ezt a foglalást? A folyamat nem visszafordítható!"
-              onCancel={this.handleCancelDelete}
-              onSubmit={this.handleDeleteReservation}
-              open={isDeleting}
-              title="Foglalás végleges törlése"
-            />
-          </div>
-        </Post>
-      </ListItem>
+                <Grid
+                  container
+                  spacing={8}
+                >
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Person/></ListItemIcon>
+                      <ListItemText
+                        primary={name}
+                        secondary="név"
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Email/></ListItemIcon>
+                      <ListItemText
+                        primary={<a href={`mailto:${email}?subject=Foglalás #${id}&body=Tisztelt ${name}!`}>{email}</a>}
+                        secondary="e-mail"
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Tel/></ListItemIcon>
+                      <ListItemText
+                        primary={<a href={`tel:${tel}`}>{tel}</a>}
+                        secondary="telefonszám"
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Address/></ListItemIcon>
+                      <ListItemText
+                        primary={address}
+                        secondary="lakcím"
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Message/></ListItemIcon>
+                      <ListItemText
+                        primary={message}
+                        secondary="megjegyzés"
+                      />
+                    </ListItem>
+                  </Grid>
+                </Grid>
+                <Typography>Egyéb részletek</Typography>
+                <Grid container>
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                  >
+                    <ListItem>
+                      <ListItemIcon><From/></ListItemIcon>
+                      <Tooltip title={moment(from.toDate()).format("LLL")}>
+                        <ListItemText
+                          primary={moment(from.toDate()).format("MMM. D.")}
+                          secondary="érkezés"
+                        />
+                      </Tooltip>
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                  >
+                    <ListItem>
+                      <ListItemIcon><To/></ListItemIcon>
+                      <Tooltip title={moment(to.toDate()).format("LLL")}>
+                        <ListItemText
+                          primary={moment(to.toDate()).format("MMM. D.")}
+                          secondary="távozás"
+                        />
+                      </Tooltip>
+                    </ListItem>
+                  </Grid>
+
+                  <Grid
+                    item
+                    md={4}
+                    xs={6}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Adult/></ListItemIcon>
+                      <ListItemText
+                        primary={`${adults} fő`}
+                        secondary="felnőtt"
+                      />
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    xs={6}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Child/></ListItemIcon>
+                      <Tooltip title={
+                        <Fragment>
+                          {children.length && children.map(({
+                            name, count
+                          }) =>
+                            <span key={name}>{name} éves korig: {count} fő<br/></span>
+                          )}
+                        </Fragment>
+                      }
+                      >
+                        <ListItemText
+                          primary={`${children.reduce((acc, {count}) => acc+count, 0)} fő`}
+                          secondary="gyerek"
+                        />
+                      </Tooltip>
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Home/></ListItemIcon>
+                      <Tooltip title="Ugrás a szobához">
+                        <ListItemText
+                          primary={
+                            <Link
+                              style={{textDecoration:"none"}}
+                              to={toRoute(routes.ROOMS, roomId)}
+                            >
+                              <Background color={colors[`room${roomId}`]}>
+                                {roomId}
+                              </Background>
+                            </Link>
+                          }
+                          secondary="szoba"
+                        />
+                      </Tooltip>
+                    </ListItem>
+                  </Grid>
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Service/></ListItemIcon>
+                      <ListItemText
+                        primary={activeService === "breakfast" ? "reggeli" : "félpanzió" }
+                        secondary="ellátás"
+                      />
+                    </ListItem>
+                  </Grid>
+
+                  <Grid
+                    item
+                    md={4}
+                    sm={6}
+                    xs={12}
+                  >
+                    <ListItem>
+                      <ListItemIcon><Money/></ListItemIcon>
+                      <ListItemText
+                        primary={price !== 1 ? (price)
+                          .toLocaleString("hu-HU", {
+                            style: "currency",
+                            currency: "HUF",
+                            maximumFractionDigits: 0,
+                            minimumFractionDigits: 0
+                          }) : "Nincs megadva"}
+                        secondary="fizetni"
+                      />
+                    </ListItem>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid
+                alignItems="flex-end"
+                container
+                direction="column"
+                item
+                justify="flex-end"
+                lg={3}
+              >
+                <QRCode
+                  size={160}
+                  value={
+                    toRoute(
+                      routes.ROOT,
+                      // BUG:  the '/' in routes.RESERVATIONS screws up the toRoute function
+                      "foglalasok",
+                      reservationId,
+                      routes.IS_VALID
+                    )
+                  }
+                />
+                <Grid item>
+                  <Typography color="textSecondary" >#{reservationId}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+
+
+          </CardContent>
+          <Divider/>
+          <CardActions>
+            {!handled &&
+            <Button
+              color="primary"
+              onClick={this.handleAccept}
+              variant="raised"
+            >
+              <Done/>
+              <Hidden xsDown>Elfogad</Hidden>
+            </Button>
+            }
+            <Button
+              component={Link}
+              to={toRoute(routes.RESERVATIONS, reservationId, routes.EDIT)}
+              variant="outlined"
+            >
+              <Edit/>
+              <Hidden xsDown>Szerkeszt</Hidden>
+            </Button>
+            <Button
+              color="secondary"
+              onClick={this.handleDelete}
+              variant="raised"
+            >
+              <Delete/>
+              <Hidden xsDown>Törlés</Hidden>
+            </Button>
+          </CardActions>
+        </Card>
+        <Tip>
+        Amennyiben a vendég felmutatja az e-mailben kapott QR-kódot, a beolvasás után kapott linkre kattintva az admin oldal megmondja, hogy a foglalás szerepel-e az adatbázisban.
+        </Tip>
+      </div>
     )
   }
 }
 
-
-export default withRouter(Reservation)

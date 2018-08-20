@@ -2,11 +2,16 @@ import React, {Component} from 'react'
 
 import {
   Card,
-  Toggle,
+  Switch,
   List,
-  ListItem
-} from 'material-ui'
+  CardContent,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography
+} from '@material-ui/core'
 
+import Store from '../../App/Store'
 import {ROOM_SERVICES_DB} from '../../../utils/firebase'
 
 
@@ -31,17 +36,26 @@ class Service extends Component {
   handleClick = serviceKey => {
     const roomServiceRef = ROOM_SERVICES_DB.child(`${serviceKey}`)
     const inRoomRef = roomServiceRef.child("inRoom")
+    const {roomId, sendNotification} = this.props
+    const success = {
+      code: "success",
+      message: "Mentve."
+    }
     if (this.state.isAvailable) {
       inRoomRef.once("value", snap => {
         const inRoom = snap.val()
         Object.keys(inRoom).forEach(room => {
-          if (inRoom[room] === this.props.roomId) {
+          if (inRoom[room] === roomId) {
             inRoomRef.child(room).remove()
+              .then(() => sendNotification(success))
+              .catch(sendNotification)
           }
         })
       })
     } else {
-      inRoomRef.push().set(this.props.roomId)
+      inRoomRef.push().set(roomId)
+        .then(() => sendNotification(success))
+        .catch(sendNotification)
     }
   }
 
@@ -53,28 +67,22 @@ class Service extends Component {
     const {isAvailable} = this.state
     return (
       <ListItem
+        button
         onClick={() => this.handleClick(serviceKey)}
-        rightIcon={
-          <Toggle
-            label={isAvailable ? "Van": "Nincs"}
-            style={{width: "auto"}}
-            toggled={isAvailable}
-          />
-        }
       >
-        <div style={{
-          display: "flex",
-          alignItems: "center"
-        }}
-        >
+        <ListItemIcon>
           <img
             alt={serviceKey}
             src={`https://bibic-vendeghazak.github.io/web/assets/icons/services/${serviceKey}.svg`}
-            style={{padding: "0 8px"}}
             width={24}
           />
-          <p>{name}</p>
-        </div>
+        </ListItemIcon>
+        <ListItemText>{name}</ListItemText>
+        <Typography>{isAvailable ? "Van": "Nincs"}</Typography>
+        <Switch
+          checked={isAvailable}
+          onClick={() => this.handleClick(serviceKey)}
+        />
       </ListItem>
     )
   }
@@ -104,23 +112,33 @@ class Services extends Component {
     const {roomId} = this.props
     const {services} = this.state
     return (
-      <Card className="room-edit-block">
-        <List className="room-services">
-          {services && Object.keys(services).map(serviceKey => {
-            const service = services[serviceKey]
-            return(
-              <Service
-                key={serviceKey}
-                style={{flexGrow: 1}}
-                {...{
-                  ...service,
-                  serviceKey,
-                  roomId
-                }}
-              />
-            )
-          })}
-        </List>
+      <Card>
+        <CardContent>
+          <Store.Consumer>
+            {({sendNotification}) =>
+              <List
+                dense
+                disablePadding
+              >
+                {services && Object.keys(services).map(serviceKey => {
+                  const service = services[serviceKey]
+                  return(
+                    <Service
+                      key={serviceKey}
+                      style={{flexGrow: 1}}
+                      {...{
+                        ...service,
+                        serviceKey,
+                        roomId,
+                        sendNotification
+                      }}
+                    />
+                  )
+                })}
+              </List>
+            }
+          </Store.Consumer>
+        </CardContent>
       </Card>
     )
   }

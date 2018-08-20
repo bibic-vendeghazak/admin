@@ -6,36 +6,30 @@ import {
   TextField,
   Tabs,
   Tab,
-  RaisedButton,
   Table,
   TableBody,
   TableRow,
-  TableRowColumn,
-  TableHeaderColumn
-} from "material-ui"
+  TableHead,
+  TableCell,
+  IconButton,
+  AppBar,
+  Typography
+} from "@material-ui/core"
 
-import IconButton from "material-ui/IconButton"
-import Delete from "material-ui/svg-icons/action/delete"
-import Done from "material-ui/svg-icons/action/done"
-import Edit from "material-ui/svg-icons/image/edit"
-import Close from "material-ui/svg-icons/navigation/close"
-import Dialog from "material-ui/Dialog"
+import Delete from "@material-ui/icons/DeleteRounded"
+import Done from "@material-ui/icons/DoneRounded"
+import Edit from "@material-ui/icons/EditRounded"
+import Close from "@material-ui/icons/CloseRounded"
+import Breakfast from "@material-ui/icons/FreeBreakfastRounded"
 
-import {colors} from "../../../utils"
+import Store from '../../App/Store'
 import {ROOMS_DB} from "../../../utils/firebase"
-const {
-  red, green
-} = colors
 
-const priceTypeName = {
-  breakfast: "Reggeli",
-  halfBoard: "Félpanzió"
-}
 
 export default class Prices extends Component {
   state = {
     prices: {},
-    value: "breakfast"
+    value: 0
   }
 
 
@@ -45,39 +39,47 @@ export default class Prices extends Component {
   }
 
 
-  handleChange = value => this.setState({value})
+  handleChange = (event, value) => this.setState({value})
 
   render() {
     const {roomId} = this.props
-    const {prices} = this.state
+    const {prices, value} = this.state
 
     return (
-      <Card className="room-edit-block">
-        <Tabs
-          inkBarStyle={{
-            marginTop: -4,
-            height: 4
-          }}
-          onChange={this.handleChange}
-          value={this.state.value}
+      <Card>
+        <AppBar
+          color="default"
+          position="static"
         >
-          {prices && Object.keys(prices).map(priceType => (
+          <Tabs
+            fullWidth
+            indicatorColor="secondary"
+            onChange={this.handleChange}
+            textColor="secondary"
+            value={value}
+          >
             <Tab
-              key={priceType}
-              label={priceTypeName[priceType]}
-              value={priceType}
-            >
-              <PriceType
-                prices={prices[priceType]}
-                {...{
-                  priceType,
-                  roomId
-                }}
-              />
-            </Tab>
-          ))}
-
-        </Tabs>
+              icon={<Breakfast width={12}/>}
+              label="Reggeli"
+            />
+            <Tab
+              icon={<Breakfast width={12}/>}
+              label="Félpanzió"
+            />
+          </Tabs>
+        </AppBar>
+        {prices && Object.keys(prices).map((priceType, index) =>
+          (value===index &&
+            <PriceType
+              key={index}
+              prices={prices[priceType]}
+              {...{
+                priceType,
+                roomId
+              }}
+            />)
+        )
+        }
       </Card>
     )
   }
@@ -92,46 +94,41 @@ class PriceType extends Component{
     } = this.props
 
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column"
-        }}
-      >
-        <Table>
-          <TableBody displayRowCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn colSpan={4}>Név</TableHeaderColumn>
-              <TableHeaderColumn colSpan={3}>Ár</TableHeaderColumn>
-              <TableHeaderColumn
-                colSpan={2}
-                style={{textAlign: "right"}}
-              >Módosítás</TableHeaderColumn>
-            </TableRow>
-            {Object.keys(prices).map(adultCount => (
-              Object.keys(prices[adultCount]).map(childCount => {
-                const {
-                  price, name
-                } = prices[adultCount][childCount]
-                return (
-                  <Price
-                    key={`${adultCount }_${ childCount}`}
-                    {...{
-                      priceType,
-                      roomId,
-                      price,
-                      name,
-                      adultCount,
-                      childCount
-                    }
-                    }
-                  />)
-              })
-            )
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Név</TableCell>
+            <TableCell>Ár</TableCell>
+            <TableCell numeric>Módosítás</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <Store.Consumer>
+            {({sendNotification, openDialog}) =>
+              Object.keys(prices).map(adultCount =>
+                Object.keys(prices[adultCount]).map(childCount => {
+                  const {
+                    price, name
+                  } = prices[adultCount][childCount]
+                  return (
+                    <Price
+                      key={`${adultCount }_${ childCount}`}
+                      {...{
+                        sendNotification, openDialog,
+                        priceType,
+                        roomId,
+                        price,
+                        name,
+                        adultCount,
+                        childCount
+                      }}
+                    />
+                  )
+                })
+              )}
+          </Store.Consumer>
+        </TableBody>
+      </Table>
     )
   }
 }
@@ -139,7 +136,6 @@ class PriceType extends Component{
 class Price extends Component {
 
   state = {
-    isDialogOpen: false,
     isEditing: false,
     name: "",
     price: null
@@ -149,10 +145,7 @@ class Price extends Component {
     const {
       price, name
     } = this.props
-    this.setState({
-      price,
-      name
-    })
+    this.setState({price, name})
     document.addEventListener("keyup", this.toggleWithKeyBoard, false)
   }
 
@@ -160,35 +153,29 @@ class Price extends Component {
   UNSAFE_componentWillReceiveProps({
     name, price
   }) {
-    this.setState({
-      name,
-      price
-    })
+    this.setState({name, price})
   }
 
   componentWillUnmount() {
     document.removeEventListener("keyup", this.toggleWithKeyBoard, false)
   }
 
-  toggleWithKeyBoard = e => {
-    const key = e.keyCode
+  toggleWithKeyBoard = ({keyCode}) => {
     const {
       isEditing, isDialogOpen
     } = this.state
     if (isEditing) {
-      switch (key) {
+      switch (keyCode) {
       case 13: // Enter
         isDialogOpen ?
           this.handleDelete() :
           this.handleSave()
         break
       case 27: // Esc
-        isDialogOpen ?
-          this.handleCloseDeleteDialog() :
-          this.handleCloseEdit()
+        this.handleCloseEdit()
         break
       case 68: // d
-        this.handleOpenDeleteDialog()
+        this.handleDelete()
         break
       default:
         break
@@ -197,39 +184,43 @@ class Price extends Component {
   }
 
 
-  handleCloseEdit = () => {
-    this.setState({isEditing: false})
-  }
+  handleCloseEdit = () => this.setState({isEditing: false})
 
-  handleOpenEdit = () => {
-    this.setState({isEditing: true})
-  }
+  handleOpenEdit = () => this.setState({isEditing: true})
 
 
   handleSave = () => {
     const {
       roomId, priceType, adultCount, childCount
     } = this.props
-    this.handleCloseEdit()
     ROOMS_DB.child(`${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}/price`)
       .set(parseInt(this.state.price, 10) || 0)
-      .catch(e => console.error(e)
-      )
+      .then(() => {
+        this.handleCloseEdit()
+        this.props.sendNotification({
+          code: "success",
+          message: "Ár frissítve."
+        })})
+      .catch(this.props.sendNotification)
   }
 
-handleOpenDeleteDialog = () => this.setState({isDialogOpen: true})
+    handleDelete = () => {
+      const {
+        roomId, priceType, adultCount, childCount
+      } = this.props
 
-handleCloseDeleteDialog = () => this.setState({isDialogOpen: false})
-
-handleDelete = () => {
-  const {
-    roomId, priceType, adultCount, childCount
-  } = this.props
-  ROOMS_DB
-    .child(`${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}`).remove()
-  this.handleCloseDeleteDialog()
-  this.handleCloseEdit()
-}
+      this.props.openDialog({
+        title: "Ár törlése",
+        content: "Biztosan törli ezt az árat az adatbázisból?",
+        submitLabel: "Törlés"
+      },
+      () => ROOMS_DB
+        .child(`${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}`)
+        .remove()
+        .then(this.handleCloseEdit),
+      "Az ár törölve lett."
+      )
+    }
 
 
   handlePriceChange = ({target: {value: price}}) => {
@@ -238,27 +229,22 @@ handleDelete = () => {
 
   render() {
     const {
-      isEditing, isDialogOpen, name, price
+      isEditing, name, price
     } = this.state
     return (
       <TableRow>
-        <TableRowColumn colSpan={4}>
-          <p>{name}</p>
-        </TableRowColumn>
-        <TableRowColumn
-          colSpan={3}
-        >
+        <TableCell padding="checkbox">
+          <Typography variant="caption">{name}</Typography>
+        </TableCell>
+        <TableCell padding="none">
           {isEditing ?
             <TextField
               autoFocus
-              floatingLabelText="Forint"
-              fullWidth
               onChange={this.handlePriceChange}
               type="number"
               value={price || ""}
-            />:
+            /> :
             <p
-
               onClick={this.handleOpenEdit}
               style={{
                 fontWeight: "bold",
@@ -272,48 +258,27 @@ handleDelete = () => {
               } )}
             </p>
           }
-        </TableRowColumn>
-        <TableRowColumn
-          colSpan={2}
-          style={{textAlign: "right"}}
+        </TableCell>
+        <TableCell
+          numeric
+          padding="none"
         >
-          <Dialog
-            actions={[
-              <RaisedButton
-                label="Mégse"
-                onClick={this.handleCloseDeleteDialog}
-                style={{marginRight: 12}}
-              />,
-              <RaisedButton
-                label="Igen"
-                onClick={this.handleDelete}
-                secondary
-              />
-            ]}
-            modal
-            open={isDialogOpen}
-            title="Ár törlése"
-          >
-            Biztos törölni szeretné ezt az árat az adatbázisból?
-          </Dialog>
-          {isEditing &&
-          <IconButton onClick={this.handleCloseEdit}>
-            <Close/>
-          </IconButton>
+          {isEditing ?
+            <IconButton onClick={this.handleCloseEdit}><Close/></IconButton> :
+            <IconButton
+              color="secondary"
+              onClick={this.handleDelete}
+            >
+              <Delete/>
+            </IconButton>
           }
           <IconButton
-            iconStyle={{color: isEditing && green}}
+            color={isEditing ? "primary" : "default"}
             onClick={() => isEditing ? this.handleSave() : this.handleOpenEdit()}
           >
             {isEditing ? <Done/> : <Edit/>}
           </IconButton>
-          <IconButton
-            iconStyle={{color: red}}
-            onClick={this.handleOpenDeleteDialog}
-          >
-            <Delete/>
-          </IconButton>
-        </TableRowColumn>
+        </TableCell>
       </TableRow>
     )
   }

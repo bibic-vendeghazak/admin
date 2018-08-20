@@ -1,17 +1,16 @@
 import React, {Component} from 'react'
 import moment from 'moment'
-import {FloatingActionButton} from 'material-ui'
 
-import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
-import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
+import {withStyles} from '@material-ui/core'
+
+import {routes, colors, toRoute} from '../../../utils'
 
 import Days from './Days'
-import MonthFooter from './MonthFooter'
-import {Link} from 'react-router-dom'
-import {CALENDAR} from '../../../utils/routes'
+import MonthHeader from './MonthHeader'
+import MonthControls from './MonthControls'
+// import MonthFooter from './MonthFooter'
 
-export default class Month extends Component {
-
+class Month extends Component {
 
   componentDidMount() {window.addEventListener("keydown", this.handleKeyUp, false)}
 
@@ -25,42 +24,24 @@ export default class Month extends Component {
     const previousMonth = moment(currentDate)
       .clone()
       .subtract(1, "month")
-      .format("YYYY-M")
-      .replace("-", "/")
+      .format("YYYY/MM")
 
     const nextMonth = moment(currentDate)
       .clone()
       .add(1, "month")
-      .format("YYYY-M")
-      .replace("-", "/")
+      .format("YYYY/MM")
+
+    const today = moment()
 
     switch (keyCode) {
     case 37:
-      history.push(`${CALENDAR}/${previousMonth}`)
+      history.push(toRoute(routes.CALENDAR, previousMonth))
       break
     case 39:
-      history.push(`${CALENDAR}/${nextMonth}`)
-      break
-    case 48:
-      let rooms = document.querySelectorAll(`.reserved`)
-      const roomLegends = document.querySelectorAll(`.room-legend p`)
-      roomLegends.forEach(roomLegend => {roomLegend.classList.toggle("unchecked")})
-      rooms.forEach(room => {room.classList.toggle('hidden')})
-      break
-    case 49:
-    case 50:
-    case 51:
-    case 52:
-    case 53:
-    case 54:
-      const roomIndex = keyCode-48
-      rooms = document.querySelectorAll(`.reserved.room-${roomIndex}`)
-      document.querySelector(`.room-legend .room-${roomIndex}`).classList.toggle("unchecked")
-      rooms.forEach(room => {room.classList.toggle('hidden')})
+      history.push(toRoute(routes.CALENDAR, nextMonth))
       break
     case 77:
-      const today = moment()
-      history.push(`${CALENDAR}/${today.format("YYYY")}/${today.format("M")}`)
+      history.push(toRoute(routes.CALENDAR, today.format("YYYY"), today.format("M")))
       break
     default:
       return
@@ -69,7 +50,7 @@ export default class Month extends Component {
 
   render() {
     const {
-      history, reservations, currentDate
+      reservations, currentDate, classes
     } = this.props
     const currentMonthDays = currentDate.daysInMonth()
     const previousMonth = moment(currentDate).clone().subtract(1, "month")
@@ -80,11 +61,10 @@ export default class Month extends Component {
     extraDaysBefore = extraDaysBefore === 0 ? 7 : extraDaysBefore
 
     return (
-      <div id="month-wrapper">
+      <div className={classes.monthWrapper}>
+        <MonthHeader classes={classes.monthHeader}/>
 
-        <DayNames/>
-
-        <ul className="days">
+        <ul className={classes.monthBody}>
 
           {/* Previous month*/}
           <Days
@@ -115,65 +95,148 @@ export default class Month extends Component {
             }}
           />
 
-          {/* <PlaceholderDays to={42 - currentMonthDays - extraDaysBefore}/> */}
+          {/*
+            <PlaceholderDays
+              to={42 - currentMonthDays - extraDaysBefore}
+            />
+          */}
 
         </ul>
 
         <MonthControls {...{
-          history,
           previousMonth,
           nextMonth
         }}
         />
-        <MonthFooter {...{currentDate}}/>
+        {/* <MonthFooter classes={classes.monthFooter} {...{currentDate}}/> */}
 
       </div>
     )
   }
 }
 
-const DayNames = () => (
-  <ul className="days-title">
-    {Array(7).fill().map((x,key) => (
-      <li
-        {...{key}}
-        className={`day-title ${(key > 4) && "weekend-title"}`}
-      >
-        <span>{moment().day(key+1).format('dddd')}</span>
-      </li>
-    ))
+const styles = theme => ({
+  monthWrapper: {
+    height: "calc(100vh - 64px)",
+    display: "flex",
+    flexDirection: "column"
+  },
+  monthHeader: {
+    margin: 0,
+    padding: 0,
+    display: "grid",
+    gridTemplateColumns: "repeat(7, 1fr)",
+    color: "#fff",
+    listStyleType: "none",
+    textTransform: "capitalize",
+    fontFamily: "sans-serif",
+    fontWeight: "bold",
+    "& li" : {
+      display: "grid",
+      justifyContent: "center",
+      height: 24,
+      alignItems: "center",
+      padding: "16px 0",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      backgroundColor: theme.palette.primary.main
+    },
+    "& .weekend-tile" : {backgroundColor: theme.palette.secondary.main}
+  },
+  monthBody: {
+    flex: 1,
+    fontFamily: "sans-serif",
+    display: "grid",
+    gridTemplateColumns: "repeat(7, 1fr)",
+    gridTemplateRows: "repeat(6, 1fr)",
+    margin: 0,
+    padding: 0,
+    listStyleType: "none",
+    fontWeight: "bold",
+    "& .day-tile": {
+      backgroundColor: "#d4d4d4",
+      display: "flex",
+      position: "relative",
+      borderBottom: '1px solid #333',
+      borderRight: '1px solid #333',
+      boxSizing: "border-box",
+      cursor: "pointer",
+      transition: ".2s ease-in-out"
+    },
+    "& .day-tile:hover": {backgroundColor: "#ededed"},
+    "& .placeholder": {opacity: .5},
+    "& li p": {
+      position: "absolute",
+      padding: 8,
+      margin: 0
+    },
+    "& li > a": {flex: 1},
+    "& li a": {
+      position: "relative",
+      textDecoration: "none",
+      color: "black"
+    },
+    "& .reserved-list": {
+      padding: 0,
+      top: 22,
+      width: "100%",
+      position: "relative",
+      listStyleType: "none"
+    },
+    "& .reserved-list li": {
+      position: "absolute",
+      width: "100%",
+      height: 5
+    },
+    "& .from": {
+      width: "25% !important",
+      left: "75%",
+      borderTopLeftRadius: 4,
+      borderBottomLeftRadius: 4
+    },
+    "& .to": {
+      width: "25% !important",
+      borderTopRightRadius: 4,
+      borderBottomRightRadius: 4
+    },
+    "& .room-1": {
+      backgroundColor: colors.room1,
+      marginTop: 0
+    },
+    "& .room-2": {
+      backgroundColor: colors.room2,
+      marginTop: 7
+    },
+    "& .room-3": {
+      backgroundColor: colors.room3,
+      marginTop: 14
+    },
+    "& .room-4": {
+      backgroundColor: colors.room4,
+      marginTop: 21
+    },
+    "& .room-5": {
+      backgroundColor: colors.room5,
+      marginTop: 28
+    },
+    "& .room-6": {
+      backgroundColor: colors.room6,
+      marginTop: 35
+    },
+    "& .today": {
+      fontSize: ".7em",
+      display: "grid",
+      justifyItems: "center",
+      alignItems: "center",
+      color: "#fff !important",
+      margin: 4,
+      padding: 5,
+      position: "absolute",
+      backgroundColor: theme.palette.secondary.main,
+      borderRadius: "50%"
     }
-  </ul>
-)
+  }
+})
 
-const MonthControls = ({
-  history, previousMonth, nextMonth
-}) => {
-
-  previousMonth = previousMonth.format("YYYY/MM")
-  nextMonth = nextMonth.format("YYYY/MM")
-  return(
-    <div>
-      <Link to={`${CALENDAR}/${previousMonth}`}>
-        <FloatingActionButton
-          className="prev-month-btn month-btn"
-          mini
-          secondary
-          title={`←\n__________\nNyomd le ezt a billentyűt`}
-        >
-          <ArrowLeft/>
-        </FloatingActionButton>
-      </Link>
-      <Link to={`${CALENDAR}/${nextMonth}`}>
-        <FloatingActionButton
-          className="next-month-btn month-btn"
-          mini
-          secondary
-          title={`→\n__________\nNyomd le ezt a billentyűt`}
-        >
-          <ArrowRight/>
-        </FloatingActionButton>
-      </Link>
-    </div>
-  )
-}
+export default withStyles(styles)(Month)

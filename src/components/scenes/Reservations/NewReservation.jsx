@@ -12,7 +12,7 @@ import {
 } from "material-ui"
 import Booking from "material-ui/svg-icons/action/bookmark-border"
 
-import {ModalDialog} from "../../shared"
+import {Modal} from "../../shared"
 import {isValidReservation} from "../../../utils"
 import {RESERVATIONS} from "../../../utils/routes"
 
@@ -122,7 +122,7 @@ class NewReservationDialog extends Component {
       from, to, message, address, price
     } = this.state.reservation
     return (
-      <ModalDialog
+      <Modal
         autoScrollBodyContent
         contentStyle={{width: "90%"}}
         onCancel={this.handleClose}
@@ -222,7 +222,7 @@ class NewReservationDialog extends Component {
             </div>
           </div>
         </Fragment>}
-      </ModalDialog>
+      </Modal>
     )
   }
 }

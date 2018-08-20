@@ -1,59 +1,78 @@
 import React, {Component, Fragment} from "react"
-import {Link} from "react-router-dom"
 import moment from "moment"
-import {RESERVATIONS, CALENDAR} from "../../../utils/routes"
-import {DB, RESERVATIONS_FS} from "../../../utils/firebase"
+import {routes, toRoute} from "../../../utils"
+import {RESERVATIONS_FS} from "../../../utils/firebase"
 
 import {
   Card,
-  CardHeader,
-  CircularProgress,
   Table,
-  TableBody,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn
-} from "material-ui"
-import LinkIcon from "material-ui/svg-icons/content/link"
-import {Tip} from "../../shared"
+  TableBody
+} from "@material-ui/core"
+import {Tip, Loading} from "../../shared"
 
+import TableHead from '../Reservations/TableHead'
+import FilteredReservations, {EmptyTableBody} from '../Reservations/TableBody'
 
 export default class DayBig extends Component {
 
   state = {
-    reservations: {},
+    reservations: [],
     date: null,
-    hasNoDates: false
+    noReservation: false
   }
-
 
   componentDidMount() {
     const {
       year, month, day
     } = this.props.match.params
-    const date = moment()
-      .year(year)
-      .month(month-1)
-      .date(day)
+    this.fetchReservations(moment([year, month, day].join("-")))
 
-    this.updateActiveReservations(date)
+
     window.addEventListener("keyup", this.handleKeyUp, false)
   }
 
-  UNSAFE_componentWillReceiveProps = ({match: {params: {
-    year, month, day
-  }}}) => {
-
-    this.updateActiveReservations(
-      moment()
-        .year(year)
-        .month(month-1)
-        .date(day)
-    )
-  }
 
   componentWillUnmount() {
     window.removeEventListener("keyup", this.handleKeyUp, false)
+  }
+
+
+  /**
+   * @param {moment} date Which day's reservations should be fetched
+   * @returns {null} -
+   */
+  fetchReservations = date => {
+    date = date.endOf("day").toDate()
+    this.setState({reservations: []})
+    RESERVATIONS_FS
+    // .where("from", "<=", date.toDate())
+      .where("to", ">=", date)
+      .limit(100)
+      .get()
+      .then(snap => {
+        if (snap.empty) {
+          this.setState({
+            noReservation: true,
+            reservations: []
+          })
+        } else {
+          const reservations = []
+          snap.forEach(reservation => {
+            const from = moment(reservation.data().from.toDate())
+            const to = moment(reservation.data().to.toDate())
+            if (moment(date).isBetween(from, to)) {
+              reservations.push({
+                key: reservation.id,
+                ...reservation.data()
+              })
+            }
+          })
+          this.setState({
+            reservations,
+            noReservation: !reservations.length
+          })
+        }
+      })
   }
 
   handleKeyUp = ({keyCode}) => {
@@ -61,23 +80,21 @@ export default class DayBig extends Component {
     const {
       year, month, day
     } = this.props.match.params
-    const date = moment()
-      .year(year)
-      .month(parseInt(month, 10)-1)
-      .date(day)
+
+    const date = moment([year, month, day].join("-"))
+    const newDate = date.clone()
+      .add((keyCode === 39 ? 1 : -1), "day")
 
     switch (keyCode) {
+    // ESC will return to the month view
     case 27:
-      this.props.history
-        .push(`${CALENDAR}/${date.clone().format("YYYY/MM")}`)
+      this.props.history.push(toRoute(routes.CALENDAR, date.clone().format("YYYY/MM")))
       break
+      // <- or -> will jump to the corresponding day
     case 37:
     case 39:
-      const newDate = date.clone()
-        .add((keyCode === 39 ? 1 : -1), "day")
-        .format("YYYY/MM/DD")
-
-      this.props.history.push(`${CALENDAR}/${newDate}`)
+      this.fetchReservations(newDate)
+      this.props.history.push(toRoute(routes.CALENDAR, newDate.clone().format("YYYY/MM/DD")))
       break
     default:
       break
@@ -85,108 +102,25 @@ export default class DayBig extends Component {
   }
 
 
-  updateActiveReservations = date => {
-    this.setState({reservations: {}})
-    DB.ref(`reservationDates/${date.clone().format("YYYY/MM/DD")}`)
-      .once("value")
-      .then(snap => {
-        if (snap.exists()) {
-
-          this.setState({hasNoDates: false})
-          snap.forEach(reservation =>
-            Object.keys(reservation.val()).forEach(reservationId =>
-              RESERVATIONS_FS
-                .doc(reservationId).get()
-                .then(reservation =>
-                  this.setState(({reservations}) => ({reservations: {
-                    ...reservations,
-                    [reservationId]: reservation.data()
-                  }}))
-                ))
-          )
-        } else this.setState({hasNoDates: true})
-      })
-      .then(() => this.setState({date: date.clone().format("MMMM DD, dddd")}))
-      .catch(e => console.error(e))
-  }
-
-
   render() {
     const {
-      reservations, hasNoDates
+      reservations, noReservation
     } = this.state
-    const reservationKeys = Object.keys(reservations)
     return (
       <Fragment>
-
-        <Card className="day-big">
-          <CardHeader
-            style={{textTransform: "capitalize"}}
-            title={this.state.date}
-          />
-          <Table style={{tableLayout: "auto"}}>
-            <TableBody
-              displayRowCheckbox={false}
-              showRowHover
-            >
-              <TableRow>
-                <TableHeaderColumn
-                  style={{width: 48}}
-                >Szoba</TableHeaderColumn>
-                <TableHeaderColumn >Érkezés / Távozás</TableHeaderColumn>
-                <TableHeaderColumn style={{textAlign: "right"}} >Foglalás</TableHeaderColumn>
-              </TableRow>
-              {reservationKeys.length !== 0 ? reservationKeys.map(key => {
-                const {
-                  from, to, roomId
-                } = reservations[key]
-                return (
-                  <TableRow {...{key}}>
-                    <TableRowColumn
-                      className={`room-day-big room-${roomId}`}
-                      style={{
-                        width: 48,
-                        textAlign: "center",
-                        color: "white"
-                      }}
-                    >
-                      {roomId}
-                    </TableRowColumn>
-                    <TableRowColumn>
-                      {moment(from.seconds*1000 || from).format("MMMM D.")} / {moment(to.seconds*1000 || to).format("MMMM D.")}
-                    </TableRowColumn>
-                    <TableRowColumn >
-                      <Link
-                        className="reservation-link"
-                        style={{
-                          fontWeight: "bold",
-                          display: "flex",
-                          alignItems:"center",
-                          justifyContent: "flex-end"
-                        }}
-                        to={`${RESERVATIONS}?kezelt=igen&keres=${key}`}
-                      >
-                        <LinkIcon color="orangered"/>
-                      </Link>
-                    </TableRowColumn>
-                  </TableRow>
-                )
-              }) : <TableRow>
-                <TableRowColumn
-                  colSpan={3}
-                  style={{
-                    padding: 16,
-                    textAlign: "center"
-                  }}
-                >
-                  {hasNoDates ?
-                    "Nincs foglalás." :
-                    <CircularProgress/>
-                  }
-                </TableRowColumn>
-              </TableRow>
+        <Card>
+          <Table>
+            <TableHead/>
+            <TableBody>
+              {reservations.length ?
+                <FilteredReservations
+                  handledReservations={reservations}
+                  unhandledReservations={[]}
+                /> :
+                <EmptyTableBody title={<Loading isEmpty={noReservation}/>}/>
               }
             </TableBody>
+
           </Table>
         </Card>
         <Tip>
