@@ -1,283 +1,165 @@
-import React, {Component, Fragment} from "react"
-import {Route, withRouter} from "react-router-dom"
-import {Database} from "./Store"
-import {AUTH} from "../../utils/firebase"
-
-import {
-  AppBar,
-  IconButton,
-  FontIcon
-} from "material-ui"
-
+import React, {Fragment} from "react"
+import {Route, Redirect, Switch} from "react-router-dom"
+import {withStore} from "./Store"
 import Sidebar from "./Sidebar"
+import NoMatch from "./NoMatch"
 import Login from "./Auth/Login"
-
-import Welcome from "../scenes/Welcome"
 import Rooms from "../scenes/Rooms"
 import Reservations from "../scenes/Reservations"
 import Calendar from "../scenes/Calendar"
-import Feedbacks from "../scenes/Feedbacks"
-import Notification from "../shared/Notification"
+// import Feedbacks from "../scenes/Feedbacks"
 
-import * as routes from "../../utils/routes"
-import TextSection from "../shared/TextSection"
-import GalleryCard from "../shared/GalleryCard"
-import {Tip} from "../shared"
-
-const initialAppState = {
-  isDrawerOpened: true,
-  isLoggedIn: false,
-  title:"",
-  // Notification state
-  isNotificationOpen: false,
-  notificationMessage: "",
-  notificationType: "",
-  errorType: ""
-}
+import {routes, toRoute, colors} from "../../utils"
+import {Tip, Paragraphs, Gallery} from "../shared"
 
 
-class App extends Component {
+import {withStyles} from '@material-ui/core/styles'
+import Menu from '@material-ui/icons/MenuRounded'
 
-  state = initialAppState
+import {
+  Drawer, AppBar, Toolbar,
+  IconButton, Hidden
+} from '@material-ui/core'
+import {Title, RightAction} from "./Toolbar"
+import Dialog from "./Dialog"
+import Notification from "./Notification"
 
-  toggleSidebar = () => {
-    this.setState(({isDrawerOpened}) => (
-      {isDrawerOpened: !isDrawerOpened})
-    )
+const drawerWidth = 240
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    minHeight: "100vh",
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+    width: '100%'
+  },
+  appBar: {
+    position: 'fixed',
+    marginLeft: drawerWidth,
+    backgroundColor: theme.palette.primary.dark,
+    [theme.breakpoints.up('md')]: {width: `calc(100% - ${drawerWidth}px)`}
+  },
+  navIconHide: {[theme.breakpoints.up('md')]: {display: 'none'}},
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    backgroundColor: theme.palette.primary.main,
+    width: drawerWidth
+  },
+  content: {
+    flexGrow: 1,
+    [theme.breakpoints.up('md')]: {marginLeft: drawerWidth},
+    backgroundColor: colors.grey
   }
+})
 
-  handleNotification = (notificationMessage, notificationType, errorType) => {
-
-    this.setState({
-      isNotificationOpen: true,
-      notificationType,
-      notificationMessage,
-      errorType
-    })
-  }
-
-  handleNotificationClose = () => this.setState({isNotificationOpen: false})
-
-  onLogout = () => {
-    AUTH.signOut().then(() => {
-      this.handleNotification("Sikeres kijelentkezés", "success")
-      this.setState({isLoggedIn: false})
-    })
-  }
-
-
-  componentDidMount = () => {
-    window.innerWidth <=768 && this.setState({isDrawerOpened: false})
-    AUTH.onAuthStateChanged(user => {
-      if(user){
-        this.setState({isLoggedIn: true})
-      }
-    })
-  }
-
-  renderTitle = () => {
-    switch(`/${this.props.location.pathname.split("/")[1]}`) {
-    case routes.ROOMS:
-      return "Szobák"
-    case routes.INTRO:
-      return "Bemutatkozás"
-    case routes.CERTIFICATES:
-      return "Tanúsítványok"
-    case routes.SPECIAL_OFFER:
-      return "Akciós ajánlatok"
-    case routes.CALENDAR:
-      return "Naptár"
-    case routes.RESERVATIONS:
-      return "Foglalások"
-    case routes.FEEDBACKS:
-      return "Visszajelzések"
-    case routes.FOODS:
-      return "Ételek"
-    case routes.STATS:
-      return "Statisztikák"
-    default:
-      return "Admin kezelőfelület"
-    }
-  }
-
-  renderRightIcon = () => {
-    let iconName, iconText= ""
-    const {pathname} = this.props.location
-
-    iconName = "close"
-    iconText = "Bezárás"
-
-
-    return (
-      ( pathname.includes("szerkeszt") ||
-        (pathname.includes(routes.CALENDAR) && pathname.split("/").length === 5)
-      ) ?
-        <div
-          onClick={this.props.history.goBack}
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            color: "#fff"
-          }}
-          title={"Esc\n__________\nNyomd le ezt a billentyűt"}
-        >
-          <p>{iconText}</p>
-          <IconButton>
-            <FontIcon
-              className="material-icons"
-              color="#fff"
+const App = ({
+  isLoggedIn, handleDrawerToggle, mobileOpen,
+  classes, theme
+}) =>
+  <div>
+    {isLoggedIn ?
+      <div className={classes.root}>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              aria-label="Open drawer"
+              className={classes.navIconHide}
+              color="inherit"
+              onClick={handleDrawerToggle}
             >
-              {iconName}
-            </FontIcon>
-          </IconButton>
-        </div> : null
-    )
-  }
-
-
-  render() {
-    const {
-      profile,
-      isMenuActive,
-      isDrawerOpened, isLoggedIn,
-      // Snackbar states
-      notificationMessage, notificationType, isNotificationOpen, errorType
-    } = this.state
-
-
-    return (
-      <Database>
-        <div className="app">
-          <Notification
-            handleNotificationClose={this.handleNotificationClose}
-            {...{
-              isLoggedIn,
-              notificationMessage,
-              notificationType,
-              isNotificationOpen,
-              errorType
-            }}
-          />
-          {isLoggedIn ?
-            <div>
-              <AppBar
-                iconElementRight={this.renderRightIcon()}
-                onLeftIconButtonClick={() => this.toggleSidebar()}
-                style={{position: "fixed"}}
-                title={this.renderTitle()}
+              <Menu/>
+            </IconButton>
+            <Title/>
+            <RightAction/>
+          </Toolbar>
+        </AppBar>
+        <Hidden mdUp>
+          <Drawer
+            // Better open performance on mobile.
+            ModalProps={{keepMounted: true}}
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            classes={{paper: classes.drawerPaper}}
+            onClose={handleDrawerToggle}
+            open={mobileOpen}
+            variant="temporary"
+          >
+            <Sidebar/>
+          </Drawer>
+        </Hidden>
+        <Hidden
+          implementation="css"
+          smDown
+        >
+          <Drawer
+            classes={{paper: classes.drawerPaper}}
+            open
+            variant="permanent"
+          >
+            <Sidebar/>
+          </Drawer>
+        </Hidden>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Switch>
+            <Route component={() => <Redirect to={routes.RESERVATIONS}/>} exact path="/" />
+            <Route
+              component={Reservations}
+              path={routes.RESERVATIONS}
+            />
+            <Route
+              component={Calendar}
+              path={toRoute(routes.CALENDAR, ":year",":month")}
+            />
+            {/* REVIEW: Implement with material v1.x
+              <Route
+                component={Feedbacks}
+                path={routes.FEEDBACKS}
               />
-              <Sidebar
-                handleLogout={this.onLogout}
-                {...{
-                  profile,
-                  isMenuActive,
-                  isDrawerOpened
-                }}
-                toggleSidebar={this.toggleSidebar}
-              />
-              <main style={{
-                marginLeft: isDrawerOpened && window.innerWidth >= 768 && 256,
-                transition: "margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)"
-              }}
-              >
-                <Route
-                  component={({match}) =>
-                    <Welcome {...{
-                      match,
-                      profile
-                    }}
-                    />
-                  }
-                  path={routes.WELCOME}
-                />
-                <Route
-                  component={Calendar}
-                  path={`${routes.CALENDAR}/:year/:month`}
-                />
-                <Route
-                  component={Feedbacks}
-                  path={routes.FEEDBACKS}
-                />
-                <Route
-                  component={Rooms}
-                  path={routes.ROOMS}
-                />
-                <Route
-                  component={() =>
-                    <GalleryCard
-                      baseURL={routes.FOODS}
-                      path="foods"
-                    />
-                  }
-                  path={routes.FOODS}
-                />
-                <Route
-                  component={() =>
-                    <GalleryCard
-                      baseURL={routes.EVENTS}
-                      path="events"
-                    />
-                  }
-                  path={routes.EVENTS}
-                />
-                <Route
-                  component={() =>
-                    <Fragment>
-                      <Tip>
-                          Az első három kép fel lesz tüntetve a főoldalon a Szolgáltatásaink szekció alatt.
-                      </Tip>
-                      <GalleryCard
-                        baseURL={routes.SERVICES}
-                        path="services"
-                      />
-                    </Fragment>
-                  }
-                  path={routes.SERVICES}
-                />
-                <Route
-                  component={() =>
-                    <TextSection
-                      path="history"
-                    />
-                  }
-                  path={routes.INTRO}
-                />
-                <Route
-                  component={() =>
-                    <TextSection
-                      path="napraforgo"
-                    />
-                  }
-                  path={routes.CERTIFICATES}
-                />
-                <Route
-                  component={Reservations}
-                  path={`${routes.RESERVATIONS}/:handledState?`}
-                />
-                <Route
-                  component={Feedbacks}
-                  path={`${routes.FEEDBACKS}/:readState`}
-                />
-                {/* <Route
-                  path={routes.STATS}
-                  component={({match}) =>
-                  <Stats
-                  {...{match, rooms, feedbacks}}
-                  reservations={handledReservations}
-                  />
-                }
-              /> */}
-              </main>
-            </div> :
-            <Login handleNotification={this.handleNotification}/>
-          }
-        </div>
-      </Database>
-    )
-  }
-}
-
-export default withRouter(App)
+            */}
+            <Route
+              component={Paragraphs}
+              path={routes.INTRO}
+            />
+            <Route
+              component={Rooms}
+              path={routes.ROOMS}
+            />
+            <Route
+              component={Paragraphs}
+              path={routes.CERTIFICATES}
+            />
+            <Route
+              component={Gallery}
+              path={routes.EVENTS}
+            />
+            <Route
+              component={props =>
+                <Fragment>
+                  <Gallery {...props}/>
+                  <Tip>
+                    Az első három kép fel lesz tüntetve a főoldalon a
+                    Szolgáltatásaink szekció alatt.
+                  </Tip>
+                </Fragment>
+              }
+              path={routes.SERVICES}
+            />
+            <Route
+              component={Gallery}
+              path={routes.FOODS}
+            />
+            <Route component={NoMatch}/>
+          </Switch>
+        </main>
+      </div>
+      : <Login/>
+    }
+    <Dialog/>
+    <Notification/>
+  </div>
 
 
+export default withStyles(styles, {withTheme: true})(withStore(App))

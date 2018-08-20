@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import {Button, CardHeader, Card, CardActions, CardContent, Divider, TextField} from '@material-ui/core'
 
 import {AUTH} from '../../../utils/firebase'
+import {withStore} from '../Store'
 
 const initialState = {
   email: "",
@@ -11,7 +12,8 @@ const initialState = {
 }
 
 
-export default class Login extends Component {
+class Login extends Component {
+
   state = initialState
 
   handleLogin = () => {
@@ -20,13 +22,8 @@ export default class Login extends Component {
     } = this.state
     if (email !== "" && password !== "") {
       AUTH.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          this.props.handleNotification("Sikeres bejelentkezés.", "success")
-          this.setState(initialState)
-        })
-        .catch(({
-          message, code
-        }) => this.props.handleNotification(message, "error", code))
+        .then(() => this.setState(initialState))
+        .catch(this.props.sendNotification)
     }
   }
 
@@ -109,3 +106,6 @@ export default class Login extends Component {
     )
   }
 }
+
+
+export default withStore(Login)

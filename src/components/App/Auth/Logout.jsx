@@ -1,22 +1,14 @@
 import React from "react"
-
 import {Button} from "@material-ui/core"
-
+import {withStore} from "../Store"
 
 const Logout = ({handleLogout}) =>
-  <div style={{
-    display: "flex",
-    justifyContent: "flex-end",
-    margin: "1em"
-  }}
+  <Button
+    color="secondary"
+    onClick={handleLogout}
+    variant="contained"
   >
-    <Button
-      color="secondary"
-      onClick={handleLogout}
-      variant="contained"
-    >
-      Kijelentkezés
-    </Button>
-  </div>
+    Kijelentkezés
+  </Button>
 
-export default Logout
+export default withStore(Logout)
