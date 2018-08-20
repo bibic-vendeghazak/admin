@@ -8,7 +8,7 @@ const {email: user, password: pass} = functions.config().gmail
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
   auth: {user, pass}
-}) 
+})
 
 // Global variables
 const APP_NAME = "Bíbic vendégházak"
@@ -17,8 +17,8 @@ const adminReservationEmail = `${APP_NAME} 🏠 <${adminEmailAddress}>`
 const FOOTER = `Üdvözlettel ${APP_NAME}`
 
 /**
- * 
- * @param {*} reservation 
+ *
+ * @param {*} reservation
  * @param {*} type One of: created, accepted, deleted, rejected, changed
  */
 module.exports.sendReservationEmails = (reservation, type) => {
@@ -76,14 +76,14 @@ module.exports.sendReservationEmails = (reservation, type) => {
 			to: adminEmailAddress,
 			subject: adminSubject
 		}
-	].map(mail => 
+	].map(mail =>
 		mailTransport.sendMail(mail)
 		.then(() => console.log("Email sent to ", mail.to))
 	))
 }
 
 
-module.exports.sendMessageEmails = snap => 
+module.exports.sendMessageEmails = snap =>
 	Promise.all([
 		// To user
 		{
@@ -101,7 +101,7 @@ module.exports.sendMessageEmails = snap =>
 			to: adminEmailAddress,
 			subject: `Új üzenet! 🔔`
 		}
-	].map(mail => 
+	].map(mail =>
 		mailTransport.sendMail(mail)
 			.then(() => console.log("Email sent to ", mail.to))
 	))

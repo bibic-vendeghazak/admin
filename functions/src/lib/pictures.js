@@ -11,14 +11,14 @@ const gcs = require('@google-cloud/storage')({keyFilename: 'service-account-cred
 const sizes = [360, 640, 768, 1024, 1280, 1440]
 
 
-module.exports.generateThumbnail = (object, context) =>  {
+module.exports.generateThumbnail = object =>  {
   // Exit if the image is already a resized one.
   const {name: filePath, contentType} = object
   const fileName = path.basename(filePath)
-  
+
   const thumbFileNames = sizes.map(size => `thumb_${size}_${fileName}`)
 
-  
+
   const dirName = path.dirname(filePath)
   const bucket = gcs.bucket(object.bucket)
 
@@ -44,10 +44,10 @@ module.exports.generateThumbnail = (object, context) =>  {
     // Generate a thumbnails using Sharp.
     return Promise
       .all(sizes
-        .map((size, index) => 
+        .map((size, index) =>
           sharp(tempFilePath)
             .resize(size)
-            .toFile(tempThumbFilePaths[index])  
+            .toFile(tempThumbFilePaths[index])
     ))
   }).then(() => {
     console.log('Thumbnails created. Now uploading...')
@@ -56,7 +56,7 @@ module.exports.generateThumbnail = (object, context) =>  {
     // Uploading the thumbnails.
     return Promise
       .all(thumbFilePaths
-        .map((thumbFilePath, index) => 
+        .map((thumbFilePath, index) =>
           bucket.upload(tempThumbFilePaths[index], {
             destination: thumbFilePath,
             metadata: {contentType}
@@ -66,8 +66,8 @@ module.exports.generateThumbnail = (object, context) =>  {
     // Once the thumbnails has been uploaded delete the local files to free up disk space.
     fs.unlinkSync(tempFilePath)
     tempThumbFilePaths.forEach(tempThumbFilePath => fs.unlinkSync(tempThumbFilePath))
-    
-    
+
+
     // Now get the URLs of the uploaded images, both the original's and the thumbnails'.
     const config = {
         action: 'read',
@@ -76,7 +76,7 @@ module.exports.generateThumbnail = (object, context) =>  {
     return Promise.all([
         bucket.file(filePath).getSignedUrl(config),
         ...thumbFileNames
-          .map(thumbFileName => 
+          .map(thumbFileName =>
             bucket
               .file(path
                 .join(dirName, thumbFileName))
@@ -85,11 +85,10 @@ module.exports.generateThumbnail = (object, context) =>  {
     ])
   }).then(([original, ...rest]) => {
     // And add the URLs to the database.
-    console.log(rest);
-    
+    console.log(rest)
+
     const pictures = {fileName, SIZE_ORIGINAL: original[0]}
     sizes.forEach((size, index) => pictures[`SIZE_${size}`] = rest[index][0])
-
     return admin.database()
       .ref(`${dirName}/pictures`)
       .push(pictures)

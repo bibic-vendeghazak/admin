@@ -71,12 +71,12 @@ module.exports.overlaps = ({query: {roomId, date}}, res) => {
 	// NOTE: Change origin to bibicvendeghazak.hu
 	res.header('Access-Control-Allow-Origin', "*")
 	const dateArray = date.split("-")
-	
+
 	switch (dateArray.length) {
 		case 2:
 			return getMonth(dateArray)
 				.then(days => {
-					
+
 					const data = {}
 					if (days) {
 						Object.entries(days).forEach(([day, rooms]) => {

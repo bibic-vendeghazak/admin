@@ -18,7 +18,7 @@ const childCombinations = (old, maxPeople, children) => {
     if (combination === "" && children === 0) {
         combinations = {
             name: `${maxPeople} felnőtt`,
-            price: old.price || 0 
+            price: old.price || 0
         }
     } else {
         combinations = old[combination] ? old[combination] : {
@@ -58,7 +58,7 @@ module.exports.populatePrices = (change, context) => {
     const {maxPeople} = change.after.val()
     const priceTableRef = roomsRef.child(`${roomId}/prices/table`)
     const priceTypes = ["breakfast", "halfBoard"]
-    const promises = priceTypes.map(priceType => 
+    const promises = priceTypes.map(priceType =>
         priceTableRef
           .child(priceType)
           .once("value", snap => snap.val())

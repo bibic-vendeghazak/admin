@@ -45,7 +45,7 @@ const updateReservationDates = (from, to, roomId, reservationId, shouldDelete=fa
 const isEquivalent = (a, b) => {
   const keys = Object.keys(a)
   for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
+    const key = keys[i]
     if (a[key] !== b[key]) {
       return false
     }
@@ -59,7 +59,7 @@ const isEquivalent = (a, b) => {
 exports.reservationCreated = reservationRef.onCreate((snap, {params: {reservationId}}) => {
   const reservation = snap.data()
   const {from, to, roomId} = reservation
-  
+
   updateReservationDates(from, to, roomId, snap.id)
 
   reservation.reservationId = reservationId
@@ -75,34 +75,34 @@ exports.reservationChanged = reservationRef
   .onUpdate(({before, after}, {params: {reservationId}}) => {
     before = before.data()
     const reservation = after.data()
-    
+
     // 🔥 Remove old dates
     updateReservationDates(before.from, before.to, before.roomId, reservationId, true)
     // ✨ Add new dates
     updateReservationDates(reservation.from, reservation.to, reservation.roomId, reservationId)
-    
+
     if (reservation.email === "email@email.hu") {
       return null
     }
 
-    const type = 
+    const type =
     // Reservation accepted 🎉
     (!before.handled && reservation.handled) ? "accepted" :
     // Reservation changed 🔔
     (before.handled === reservation.handled && !isEquivalent(before, reservation)) ? "changed" : null
 
-    
+
     reservation.reservationId = reservationId
     return type ? email.sendReservationEmails(reservation, type) : null
   })
-  
+
   exports.reservationDeleted = reservationRef
   .onDelete((change, {params: {reservationId}}) => {
     const reservation = change.data()
     const {from, to, roomId} = reservation
 
     updateReservationDates(from, to, roomId, reservationId, true)
-    
+
     reservation.reservationId = reservationId
 
     return reservation.email !== "email@email.hu" ? email.sendReservationEmails(reservation, "deleted") : null
@@ -110,7 +110,7 @@ exports.reservationChanged = reservationRef
 
 
 
-  
+
 // Return overlaps in a month 📅
 exports.overlaps = functions.region('europe-west1').https
   .onRequest(overlaps.overlaps)
@@ -128,7 +128,7 @@ exports.populatePrices = functions.region('europe-west1').database
 // ---------------------------------------------------------------------------------------------------
 // Picture handling 🍱
 exports.generateThumbnail = functions.region('europe-west1').storage.object()
-  .onFinalize(pictures.generateThumbnail) 
+  .onFinalize(pictures.generateThumbnail)
 
 
 exports.deleteRoomPicture = functions.region('europe-west1').database
