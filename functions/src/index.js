@@ -131,16 +131,7 @@ exports.generateThumbnail = functions.region('europe-west1').storage.object()
   .onFinalize(pictures.generateThumbnail)
 
 
-exports.deleteRoomPicture = functions.region('europe-west1').database
-  .ref("rooms/{roomId}/pictures/{pictureId}")
-  .onDelete((snap, {params: {roomId}}) => pictures.deletePicture(snap, `rooms/${roomId}`))
 
-
-exports.deleteFoodPicture = functions.region('europe-west1').database
-  .ref("foods/pictures/{pictureId}")
-  .onDelete(snap => pictures.deletePicture(snap, "foods"))
-
-
-exports.deleteEventsPicture = functions.region('europe-west1').database
-  .ref("events/pictures/{pictureId}")
-  .onDelete(snap => pictures.deletePicture(snap, "events"))
+exports.deletePicture = functions.region('europe-west1').database
+  .ref("galleries/{galleryId}/{pictureId}")
+  .onDelete(pictures.deletePicture)

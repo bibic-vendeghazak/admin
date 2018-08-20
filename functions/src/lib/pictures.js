@@ -90,28 +90,33 @@ module.exports.generateThumbnail = object =>  {
     const pictures = {fileName, SIZE_ORIGINAL: original[0]}
     sizes.forEach((size, index) => pictures[`SIZE_${size}`] = rest[index][0])
     return admin.database()
-      .ref(`${dirName}/pictures`)
+      .ref(dirName)
       .push(pictures)
   })}
 
 
 
 /**
- * Delete a picture and its corresponding thumbnails 
- * @param {*} snapshot contains the deleted file's name
- * @param {*} baseURL the directory from which the images should be deleted
+ * Delete a picture and its corresponding thumbnails
+ * @param {DataSnapshot} snapshot contains the deleted file's name
+ * @param {string} context.params.galleryId the location where the picture was deleted from
  */
-module.exports.deletePicture = (snapshot, baseURL) => {    
+module.exports.deletePicture = (snapshot, {params: {galleryId}}) => {
   const {fileName} = snapshot.val()
   const bucket = admin.storage().bucket()
+  const baseURL = `galleries/${galleryId}`
+  const promises = sizes.map(size =>
+    bucket.file(`${baseURL}/thumb_${size}_${fileName}`)
+      .delete()
+    )
+
+  promises
+    .push(bucket
+      .file(`${baseURL}/${fileName}`)
+      .delete()
+    )
+
   return Promise
-          .all([
-                bucket.file(`${baseURL}/${fileName}`).delete(),
-                ...sizes
-                  .map(size => 
-                    bucket.file(
-                      `${baseURL}/thumb_${size}_${fileName}`
-                    ).delete())
-              ])
-          .catch(console.error)
+    .all(promises)
+    .then(() => console.log(`All versions of ${fileName} are now deleted.`))
 }
