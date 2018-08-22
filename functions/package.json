@@ -1,12 +1,15 @@
 {
-  "engines": {"node": "8"},
+  "engines": {
+    "node": "8"
+  },
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./src",
+    "clean": "rm -rf lib && rm -f index.js",
     "serve": "firebase serve --only functions",
     "shell": "firebase experimental:functions:shell",
-    "build": "babel src/index.js -o index.js; babel src/lib -d lib",
+    "build": "npm run clean; babel src/index.js -o index.js; babel src/lib -d lib",
     "start": "npm run shell",
     "deploy": "npm run build; firebase deploy --only functions",
     "logs": "firebase functions:log"
