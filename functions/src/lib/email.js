@@ -41,7 +41,11 @@ Szeretettel várjuk!
 `,
     location: constants.ADDRESS,
     url: constants.WEB,
-    attendees: [{email, name}]
+    attendees: [{email, name}],
+    organizer: {
+      email: constants.ADMIN_EMAIL,
+      name: constants.APP_NAME
+    }
   })
 
   return  ({
