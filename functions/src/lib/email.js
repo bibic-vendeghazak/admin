@@ -1,6 +1,7 @@
 const functions = require("firebase-functions")
 const nodemailer = require("nodemailer")
 const templates = require("./templates")
+const constants = require("./constants")
 
 
 // Init email
@@ -11,11 +12,6 @@ const mailTransport = nodemailer.createTransport({
   auth: {user, pass}
 })
 
-// Global variables
-const APP_NAME = "Bíbic vendégházak"
-const adminEmailAddress = "szallasfoglalas@bibicvendeghazak.hu"
-const adminReservationEmail = `${APP_NAME} 🏠 <${adminEmailAddress}>`
-const FOOTER = `Üdvözlettel ${APP_NAME}`
 
 /**
  *

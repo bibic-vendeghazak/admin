@@ -1,5 +1,6 @@
 const moment = require("./moment")
 const generateURL = require("generate-google-calendar-url")
+const constants = require("./constants")
 
 const toPrice = price => parseInt(price, 10)
   .toLocaleString("hu-HU", {
@@ -50,7 +51,7 @@ Tartalom: ${message}
 
 Amint tudunk, válaszolunk Önnek. Amennyiben további információt szeretne megadni, úgy válaszolhat erre az e-mailre.
 
-${footer}
+${constants.FOOTER}
 `
 
 module.exports.adminMessage = ({name, email, tel, message, subject}) =>
@@ -112,7 +113,7 @@ module.exports.adminHTML = ({tel, handled,roomId, from, to, adults, children, me
 </ul>
 `
 
-module.exports.createdUserText = (reservation, footer) =>
+module.exports.createdUserText = reservation =>
   `
 Tisztelt ${reservation.name}!
 
@@ -122,9 +123,9 @@ Foglalási azonosító: ${reservation.reservationId}
 
 Mihamarabb értesítjük Önt a további teendőkről.
   
-${footer}`
+${constants.FOOTER}`
 
-module.exports.acceptedUserText = (reservation, footer) =>
+module.exports.acceptedUserText = reservation =>
   `
 Tisztelt ${reservation.name}!
 
@@ -134,26 +135,26 @@ A foglalást ${reservation.lastHandledBy} hagyta jóvá.
 
 Köszönjük!
   
-${footer}`
+${constants.FOOTER}`
 
-module.exports.deletedUserText = ({name}, footer) =>
+module.exports.changedUserText = reservation =>
   `
 Tisztelt ${name}!
 
 Foglalása törölve lett rendszerünkből.
 Sajnáljuk.
   
-${footer}`
+${constants.FOOTER}`
 
 
-module.exports.rejectedUserText = (reservation, footer) =>
+module.exports.rejectedUserText = reservation =>
   `
 Tisztelt ${reservation.name}!
 
 Foglalása az alábbiak szerint módosul:
 ${commonFields(reservation)}
   
-${footer}`
+${constants.FOOTER}`
 
 
 
@@ -176,8 +177,9 @@ Megjegyzés: ${message}
 Felnőtt: ${adults}
 Gyerek (0-6): ${children.filter(child => child === "0-6").length}
 Gyerek (6-12): ${children.filter(child => child === "6-12").length}
+${constants.TEL}
 
-szallasfoglalas@bibicvendeghazak.hu
+${constants.ADMIN_EMAIL}
     `
   })
 
