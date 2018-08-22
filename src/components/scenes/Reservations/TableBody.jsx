@@ -21,9 +21,9 @@ const sortReservations = (order, orderBy) => (a, b) =>
     (a[orderBy] > b[orderBy]) - (a[orderBy] < b[orderBy])
 
 const filterByQuery = query => ({
-  name, message
+  name, message, id
 }) => query
-  .some(word => [name, message].join(" ")
+  .some(word => [name, message, id].join(" ")
     .toLowerCase()
     .includes(word)
   )
