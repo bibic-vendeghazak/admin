@@ -1,12 +1,12 @@
-const admin = require('firebase-admin')
+const admin = require("firebase-admin")
 
 // Imports for thumbnail generating
-const sharp = require('sharp')
-const spawn = require('child-process-promise').spawn
-const path = require('path')
-const os = require('os')
-const fs = require('fs')
-const gcs = require('@google-cloud/storage')({keyFilename: 'service-account-credentials.json'})
+const sharp = require("sharp")
+const spawn = require("child-process-promise").spawn
+const path = require("path")
+const os = require("os")
+const fs = require("fs")
+const gcs = require("@google-cloud/storage")({keyFilename: "service-account-credentials.json"})
 
 const sizes = [360, 640, 768, 1024, 1280, 1440]
 
@@ -22,13 +22,13 @@ module.exports.generateThumbnail = object =>  {
   const dirName = path.dirname(filePath)
   const bucket = gcs.bucket(object.bucket)
 
-  if (fileName.includes('thumb_')) {
-    console.log('✖ Already processed image.')
+  if (fileName.includes("thumb_")) {
+    console.log("✖ Already processed image.")
     return null
   }
 
-  if (!contentType.startsWith('image/')) {
-    console.log('✖ Not an image.')
+  if (!contentType.startsWith("image/")) {
+    console.log("✖ Not an image.")
     return null
   }
   // Download file from bucket.
@@ -40,7 +40,7 @@ module.exports.generateThumbnail = object =>  {
   return bucket.file(filePath).download({
     destination: tempFilePath,
   }).then(() => {
-    console.log('Image downloaded locally to', tempFilePath)
+    console.log("Image downloaded locally to", tempFilePath)
     // Generate a thumbnails using Sharp.
     return Promise
       .all(sizes
@@ -48,9 +48,9 @@ module.exports.generateThumbnail = object =>  {
           sharp(tempFilePath)
             .resize(size)
             .toFile(tempThumbFilePaths[index])
-    ))
+        ))
   }).then(() => {
-    console.log('Thumbnails created. Now uploading...')
+    console.log("Thumbnails created. Now uploading...")
 
     const thumbFilePaths = sizes.map((size, index) => path.join(dirName, thumbFileNames[index]))
     // Uploading the thumbnails.
@@ -61,7 +61,7 @@ module.exports.generateThumbnail = object =>  {
             destination: thumbFilePath,
             metadata: {contentType}
           })
-    ))
+        ))
   }).then(() => {
     // Once the thumbnails has been uploaded delete the local files to free up disk space.
     fs.unlinkSync(tempFilePath)
@@ -70,17 +70,17 @@ module.exports.generateThumbnail = object =>  {
 
     // Now get the URLs of the uploaded images, both the original's and the thumbnails'.
     const config = {
-        action: 'read',
-        expires: '03-01-2500'
+      action: "read",
+      expires: "03-01-2500"
     }
     return Promise.all([
-        bucket.file(filePath).getSignedUrl(config),
-        ...thumbFileNames
-          .map(thumbFileName =>
-            bucket
-              .file(path
-                .join(dirName, thumbFileName))
-                .getSignedUrl(config)
+      bucket.file(filePath).getSignedUrl(config),
+      ...thumbFileNames
+        .map(thumbFileName =>
+          bucket
+            .file(path
+              .join(dirName, thumbFileName))
+            .getSignedUrl(config)
         )
     ])
   }).then(([original, ...rest]) => {
@@ -108,7 +108,7 @@ module.exports.deletePicture = (snapshot, {params: {galleryId}}) => {
   const promises = sizes.map(size =>
     bucket.file(`${baseURL}/thumb_${size}_${fileName}`)
       .delete()
-    )
+  )
 
   promises
     .push(bucket

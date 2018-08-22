@@ -11,36 +11,36 @@ const toPrice = price => parseInt(price, 10)
 
 const translateSubject = subject => {
   switch (subject) {
-    case "other":
-      subject = "Egyéb"
-      break
-    case "eventHall":
-      subject = "Rendezvényterem"
-      break
-    case "special":
-      subject = "Külön ajánlat"
-      break
-    case "fullHouse":
-      subject = "Teljes ház"
-      break
+  case "other":
+    subject = "Egyéb"
+    break
+  case "eventHall":
+    subject = "Rendezvényterem"
+    break
+  case "special":
+    subject = "Külön ajánlat"
+    break
+  case "fullHouse":
+    subject = "Teljes ház"
+    break
   }
   return subject
 }
 
 const translateService = service => {
   switch (service) {
-    case "halfBoard":
-      service = "Félpanzió"
-      break
-    case "breakfast":
-      service = "Reggeli"
-      break
+  case "halfBoard":
+    service = "Félpanzió"
+    break
+  case "breakfast":
+    service = "Reggeli"
+    break
   }
   return service
 }
 
-module.exports.userMessage = ({name, tel, message, subject}, footer) =>
-`
+module.exports.userMessage = ({name, tel, message, subject}) =>
+  `
 Tisztelt ${name}!
 
 Üzenetét megkaptuk az alábbi adatokkal:
@@ -54,7 +54,7 @@ ${footer}
 `
 
 module.exports.adminMessage = ({name, email, tel, message, subject}) =>
-`
+  `
 ${name} új üzenetet küldött!
 Téma: ${translateSubject(subject)}
 E-mail: ${email}
@@ -81,7 +81,7 @@ Fizetendő összeg: ${toPrice(price)}
 
 
 module.exports.adminText = reservation =>
-`
+  `
 Név: ${reservation.name}
 E-mail cím: ${reservation.email}
 ${commonFields(reservation)}
@@ -113,7 +113,7 @@ module.exports.adminHTML = ({tel, handled,roomId, from, to, adults, children, me
 `
 
 module.exports.createdUserText = (reservation, footer) =>
-`
+  `
 Tisztelt ${reservation.name}!
 
 Foglalási kérelmét megkaptuk, az alábbi információkkal:
@@ -125,7 +125,7 @@ Mihamarabb értesítjük Önt a további teendőkről.
 ${footer}`
 
 module.exports.acceptedUserText = (reservation, footer) =>
-`
+  `
 Tisztelt ${reservation.name}!
 
 Foglalási kérelmét jóváhagytuk:
@@ -137,7 +137,7 @@ Köszönjük!
 ${footer}`
 
 module.exports.deletedUserText = ({name}, footer) =>
-`
+  `
 Tisztelt ${name}!
 
 Foglalása törölve lett rendszerünkből.
@@ -147,7 +147,7 @@ ${footer}`
 
 
 module.exports.rejectedUserText = (reservation, footer) =>
-`
+  `
 Tisztelt ${reservation.name}!
 
 Foglalása az alábbiak szerint módosul:

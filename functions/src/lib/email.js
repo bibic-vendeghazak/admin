@@ -1,12 +1,13 @@
-const functions = require('firebase-functions')
+const functions = require("firebase-functions")
 const nodemailer = require("nodemailer")
 const templates = require("./templates")
 
 
 // Init email
 const {email: user, password: pass} = functions.config().gmail
+
 const mailTransport = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {user, pass}
 })
 
@@ -84,24 +85,24 @@ module.exports.sendReservationEmails = (reservation, type) => {
 
 
 module.exports.sendMessageEmails = snap =>
-	Promise.all([
-		// To user
-		{
-			replyTo: adminEmailAddress,
-			from: adminReservationEmail,
-			to: snap.val().email,
-			text: templates.userMessage(snap.val(), FOOTER),
-			subject: "Üzenetét megkaptuk 👍"
-		},
-		// To admin
-		{
-			replyTo: snap.val().email,
-			from: snap.val().email,
-			text: templates.adminMessage(snap.val()),
-			to: adminEmailAddress,
-			subject: `Új üzenet! 🔔`
-		}
-	].map(mail =>
-		mailTransport.sendMail(mail)
-			.then(() => console.log("Email sent to ", mail.to))
-	))
+  Promise.all([
+    // To user
+    {
+      replyTo: constants.ADMIN_EMAIL,
+      from: constants.ADMIN_RESERVATION_EMAIL,
+      to: snap.val().email,
+      text: templates.userMessage(snap.val(), FOOTER),
+      subject: "Üzenetét megkaptuk 👍"
+    },
+    // To admin
+    {
+      replyTo: snap.val().email,
+      from: snap.val().email,
+      text: templates.adminMessage(snap.val()),
+      to: constants.ADMIN_EMAIL,
+      subject: "Új üzenet! 🔔"
+    }
+  ].map(mail =>
+    mailTransport.sendMail(mail)
+      .then(() => console.log("Email sent to ", mail.to))
+  ))
