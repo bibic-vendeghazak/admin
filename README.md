@@ -1,4 +1,4 @@
-***Admin dashboard*** ![alt](https://travis-ci.org/bibic-vendeghazak/admin.svg?branch=develop)
+***Admin dashboard*** ![Travis CI Status](https://travis-ci.org/bibic-vendeghazak/admin.svg?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/bibic-vendeghazak/admin/badge.svg?branch=develop)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop)
 
 [https://bibic-vendeghazak-api.firebaseapp.com](https://bibic-vendeghazak-api.firebaseapp.com)
 The site requires login, so here is a preview:
