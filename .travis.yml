@@ -6,4 +6,5 @@ before_script:
 script:
   - yarn build
 after_success:
-  - curl --ftp-create-dirs -u "$FTP_USERNAME":"$FTP_PASSWORD" -T build ftp://"$FTP_HOST"
+  - cd build
+  - curl --ftp-create-dirs -u "$FTP_USERNAME":"$FTP_PASSWORD" -T * ftp://"$FTP_HOST"
