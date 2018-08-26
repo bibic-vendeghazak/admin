@@ -70,8 +70,7 @@ export class Database extends Component {
     rooms: [],
     roomPictures: [],
     reservations: null,
-    unHandledReservationCount: 0,
-    unreadFeedbackCount: 0
+    unhandledFeedbackCount: 0
   }
 
 
@@ -95,15 +94,6 @@ export class Database extends Component {
             })
           })
           this.setState({reservations})
-        })
-        FEEDBACKS_DB.on("value", snap => {
-          let unreadFeedbackCount = 0
-          snap.forEach(feedback => {
-            if (!feedback.val().handled) {
-              unreadFeedbackCount+=1
-            }
-          })
-          this.setState({unreadFeedbackCount})
         })
         ADMINS.child(user.uid).once("value", snap => {
           this.setState({profile: snap.val()})
