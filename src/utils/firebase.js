@@ -22,8 +22,8 @@ export const AUTH = firebase.auth()
 
 
 export const RESERVATIONS_FS = FS.collection("reservations")
+export const FEEDBACKS_FS = FS.collection("feedbacks")
 export const GALLERIES_DB = DB.ref("galleries")
-export const FEEDBACKS_DB = DB.ref("feedbacks")
 export const ADMINS = DB.ref("admins")
 export const ROOMS_DB = DB.ref("rooms")
 export const FOODS_DB = DB.ref("foods")
