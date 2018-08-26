@@ -1,10 +1,8 @@
 language: node_js
 node_js:
 - node
-before_script:
-  - yarn global add firebase-tools
 script:
   - yarn build
 after_success:
   - cd build
-  - curl --ftp-create-dirs -u "$FTP_USERNAME":"$FTP_PASSWORD" -T * ftp://"$FTP_HOST"
+  - find . -type f -exec curl -u ${FTP_USERNAME}:${FTP_PASSWORD} --ftp-create-dirs -T {} ftp://${FTP_HOST}/{} \;
