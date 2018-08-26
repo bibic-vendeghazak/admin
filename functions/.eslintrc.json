@@ -13,9 +13,13 @@
     "no-console": "off",
     "no-trailing-spaces":"error",
     "semi":"error",
+    "indent":"error",
     // Removed rule "disallow multiple spaces in regular expressions" from recommended eslint rules
     "no-regex-spaces": "off",
-
+    "prefer-const":"error",
+    "quotes":"error",
+    "prefer-template":"error",
+    "prefer-destructuring":"warn",
     // Removed rule "disallow the use of debugger" from recommended eslint rules
     "no-debugger": "off",
 

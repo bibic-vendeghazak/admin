@@ -1,17 +1,18 @@
 import React, {Component, Fragment} from "react"
 import moment from "moment"
 import {routes, toRoute} from "../../../utils"
-import {RESERVATIONS_FS} from "../../../utils/firebase"
+import {RESERVATIONS_FS, RESERVATION_DATES_DB} from "../../../utils/firebase"
 
 import {
   Card,
   Table,
   TableBody
 } from "@material-ui/core"
-import {Tip, Loading} from "../../shared"
+import {EmptyTableBody, Tip, Loading} from "../../shared"
 
 import TableHead from '../Reservations/TableHead'
-import FilteredReservations, {EmptyTableBody} from '../Reservations/TableBody'
+import FilteredReservations from '../Reservations/FilteredReservations'
+
 
 export default class DayBig extends Component {
 
@@ -42,37 +43,33 @@ export default class DayBig extends Component {
    * @returns {null} -
    */
   fetchReservations = date => {
-    date = date.endOf("day").toDate()
-    this.setState({reservations: []})
-    RESERVATIONS_FS
-    // .where("from", "<=", date.toDate())
-      .where("to", ">=", date)
-      .limit(100)
-      .get()
-      .then(snap => {
-        if (snap.empty) {
-          this.setState({
-            noReservation: true,
-            reservations: []
-          })
-        } else {
-          const reservations = []
-          snap.forEach(reservation => {
-            const from = moment(reservation.data().from.toDate())
-            const to = moment(reservation.data().to.toDate())
-            if (moment(date).isBetween(from, to)) {
-              reservations.push({
-                key: reservation.id,
-                ...reservation.data()
-              })
-            }
-          })
-          this.setState({
-            reservations,
-            noReservation: !reservations.length
-          })
-        }
-      })
+    this.setState({
+      noReservation: false,
+      reservations: []
+    })
+    RESERVATION_DATES_DB.child(date.format("YYYY/MM/DD")).once("value", snap => {
+      if (snap.exists()) {
+        Object.values(snap.val()).forEach(room =>
+          RESERVATIONS_FS
+            .doc(Object.keys(room)[0])
+            .get()
+            .then(
+              reservation => this.setState(({reservations}) => ({reservations: [
+                ...reservations,
+                {
+                  key: reservation.id,
+                  ...reservation.data()
+                }
+              ]})
+              ))
+        )
+      } else {
+        this.setState({
+          noReservation: true,
+          reservations: []
+        })
+      }
+    })
   }
 
   handleKeyUp = ({keyCode}) => {

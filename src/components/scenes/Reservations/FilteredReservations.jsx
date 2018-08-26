@@ -3,7 +3,7 @@ import moment from 'moment'
 import {Link, withRouter} from "react-router-dom"
 
 import {routes, toRoute, colors} from "../../../utils"
-import {Background, Loading} from '../../shared'
+import {Background, EmptyTableBody} from '../../shared'
 
 import {TableRow, TableCell, Hidden, Tooltip, IconButton, Typography} from "@material-ui/core"
 
@@ -21,23 +21,26 @@ const sortReservations = (order, orderBy) => (a, b) =>
     (a[orderBy] > b[orderBy]) - (a[orderBy] < b[orderBy])
 
 const filterByQuery = query => ({
-  name, message
+  name, message, id
 }) => query
-  .some(word => [name, message].join(" ")
+  .some(word => [name, message, id].join(" ")
     .toLowerCase()
     .includes(word)
   )
 
-const filterByRooms = roomsFilter => ({roomId}) =>
-  roomsFilter ? roomsFilter[roomId-1] : true
+const filterByRoom = filteredRooms => ({roomId}) =>
+  filteredRooms.length ? filteredRooms[roomId-1] : true
 
 const FilteredReservations = ({
-  query, order, orderBy, history, handledReservations, unhandledReservations, roomsFilter
+  order, orderBy,
+  handledReservations, unhandledReservations,
+  query, filteredRooms,
+  history
 }) => {
 
   const renderReservations = reservations =>
     reservations
-      .filter(filterByRooms(roomsFilter))
+      .filter(filterByRoom(filteredRooms))
       .filter(filterByQuery(query))
       .sort(sortReservations(order, orderBy))
       .map(({
@@ -124,21 +127,11 @@ const FilteredReservations = ({
 FilteredReservations.defaultProps = {
   query: [""],
   order: "asc",
-  orderBy: "roomId"
+  orderBy: "roomId",
+  filteredRooms: []
 }
 
 
 export default withRouter(FilteredReservations)
 
 
-export const EmptyTableBody = ({title=<Loading isEmpty/>}) =>
-  <TableRow>
-    <TableCell colSpan={10}>
-      <Typography
-        align="center"
-        variant="subheading"
-      >
-        {title}
-      </Typography>
-    </TableCell>
-  </TableRow>

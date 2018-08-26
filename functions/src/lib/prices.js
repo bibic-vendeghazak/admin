@@ -1,4 +1,4 @@
-const admin = require('firebase-admin')
+const admin = require("firebase-admin")
 const roomsRef = admin.database().ref("roomsRef")
 
 
@@ -11,22 +11,22 @@ const roomsRef = admin.database().ref("roomsRef")
  */
 
 const childCombinations = (old, maxPeople, children) => {
-    let combinations = {}
-    let combination = Array(children).fill("6-12").join("_")
-    const length = combination.length - 1
-    combination = combination[length] === "_" ? combination.slice(0, length) : combination
-    if (combination === "" && children === 0) {
-        combinations = {
-            name: `${maxPeople} felnőtt`,
-            price: old.price || 0
-        }
-    } else {
-        combinations = old[combination] ? old[combination] : {
-            price: 0,
-            name: `${maxPeople} felnőtt, ${combination.split("_").length} gyerek (6-12)`
-        }
+  let combinations = {}
+  let combination = Array(children).fill("6-12").join("_")
+  const length = combination.length - 1
+  combination = combination[length] === "_" ? combination.slice(0, length) : combination
+  if (combination === "" && children === 0) {
+    combinations = {
+      name: `${maxPeople} felnőtt`,
+      price: old.price || 0
     }
-    return combinations
+  } else {
+    combinations = old[combination] ? old[combination] : {
+      price: 0,
+      name: `${maxPeople} felnőtt, ${combination.split("_").length} gyerek (6-12)`
+    }
+  }
+  return combinations
 }
 
 
@@ -36,39 +36,39 @@ const childCombinations = (old, maxPeople, children) => {
  * @param {number} maxPeople maximum number of adults
  */
 const generatePrices = (old, maxPeople) => {
-    let table = {}
-    for (let adults = 1; adults <= maxPeople; adults++) {
-        let adultGroup = {}
-        for (let children = 0; children <= maxPeople - 1; children++) {
-            if (adults+children <= maxPeople) {
-                const oldPrice = old && old[adults] && old[adults][children] ? old[adults][children] : {}
-                adultGroup[children] = childCombinations(oldPrice, adults, children)
-            }
-        }
-        table[adults] = adultGroup
+  const table = {}
+  for (let adults = 1; adults <= maxPeople; adults++) {
+    const adultGroup = {}
+    for (let children = 0; children <= maxPeople - 1; children++) {
+      if (adults+children <= maxPeople) {
+        const oldPrice = old && old[adults] && old[adults][children] ? old[adults][children] : {}
+        adultGroup[children] = childCombinations(oldPrice, adults, children)
+      }
     }
-    return table
+    table[adults] = adultGroup
+  }
+  return table
 }
 
 
 
 
 module.exports.populatePrices = (change, context) => {
-    const {roomId} = context.params
-    const {maxPeople} = change.after.val()
-    const priceTableRef = roomsRef.child(`${roomId}/prices/table`)
-    const priceTypes = ["breakfast", "halfBoard"]
-    const promises = priceTypes.map(priceType =>
-        priceTableRef
-          .child(priceType)
-          .once("value", snap => snap.val())
-      )
-    return Promise
-      .all(promises)
-      .then(values => {
-        return priceTableRef.set({
-          "breakfast": generatePrices(values[0].val(), maxPeople),
-          "halfBoard": generatePrices(values[1].val(), maxPeople)
-        })
+  const {roomId} = context.params
+  const {maxPeople} = change.after.val()
+  const priceTableRef = roomsRef.child(`${roomId}/prices/table`)
+  const priceTypes = ["breakfast", "halfBoard"]
+  const promises = priceTypes.map(priceType =>
+    priceTableRef
+      .child(priceType)
+      .once("value", snap => snap.val())
+  )
+  return Promise
+    .all(promises)
+    .then(values => {
+      return priceTableRef.set({
+        "breakfast": generatePrices(values[0].val(), maxPeople),
+        "halfBoard": generatePrices(values[1].val(), maxPeople)
       })
-  }
+    })
+}

@@ -9,8 +9,9 @@ import Autorenew from '@material-ui/icons/AutorenewRounded'
 
 import {Modal} from "../../shared"
 import {isValidReservation} from "../../../utils"
+import {withStore} from "../../App/Store"
 
-export default class EditReservation extends Component {
+class EditReservation extends Component {
 
   constructor(props) {
     super(props)
@@ -456,3 +457,5 @@ export default class EditReservation extends Component {
     )
   }
 }
+
+export default withStore(EditReservation)

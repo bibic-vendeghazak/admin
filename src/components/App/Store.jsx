@@ -8,7 +8,7 @@ import {
   SERVER_MESSAGE_DB,
   ROOM_SERVICES_DB,
   RESERVATIONS_FS,
-  FEEDBACKS_DB,
+  FEEDBACKS_FS,
   GALLERIES_DB,
   RESERVATION_DATES_DB
 } from "../../utils/firebase"
@@ -69,9 +69,8 @@ export class Database extends Component {
     },
     rooms: [],
     roomPictures: [],
-    reservations: null,
-    unHandledReservationCount: 0,
-    unreadFeedbackCount: 0
+    unhandledReservationCount: 0,
+    unhandledFeedbackCount: 0
   }
 
 
@@ -84,26 +83,10 @@ export class Database extends Component {
         })
         this.setState({isLoggedIn: true})
         RESERVATIONS_FS.where("handled", "==", false).onSnapshot(snap => {
-          this.setState({unHandledReservationCount: snap.size})
+          this.setState({unhandledReservationCount: snap.size})
         })
-        RESERVATIONS_FS.onSnapshot(snap => {
-          const reservations = []
-          snap.forEach(reservation => {
-            reservations.push({
-              key: reservation.id,
-              ...reservation.data()
-            })
-          })
-          this.setState({reservations})
-        })
-        FEEDBACKS_DB.on("value", snap => {
-          let unreadFeedbackCount = 0
-          snap.forEach(feedback => {
-            if (!feedback.val().handled) {
-              unreadFeedbackCount+=1
-            }
-          })
-          this.setState({unreadFeedbackCount})
+        FEEDBACKS_FS.where("accepted", "==", false).onSnapshot(snap => {
+          this.setState({unhandledFeedbackCount: snap.size})
         })
         ADMINS.child(user.uid).once("value", snap => {
           this.setState({profile: snap.val()})
@@ -126,7 +109,7 @@ export class Database extends Component {
                   Object.keys(snap.val()).map(key => key.substring(1))
                     .forEach(roomId => {
                       rooms[roomId-1]["isBooked"] = true
-                      rooms.key = reservation.key
+                      // rooms.key = reservation.key
                     })
                 }
               })
@@ -143,7 +126,7 @@ export class Database extends Component {
         this.setState({isLoggedIn: true})
       } else this.handleSendNotification({
         code: "success",
-        message: "Sikeres kijelentkezés."
+        message: "Kijelentkezve."
       })
     })
   }

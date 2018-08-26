@@ -1,12 +1,15 @@
 {
-  "engines": {"node": "8"},
+  "engines": {
+    "node": "8"
+  },
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./src",
+    "clean": "rm -rf lib && rm -f index.js",
     "serve": "firebase serve --only functions",
     "shell": "firebase experimental:functions:shell",
-    "build": "babel src/index.js -o index.js; babel src/lib -d lib",
+    "build": "npm run clean; babel src/index.js -o index.js; babel src/lib -d lib",
     "start": "npm run shell",
     "deploy": "npm run build; firebase deploy --only functions",
     "logs": "firebase functions:log"
@@ -17,10 +20,12 @@
     "firebase-admin": "6.0.0",
     "firebase-functions": "^2.0.5",
     "generate-google-calendar-url": "^0.0.2",
+    "ical-generator": "^1.0.3",
     "moment": "^2.22.2",
     "moment-range": "^4.0.1",
     "nodemailer": "^4.6.8",
-    "sharp": "0.20.5"
+    "qrcode": "^1.2.2",
+    "sharp": "^0.20.7"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

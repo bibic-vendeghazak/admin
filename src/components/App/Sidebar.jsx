@@ -25,7 +25,7 @@ import Bookmark from "@material-ui/icons/BookmarkRounded"
 import Business from "@material-ui/icons/BusinessRounded"
 import DateRange from "@material-ui/icons/DateRangeRounded"
 import Event from "@material-ui/icons/EventRounded"
-import Feedback from "@material-ui/icons/FeedbackRounded"
+import Feedback from "@material-ui/icons/ThumbsUpDownRounded"
 import Group from "@material-ui/icons/GroupRounded"
 import Language from "@material-ui/icons/LanguageRounded"
 import Message from "@material-ui/icons/MessageRounded"
@@ -49,7 +49,7 @@ const Sidebar = ({
   classes : {
     divider, primary, button, activeLink
   }, handleDrawerToggle,
-  unHandledReservationCount, unreadFeedbackCount, profile: {
+  unhandledReservationCount, unhandledFeedbackCount, profile: {
     name="Bíbic vendégházak",
     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"
   }
@@ -91,7 +91,7 @@ const Sidebar = ({
           {...{drawerItemStyle}}
           icon={
             <Badge
-              badgeContent={unHandledReservationCount}
+              badgeContent={unhandledReservationCount}
               color="secondary"
             >
               <Bookmark/>
@@ -110,7 +110,7 @@ const Sidebar = ({
           {...{drawerItemStyle}}
           icon={
             <Badge
-              badgeContent={unreadFeedbackCount}
+              badgeContent={unhandledFeedbackCount}
               color="secondary"
             >
               <Feedback/>
@@ -213,8 +213,8 @@ const Sidebar = ({
 Sidebar.propTypes = {
   classes: PropTypes.object,
   handleLogout: PropTypes.func,
-  unHandledReservationCount: PropTypes.number,
-  unreadFeedbackCount: PropTypes.number,
+  unhandledReservationCount: PropTypes.number,
+  unhandledFeedbackCount: PropTypes.number,
   profile: PropTypes.object
 }
 

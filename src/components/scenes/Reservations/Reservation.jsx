@@ -24,8 +24,9 @@ import {Tip, Background} from '../../shared'
 import {RESERVATIONS_FS, AUTH, getAdminName, TIMESTAMP} from "../../../utils/firebase"
 import {routes, colors, toRoute} from "../../../utils"
 import {Card, Button, CardActions, Hidden, Divider, CardContent, ListItem, Typography, ListItemIcon, ListItemText, Grid, Tooltip} from "@material-ui/core"
+import {withStore} from "../../App/Store"
 
-export default class Reservation extends Component {
+class Reservation extends Component {
 
   state = {
     email: "",
@@ -391,3 +392,5 @@ export default class Reservation extends Component {
   }
 }
 
+
+export default withStore(Reservation)

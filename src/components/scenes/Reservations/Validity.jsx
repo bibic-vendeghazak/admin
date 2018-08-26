@@ -21,10 +21,9 @@ export default class Validity extends Component {
     this.setState({loading: true})
     RESERVATIONS_FS
       .doc(this.props.match.params.reservationId)
-      .where("handled", "==", true)
       .get()
       .then(snap => this.setState({
-        isValid: snap.exists,
+        isValid: snap.exists && snap.data().handled,
         loading: false
       }))
       .catch(error => this.setState({error}))
