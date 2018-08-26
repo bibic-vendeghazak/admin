@@ -1,109 +1,91 @@
-import React, {Component, Fragment} from 'react'
-import {
-  Tabs,
-  Tab,
-  List
-} from 'material-ui'
+import React, {Component} from 'react'
 
-import Feedback from './Feedback'
-
-import {TabLabel, PlaceholderText} from '../../shared'
-import {FEEDBACKS_DB} from '../../../utils/firebase'
+import {withStore} from '../../App/Store'
+import {Grid, Typography, Paper} from '@material-ui/core'
+import Stats from './Stats'
+import {FEEDBACKS_FS} from '../../../utils/firebase'
+import FeedbacksTable from './FeedbacksTable'
+import {Tip} from '../../shared'
 
 
-const FeedbackList = ({
-  styleId, feedbacks
-}) => {
-  return (
-    feedbacks.length !== 0 ?
-      <Fragment>
-        <List
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            maxWidth: 540,
-            margin: "0 auto"
-          }}
-        >{feedbacks}</List>
-      </Fragment> :
-      <PlaceholderText>
-        Nincs {styleId==="read" ? "jóváhagyott" : "jóváhagyásra váró"} visszajelzés
-      </PlaceholderText>
-  )
-}
+class Feedbacks extends Component {
 
-export default class Feedbacks extends Component {
   state = {
-    feedbacks: null,
-    accepted: false
+    handledFeedbacks: [],
+    unhandledFeedbacks: [],
+    isLoading: true
   }
 
   componentDidMount() {
-    FEEDBACKS_DB
-      .on("value", snap =>
-        this.setState({feedbacks: snap.val()})
-      )
+    this.getFeedbacks()
   }
 
-  handleChange = () => this.setState(({accepted}) => ({accepted: !accepted}))
+  getFeedbacks = () => {
+    FEEDBACKS_FS
+      // .where("timestamp", ">=", moment().add(-3, "months").toString())
+      .orderBy("accepted", "desc")
+      .orderBy("timestamp", "desc")
+      .limit(100)
+      .onSnapshot(snap => {
+        const unhandledFeedbacks = []
+        const handledFeedbacks = []
+        snap.forEach(reservation => {
+          const feedback = {
+            key: reservation.id,
+            ...reservation.data()
+          }
+          if (feedback.accepted) {
+            handledFeedbacks.push(feedback)
+          } else {
+            unhandledFeedbacks.push(feedback)
+          }
+        })
+        this.setState({
+          isLoading: false,
+          handledFeedbacks,
+          unhandledFeedbacks
+        })
+      }, this.props.sendNotification)
+  }
+
 
   render() {
     const {
-      feedbacks, accepted
+      handledFeedbacks, unhandledFeedbacks, isLoading
     } = this.state
-    const unreadFeedbacks = []
-    const readFeedbacks = []
-    for (const key in feedbacks) {
-      const feedback = feedbacks[key]
-      const feedbackComponent =
-        <Feedback
-          feedback={feedback}
-          feedbackId={key}
-          key={key}
-        />
-      !feedback.handled ?
-        unreadFeedbacks.push(feedbackComponent) :
-        readFeedbacks.push(feedbackComponent)
-    }
 
     return (
-      <Tabs
-        inkBarStyle={{
-          marginTop: -4,
-          height: 4
-        }}
-        onChange={this.handleChange}
-        value={accepted}
-      >
-        <Tab
-          label={
-            <TabLabel
-              count={unreadFeedbacks.length}
-              title="Új"
-            />
-          }
-          value={false}
-        >
-          <FeedbackList
-            feedbacks={unreadFeedbacks}
-            styleId="unread"
+      <Grid container direction="column" spacing={16} style={{padding: 16}}>
+        <Grid item>
+          <Typography style={{margin: 16}} variant="title">Statisztika</Typography>
+          <Stats
+            feedbacks={handledFeedbacks}
+            isLoading={isLoading}
           />
-        </Tab>
-        <Tab
-          label={
-            <TabLabel
-              count={readFeedbacks.length}
-              title="Jóváhagyott"
+        </Grid>
+        <Grid item>
+          <Typography style={{margin: 16}} variant="title">Üzenetek (utolsó 100)</Typography>
+          <Paper style={{paddingTop: 16}}>
+            <Tip>
+              A keresés mezővel kikereshetőek üzenetek, vagy kiszűrhető az összes visszajelzés ami 5-t kapott pl. a kávéra így: &quot;kávé:5&quot; (ugyanígy más értékelés is szűrhető)
+            </Tip>
+            <Tip>
+              A kezeletlen visszajelzések mindig a lista tetején jelennek meg
+            </Tip>
+            <FeedbacksTable
+              showDateFilter={false}
+              {...{
+                unhandledFeedbacks,
+                handledFeedbacks
+              }}
             />
-          }
-          value
-        >
-          <FeedbackList
-            feedbacks={readFeedbacks}
-            styleId="read"
-          />
-        </Tab>
-      </Tabs>
+          </Paper>
+        </Grid>
+      </Grid>
+
     )
   }
 }
+
+
+export default withStore(Feedbacks)

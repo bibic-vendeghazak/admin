@@ -8,10 +8,11 @@ import {
   Table,
   TableBody
 } from "@material-ui/core"
-import {Tip, Loading} from "../../shared"
+import {EmptyTableBody, Tip, Loading} from "../../shared"
 
 import TableHead from '../Reservations/TableHead'
-import FilteredReservations, {EmptyTableBody} from '../Reservations/TableBody'
+import FilteredReservations from '../Reservations/FilteredReservations'
+
 
 export default class DayBig extends Component {
 
