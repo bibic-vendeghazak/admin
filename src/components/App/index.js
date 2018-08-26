@@ -7,7 +7,7 @@ import Login from "./Auth/Login"
 import Rooms from "../scenes/Rooms"
 import Reservations from "../scenes/Reservations"
 import Calendar from "../scenes/Calendar"
-// import Feedbacks from "../scenes/Feedbacks"
+import Feedbacks from "../scenes/Feedbacks"
 
 import {routes, toRoute, colors} from "../../utils"
 import {Tip, Paragraphs, Gallery} from "../shared"
@@ -113,12 +113,10 @@ const App = ({
               component={Calendar}
               path={toRoute(routes.CALENDAR, ":year",":month")}
             />
-            {/* REVIEW: Implement with material v1.x
-              <Route
-                component={Feedbacks}
-                path={routes.FEEDBACKS}
-              />
-            */}
+            <Route
+              component={Feedbacks}
+              path={routes.FEEDBACKS}
+            />
             <Route
               component={Paragraphs}
               path={routes.INTRO}
