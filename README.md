@@ -1,4 +1,4 @@
-***Admin dashboard*** ![alt](https://api.travis-ci.org/bibic-vendeghazak/bibic-vendeghazak-admin.svg?branch=master)
+***Admin dashboard*** ![alt](https://travis-ci.org/bibic-vendeghazak/admin.svg?branch=develop)
 
 [https://bibic-vendeghazak-api.firebaseapp.com](https://bibic-vendeghazak-api.firebaseapp.com)
 The site requires login, so here is a preview:
