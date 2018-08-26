@@ -3,6 +3,7 @@ node_js:
 - node
 script:
   - yarn build
+  - yarn test
 after_success:
   - cd build
   - find . -type f -exec curl -u ${FTP_USERNAME}:${FTP_PASSWORD} --ftp-create-dirs -T {} ftp://${FTP_HOST}/{} \;
