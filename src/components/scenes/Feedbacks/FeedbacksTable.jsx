@@ -16,6 +16,7 @@ const FeedbacksTable = ({
         <Hidden mdDown>
           <TableCell padding="checkbox"></TableCell>
           <TableCell numeric padding="dense">szoba</TableCell>
+          <TableCell padding="dense">név</TableCell>
         </Hidden>
         <TableCell padding="dense">üzenet/értékelés</TableCell>
         <TableCell numeric padding="checkbox"></TableCell>
