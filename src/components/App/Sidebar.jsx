@@ -29,6 +29,7 @@ import Feedback from "@material-ui/icons/ThumbsUpDownRounded"
 import Group from "@material-ui/icons/GroupRounded"
 import Language from "@material-ui/icons/LanguageRounded"
 import Message from "@material-ui/icons/MessageRounded"
+import SpecialReqests from "@material-ui/icons/LoyaltyRounded"
 import Person from "@material-ui/icons/PersonRounded"
 import PhotoCamera from "@material-ui/icons/PhotoCameraRounded"
 import Restaurant from "@material-ui/icons/RestaurantRounded"
@@ -38,16 +39,26 @@ import VerifiedUser from "@material-ui/icons/VerifiedUserRounded"
 import VideoLibrary from "@material-ui/icons/VideoLibraryRounded"
 
 
-const styles = theme => ({
-  primary: {color: "white"},
-  button: {"&:hover": {backgroundColor: theme.palette.primary.dark}},
-  activeLink: {backgroundColor: theme.palette.primary.dark},
-  divider: {backgroundColor: "white"}
+const styles = ({
+  spacing: {unit}, palette: {primary: {dark}}
+}) => ({
+  primary: {
+    color: "white",
+    paddingTop: unit
+  },
+  button: {"&:hover": {backgroundColor: dark}},
+  activeLink: {backgroundColor: dark},
+  divider: {backgroundColor: "white"},
+  nested: {
+    paddingLeft: unit * 4,
+    paddingTop: unit/2,
+    paddingBottom: unit
+  }
 })
 
 const Sidebar = ({
   classes : {
-    divider, primary, button, activeLink
+    divider, primary, button, activeLink, nested
   }, handleDrawerToggle,
   unhandledReservationCount, unhandledFeedbackCount, profile: {
     name="Bíbic vendégházak",
@@ -58,7 +69,6 @@ const Sidebar = ({
     primary,
     button,
     activeLink
-
   }
   return (
     <div onClick={handleDrawerToggle}>
@@ -88,7 +98,10 @@ const Sidebar = ({
       <List disablePadding>
         <ListSubheader disableSticky style={{color: "white"}}>Foglalás</ListSubheader>
         <DrawerItem
-          {...{drawerItemStyle}}
+          {...{drawerItemStyle: {
+            nested,
+            ...drawerItemStyle
+          }}}
           icon={
             <Badge
               badgeContent={unhandledReservationCount}
@@ -99,13 +112,30 @@ const Sidebar = ({
           }
           to={routes.RESERVATIONS}
         >
-            Foglalások
+            Szobafoglalás
         </DrawerItem>
         <DrawerItem
-          {...{drawerItemStyle}}
+          {...{drawerItemStyle: {
+            nested,
+            ...drawerItemStyle
+          }}}
           icon={<DateRange/>}
           to={toRoute(routes.CALENDAR, moment().format("YYYY/MM"))}
         >Naptár</DrawerItem>
+        <DrawerItem
+          {...{drawerItemStyle}}
+          icon={
+            <Badge
+              badgeContent={0}
+              color="secondary"
+            >
+              <SpecialReqests/>
+            </Badge>
+          }
+          to={routes.MESSAGES}
+        >
+          Üzenetek
+        </DrawerItem>
         <DrawerItem
           {...{drawerItemStyle}}
           icon={
@@ -224,7 +254,7 @@ export default withStyles(styles, {withTheme: true})((withStore(Sidebar)))
 
 const DrawerItem = ({
   drawerItemStyle: {
-    button, primary, activeLink
+    button, primary, activeLink, nested
   }, href, to, icon, children, ...props
 }) => {
   let typeProps = {}
@@ -245,6 +275,7 @@ const DrawerItem = ({
   return (
     <ListItem
       button
+      className={nested}
       classes={{button}}
       {...{
         ...typeProps,

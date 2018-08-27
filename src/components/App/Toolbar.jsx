@@ -17,7 +17,7 @@ export const Title = () =>
       <Route component={() => "Szobák"} path={routes.ROOMS}/>
       <Route component={() => "Bemutatkozás"} path={routes.INTRO}/>
       <Route component={() => "Tanúsítványok"} path={routes.CERTIFICATES}/>
-      <Route component={() => "Akciós ajánlatok"} path={routes.SPECIAL_OFFER}/>
+      <Route component={() => "Üzenetek"} path={routes.MESSAGES}/>
       <Route
         component={
           ({match: {params: {
