@@ -48,7 +48,6 @@ const Reservations = ({rooms}) =>
           error="A foglalást nem tudtuk frissíteni. Kérjük ellenőrizze az adatokat."
           isFullReservation
           promptTitle="Menti a változtatásokat?"
-          sendNotification={this.props.sendNotification}
           shouldPrompt
           submitLabel="Mentés"
           success="Foglalás sikeresen frissítve!"
@@ -67,7 +66,6 @@ const Reservations = ({rooms}) =>
           }}
           error="Sikertelen foglalás! Kérjük ellenőrizze az adatokat."
           promptTitle="Biztosan felveszi ezt a foglalást?"
-          sendNotification={this.props.sendNotification}
           shouldPrompt
           submitLabel="Felvétel"
           success="Foglalás sikeresen felvéve!"

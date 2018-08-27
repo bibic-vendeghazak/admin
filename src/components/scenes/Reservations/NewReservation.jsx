@@ -15,6 +15,7 @@ import Booking from "material-ui/svg-icons/action/bookmark-border"
 import {Modal} from "../../shared"
 import {isValidReservation} from "../../../utils"
 import {RESERVATIONS} from "../../../utils/routes"
+import {withStore} from "../../App/Store"
 
 
 const NewReservation = () => (
@@ -243,4 +244,4 @@ export const NewReservationFAB = ({openNewReservation}) => (
 )
 
 
-export default NewReservation
+export default withStore(NewReservation)
