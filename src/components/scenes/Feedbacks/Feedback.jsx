@@ -38,7 +38,7 @@ class Feedback extends Component {
   render() {
     const {showRatings} = this.state
     const {
-      roomId, ratings, accepted, message, timestamp
+      roomId, ratings, accepted, message, timestamp, name
     } = this.props
     return (
       <TableRow
@@ -58,6 +58,7 @@ class Feedback extends Component {
               {roomId}
             </Background>
           </TableCell>
+          <TableCell padding="dense">{name || "-"}</TableCell>
         </Hidden>
         <TableCell padding="dense">
           {showRatings ?
