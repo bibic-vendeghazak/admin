@@ -8,7 +8,7 @@ const routes = {
   FACEBOOK: "https://www.facebook.com/B%C3%ADbic-Vendegh%C3%A1zak-%C3%89s-S%C3%B6r%C3%B6z%C5%91-200199203718517",
   LOGIN: "/bejelentkezes",
   WELCOME: "/kezdolap",
-  MESSAGES: "/uzenetek",
+  SPECIAL_REQUESTS: "/kulon-ajanlat",
   ROOMS: "/szobak",
   INTRO: "/bemutatkozas",
   CERTIFICATES: "/tanusitvanyok",
