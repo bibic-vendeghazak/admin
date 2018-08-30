@@ -12,6 +12,7 @@ const SpecialRequestsTable = ({
       <TableRow>
         <TableCell numeric padding="checkbox"></TableCell>
         <TableCell numeric>név</TableCell>
+        <TableCell numeric>e-mail</TableCell>
         <TableCell numeric>telefon</TableCell>
         <TableCell numeric>rendezvény célja</TableCell>
         <TableCell numeric>időpont</TableCell>
