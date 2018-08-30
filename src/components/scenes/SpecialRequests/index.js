@@ -1,7 +1,10 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
+import {Route} from "react-router-dom"
 import {Paper} from '@material-ui/core'
 import SpecialRequestsTable from './SpecialRequestsTable'
 import {SPECIAL_REQUESTS_FS} from '../../../utils/firebase'
+import {toRoute, routes} from '../../../utils'
+import SpecialRequest from './SpecialRequest'
 
 
 class SpecialRequests extends Component {
@@ -39,16 +42,29 @@ class SpecialRequests extends Component {
       specialRequests, isFetched
     } = this.state
     return (
-      <Paper>
-        <SpecialRequestsTable
-          {...{
-            specialRequests,
-            isFetched
-          }}
-          showDateFilter={false}
-          showRoomFilter={false}
+      <Fragment>
+        <Route
+          exact
+          path={routes.SPECIAL_REQUESTS}
+          render={() =>
+            <Paper>
+              <SpecialRequestsTable
+                {...{
+                  specialRequests,
+                  isFetched
+                }}
+                showDateFilter={false}
+                showRoomFilter={false}
+              />
+            </Paper>
+          }
         />
-      </Paper>
+        <Route
+          component={SpecialRequest}
+          path={toRoute(routes.SPECIAL_REQUESTS, ":specialRequestId")}
+        />
+
+      </Fragment>
     )
   }
 }
