@@ -6,7 +6,7 @@ script:
   - yarn test
 deploy:
   provider: script
-  script: bash cd build;find . -type f -exec curl -u ${FTP_USERNAME}:${FTP_PASSWORD} --ftp-create-dirs -T {} ftp://${FTP_HOST}/{} \;
+  script: bash scripts/deploy.sh
   on:
     branch: develop
   
