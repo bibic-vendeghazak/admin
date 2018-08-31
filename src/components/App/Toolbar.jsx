@@ -25,7 +25,7 @@ export const Title = () =>
           ({match: {params: {p1}}}) =>
             p1 ? "Külön ajánlat" : "Külön ajánlatok"
         }
-        path={toRoute(routes.SPECIAL_REQUESTS, ":p1")}
+        path={toRoute(routes.SPECIAL_REQUESTS, ":p1?")}
       />
       <Route
         component={
