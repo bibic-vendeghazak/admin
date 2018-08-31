@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import moment from "moment"
+import {Link} from "react-router-dom"
 import {Card, CardContent, Grid, Typography, Tooltip, ListItem, ListItemText, ListItemIcon, CardActions, Button} from '@material-ui/core'
 import {SPECIAL_REQUESTS_FS, TIMESTAMP} from '../../../utils/firebase'
 import {withStore} from "../../App/Store"
@@ -122,8 +123,12 @@ class SpecialRequest extends Component {
             <Item
               icon={<From/>}
               primary={
-                <Tooltip title={moment(from.toDate()).format("LLL")}>
-                  <span>{moment(from.toDate()).format("YYYY MMM. DD")}</span>
+                <Tooltip title="Ugrás a naptárra">
+                  <Link
+                    to={toRoute(routes.CALENDAR, moment(from.toDate()).format("YYYY/MM/DD"))}
+                  >
+                    {moment(from.toDate()).format("YYYY. MMMM DD, dddd")}
+                  </Link>
                 </Tooltip>
               }
               secondary="időpont"
