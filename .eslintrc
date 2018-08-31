@@ -10,7 +10,8 @@
     "require-jsdoc": "error",
     "max-len": ["error", {
       "ignoreTemplateLiterals": true,
-      "ignoreStrings": true
+      "ignoreStrings": true,
+      "ignorePattern": true
       }],
     "block-spacing":["warn", "never"],
     "semi": [2, "never"],
