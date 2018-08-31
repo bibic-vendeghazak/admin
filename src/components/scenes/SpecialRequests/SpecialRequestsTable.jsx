@@ -18,7 +18,7 @@ const SpecialRequestsTable = ({
         <TableCell numeric>időpont</TableCell>
         <TableCell numeric>igényelt ellátás</TableCell>
         <TableCell numeric>fő</TableCell>
-        <TableCell numeric>részletek</TableCell>
+        <TableCell></TableCell>
       </TableRow>
     </TableHead>
     <TableBody>
