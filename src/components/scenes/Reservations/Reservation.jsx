@@ -23,7 +23,7 @@ import {Tip, Background, Item} from '../../shared'
 
 import {RESERVATIONS_FS, TIMESTAMP} from "../../../utils/firebase"
 import {routes, colors, toRoute} from "../../../utils"
-import {Card, Button, CardActions, Hidden, Divider, CardContent, ListItem, Typography, ListItemIcon, ListItemText, Grid, Tooltip} from "@material-ui/core"
+import {Card, Button, CardActions, Hidden, Divider, CardContent, Typography, Grid, Tooltip} from "@material-ui/core"
 import {withStore} from "../../App/Store"
 
 class Reservation extends Component {
@@ -83,7 +83,8 @@ class Reservation extends Component {
 
   render() {
     const {
-      email, name, tel, message, handled, from, to, roomId, adults, children, price, address, timestamp, lastHandledBy, id, activeService
+      email, name, tel, message, handled, from, to, roomId, adults, children,
+      price, address, timestamp, lastHandledBy, id, activeService
     } = this.state
     const {reservationId} = this.props.match.params
     return (
@@ -185,7 +186,9 @@ class Reservation extends Component {
                         {children.length && children.map(({
                           name, count
                         }) =>
-                          <span key={name}>{name} éves korig: {count} fő<br/></span>
+                          <span key={name}>
+                            {name} éves korig: {count} fő<br/>
+                          </span>
                         )}
                       </Fragment>
                     }
@@ -289,7 +292,9 @@ class Reservation extends Component {
           </CardActions>
         </Card>
         <Tip>
-        Amennyiben a vendég felmutatja az e-mailben kapott QR-kódot, a beolvasás után kapott linkre kattintva az admin oldal megmondja, hogy a foglalás szerepel-e az adatbázisban.
+          Amennyiben a vendég felmutatja az e-mailben kapott QR-kódot,
+          a beolvasás után kapott linkre kattintva az admin oldal megmondja,
+          hogy a foglalás szerepel-e az adatbázisban.
         </Tip>
       </div>
     )
