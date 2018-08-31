@@ -54,9 +54,24 @@ const Day = ({
   reservations = Object.values(reservations)
   return (
     <li className={`day-tile ${isPlaceholder ? "placeholder" : ""}`}>
-      <p className={moment().isSame(date, "day") ? "today" : ""}>
-        {date.clone().format("D")}
-      </p>
+      <span
+        style={{
+          fontSize: 8,
+          position: "absolute",
+          right: 0,
+          bottom: 0,
+          margin: 4,
+          opacity: .5
+        }}
+      >{date.clone().format("dddd")}</span>
+      {moment().isSame(date, "day") ?
+        <Tooltip title="Ma">
+          <p className="today">
+            {date.clone().format("D")}
+          </p>
+        </Tooltip> :
+        <p>{date.clone().format("D")}</p>
+      }
       {reservations.length ?
         <Tooltip title={`Foglalva: ${reservations.map(({roomId}) => roomId).join(", ")}`}>
           <Link to={toRoute(routes.CALENDAR, date.clone().format("YYYY/MM/DD"))}>
