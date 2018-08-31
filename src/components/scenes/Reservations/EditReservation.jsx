@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from "react"
 import moment from "moment"
 
-import {RESERVATIONS_FS, TIMESTAMP, AUTH, getAdminName} from "../../../utils/firebase"
+import {RESERVATIONS_FS, TIMESTAMP} from "../../../utils/firebase"
 
 import {Switch, Grid, TextField, FormControlLabel, InputAdornment, Select, MenuItem, FormControl, InputLabel, Input, Tooltip} from '@material-ui/core'
 
@@ -45,9 +45,6 @@ class EditReservation extends Component {
   }
 
   componentDidMount() {
-    getAdminName(AUTH.currentUser.uid)
-      .then(admin => this.setState({admin: admin.val()}))
-
 
     RESERVATIONS_FS.doc(this.props.match.params.reservationId || "newReservation")
       .get()
@@ -104,18 +101,16 @@ class EditReservation extends Component {
   }
 
   handleSubmit = () => {
+    const {reservation} = this.state
     const {
-      reservation, admin
-    } = this.state
-    const {
-      rooms, match: {params: {reservationId}}
+      rooms, match: {params: {reservationId}}, profile
     } = this.props
 
     const newReservation = {
       ...reservation,
       timestamp: TIMESTAMP,
       id: `${moment(reservation.from).format("YYYYMMDD")}-sz${reservation.roomId}`,
-      lastHandledBy: admin
+      lastHandledBy: profile.name
     }
 
     const reservationStatus = isValidReservation(newReservation, rooms.length)

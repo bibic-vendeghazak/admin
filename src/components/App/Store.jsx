@@ -5,7 +5,6 @@ import {
   AUTH,
   ADMINS,
   ROOMS_DB,
-  SERVER_MESSAGE_DB,
   ROOM_SERVICES_DB,
   RESERVATIONS_FS,
   FEEDBACKS_FS,
@@ -15,12 +14,6 @@ import {
 import {routes} from "../../utils"
 
 const Store = React.createContext()
-
-
-/*
- * REVIEW: Using withStore may cause flickering?
- */
-
 
 /**
  * Makes the Store values available
@@ -91,12 +84,6 @@ export class Database extends Component {
         ADMINS.child(user.uid).once("value", snap => {
           this.setState({profile: snap.val()})
         })
-        SERVER_MESSAGE_DB.on("value", snap => {
-          const {
-            message, type
-          } = snap.val()
-          message !== "" && this.handleNotification(message, type, "server")
-        })
 
 
         ROOMS_DB.on("value", snap => {
@@ -104,7 +91,7 @@ export class Database extends Component {
           RESERVATION_DATES_DB
             .child(moment().format("YYYY/MM/DD"))
             .once("value", snap => {
-              snap.forEach(reservation => {
+              snap.forEach(() => {
                 if (snap.exists) {
                   Object.keys(snap.val()).map(key => key.substring(1))
                     .forEach(roomId => {
