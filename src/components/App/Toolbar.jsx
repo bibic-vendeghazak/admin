@@ -4,8 +4,9 @@ import moment from 'moment'
 
 import {routes, toRoute} from "../../utils"
 
-import {Typography, IconButton} from '@material-ui/core'
+import {Typography, IconButton, Tooltip} from '@material-ui/core'
 import Close from "@material-ui/icons/CloseRounded"
+import Today from "@material-ui/icons/TodayRounded"
 
 
 export const Title = () =>
@@ -34,45 +35,56 @@ export const Title = () =>
         path={toRoute(routes.CALENDAR, ":year", ":month", ":day?")}
       />
       <Route component={({match: {params: {p1}}}) => p1 ? "Foglalás" : "Foglalások"} path={toRoute(routes.RESERVATIONS, ":p1?")}/>
-      <Route component={() => "Visszajelzések"} path={routes.FEEDBACKS}/>
-      <Route component={() => "Ételek"} path={routes.FOODS}/>
-      <Route component={() => "Rendezvények"} path={routes.EVENTS}/>
-      <Route component={() => "Szolgáltatásaink"} path={routes.SERVICES}/>
-      <Route component={() => "Statisztikák"} path={routes.STATS}/>
+      <Route component={() => "Statisztika / Üzenetek"} path={routes.FEEDBACKS}/>
+      <Route component={() => "Ételek galéria"} path={routes.FOODS}/>
+      <Route component={() => "Rendezvények galéria"} path={routes.EVENTS}/>
+      <Route component={() => "Szolgáltatások galéria"} path={routes.SERVICES}/>
       <Route component={() => "Admin kezelőfelület"}/>
     </Switch>
   </Typography>
 
+
+const pathsWithClose = [routes.ROOMS, routes.RESERVATIONS, routes.SPECIAL_REQUESTS]
+
 export const RightAction = () =>
   <Switch>
-    <Route component={() => ""} path={routes.ROOMS}/>
-    <Route component={() => ""} path={routes.INTRO}/>
-    <Route component={() => ""} path={routes.CERTIFICATES}/>
+    {pathsWithClose.map(path =>
+      <Route
+        component={() =>
+          <CloseButton
+            to={path}
+          />}
+        key={path}
+        path={toRoute(path, ":parameter")}
+      />
+    )}
     <Route
-      component={() =>
-        <CloseButton
-          to={routes.SPECIAL_REQUESTS}
-        />}
-      path={toRoute(routes.SPECIAL_REQUESTS, ":specialRequestId")}
-    />
-    <Route
-      component={() => ""}
+      component={({match: {params: {
+        year, month, day
+      }}}) =>
+        day ?
+          <CloseButton to={toRoute(routes.CALENDAR, year, month)}/> :
+          <Tooltip title="Ugrás ide: ma">
+            <IconButton
+              component={Link}
+              to={toRoute(routes.CALENDAR, moment().format("YYYY/MM"))}
+            >
+              <Today style={{color: "white"}}/>
+            </IconButton>
+          </Tooltip>
+      }
       path={toRoute(routes.CALENDAR, ":year", ":month", ":day?")}
     />
-    <Route component={() => ""} path={routes.RESERVATIONS}/>
-    <Route component={() => ""} path={routes.FEEDBACKS}/>
-    <Route component={() => ""} path={routes.FOODS}/>
-    <Route component={() => ""} path={routes.EVENTS}/>
-    <Route component={() => ""} path={routes.SERVICES}/>
-    <Route component={() => ""} path={routes.STATS}/>
     <Route component={() => ""}/>
   </Switch>
 
 
 const CloseButton = ({to}) =>
-  <IconButton
-    component={Link}
-    {...{to}}
-  >
-    <Close style={{color: "white"}}/>
-  </IconButton>
+  <Tooltip title="Bezárás">
+    <IconButton
+      component={Link}
+      {...{to}}
+    >
+      <Close style={{color: "white"}}/>
+    </IconButton>
+  </Tooltip>
