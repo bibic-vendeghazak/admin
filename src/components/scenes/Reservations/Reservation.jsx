@@ -19,7 +19,7 @@ import Child from "@material-ui/icons/ChildCareRounded"
 import Money from "@material-ui/icons/AttachMoneyRounded"
 import Service from "@material-ui/icons/RoomServiceRounded"
 
-import {Tip, Background} from '../../shared'
+import {Tip, Background, Item} from '../../shared'
 
 import {RESERVATIONS_FS, TIMESTAMP} from "../../../utils/firebase"
 import {routes, colors, toRoute} from "../../../utils"
@@ -124,206 +124,110 @@ class Reservation extends Component {
                   container
                   spacing={8}
                 >
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Person/></ListItemIcon>
-                      <ListItemText
-                        primary={name}
-                        secondary="név"
-                      />
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Email/></ListItemIcon>
-                      <ListItemText
-                        primary={<a href={`mailto:${email}?subject=Foglalás #${id}&body=Tisztelt ${name}!`}>{email}</a>}
-                        secondary="e-mail"
-                      />
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Tel/></ListItemIcon>
-                      <ListItemText
-                        primary={<a href={`tel:${tel}`}>{tel}</a>}
-                        secondary="telefonszám"
-                      />
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Address/></ListItemIcon>
-                      <ListItemText
-                        primary={address}
-                        secondary="lakcím"
-                      />
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={6}
-                    xs={12}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Message/></ListItemIcon>
-                      <ListItemText
-                        primary={message}
-                        secondary="megjegyzés"
-                      />
-                    </ListItem>
-                  </Grid>
+                  <Item
+                    icon={<Person/>}
+                    primary={name}
+                    secondary="név"
+                  />
+                  <Item
+                    icon={<Email/>}
+                    primary={<a href={`mailto:${email}?subject=Foglalás #${id}&body=Tisztelt ${name}!`}>{email}</a>}
+                    secondary="e-mail"
+                  />
+                  <Item
+                    icon={<Tel/>}
+                    primary={<a href={`tel:${tel}`}>{tel}</a>}
+                    secondary="telefonszám"
+                  />
+                  <Item
+                    icon={<Address/>}
+                    primary={address}
+                    secondary="lakcím"
+                  />
+                  <Item
+                    icon={<Message/>}
+                    primary={message}
+                    secondary="megjegyzés"
+                  />
                 </Grid>
                 <Typography>Egyéb részletek</Typography>
                 <Grid container>
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                  >
-                    <ListItem>
-                      <ListItemIcon><From/></ListItemIcon>
-                      <Tooltip title={moment(from.toDate()).format("LLL")}>
-                        <ListItemText
-                          primary={moment(from.toDate()).format("MMM. D.")}
-                          secondary="érkezés"
-                        />
-                      </Tooltip>
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                  >
-                    <ListItem>
-                      <ListItemIcon><To/></ListItemIcon>
-                      <Tooltip title={moment(to.toDate()).format("LLL")}>
-                        <ListItemText
-                          primary={moment(to.toDate()).format("MMM. D.")}
-                          secondary="távozás"
-                        />
-                      </Tooltip>
-                    </ListItem>
-                  </Grid>
-
-                  <Grid
-                    item
-                    md={4}
-                    xs={6}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Adult/></ListItemIcon>
-                      <ListItemText
-                        primary={`${adults} fő`}
-                        secondary="felnőtt"
-                      />
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={4}
-                    xs={6}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Child/></ListItemIcon>
-                      <Tooltip title={
-                        <Fragment>
-                          {children.length && children.map(({
-                            name, count
-                          }) =>
-                            <span key={name}>{name} éves korig: {count} fő<br/></span>
-                          )}
-                        </Fragment>
+                  <Tooltip title="Ugrás a naptárra">
+                    <Item
+                      icon={<From/>}
+                      primary={
+                        <Link to={toRoute(routes.CALENDAR, moment(from.toDate()).format("YYYY/MM/DD"))}>
+                          {moment(from.toDate()).format("MMM. D.")}
+                        </Link>
                       }
-                      >
-                        <ListItemText
-                          primary={`${children.reduce((acc, {count}) => acc+count, 0)} fő`}
-                          secondary="gyerek"
-                        />
-                      </Tooltip>
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
+                      secondary="érkezés"
+                    />
+                  </Tooltip>
+                  <Tooltip title="Ugrás a naptárra">
+                    <Item
+                      icon={<To/>}
+                      primary={
+                        <Link to={toRoute(routes.CALENDAR, moment(to.toDate()).format("YYYY/MM/DD"))}>
+                          {moment(to.toDate()).format("MMM. D.")}
+                        </Link>
+                      }
+                      secondary="távozás"
+                    />
+                  </Tooltip>
+                  <Item
+                    icon={<Adult/>}
+                    primary={`${adults} fő`}
+                    secondary="felnőtt"
+                  />
+                  <Tooltip
+                    title={
+                      <Fragment>
+                        {children.length && children.map(({
+                          name, count
+                        }) =>
+                          <span key={name}>{name} éves korig: {count} fő<br/></span>
+                        )}
+                      </Fragment>
+                    }
                   >
-                    <ListItem>
-                      <ListItemIcon><Home/></ListItemIcon>
-                      <Tooltip title="Ugrás a szobához">
-                        <ListItemText
-                          primary={
-                            <Link
-                              style={{textDecoration:"none"}}
-                              to={toRoute(routes.ROOMS, roomId)}
-                            >
-                              <Background color={colors[`room${roomId}`]}>
-                                {roomId}
-                              </Background>
-                            </Link>
-                          }
-                          secondary="szoba"
-                        />
-                      </Tooltip>
-                    </ListItem>
-                  </Grid>
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Service/></ListItemIcon>
-                      <ListItemText
-                        primary={activeService === "breakfast" ? "reggeli" : "félpanzió" }
-                        secondary="ellátás"
-                      />
-                    </ListItem>
-                  </Grid>
-
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
-                  >
-                    <ListItem>
-                      <ListItemIcon><Money/></ListItemIcon>
-                      <ListItemText
-                        primary={price !== 1 ? (price)
-                          .toLocaleString("hu-HU", {
-                            style: "currency",
-                            currency: "HUF",
-                            maximumFractionDigits: 0,
-                            minimumFractionDigits: 0
-                          }) : "Nincs megadva"}
-                        secondary="fizetni"
-                      />
-                    </ListItem>
-                  </Grid>
+                    <Item
+                      icon={<Child/>}
+                      primary={`${children.reduce((acc, {count}) => acc+count, 0)} fő`}
+                      secondary="gyerek"
+                    />
+                  </Tooltip>
+                  <Tooltip title="Ugrás a szobához">
+                    <Item
+                      icon={<Home/>}
+                      primary={
+                        <Link
+                          style={{textDecoration:"none"}}
+                          to={toRoute(routes.ROOMS, roomId)}
+                        >
+                          <Background color={colors[`room${roomId}`]}>
+                            {roomId}
+                          </Background>
+                        </Link>
+                      }
+                      secondary="szoba"
+                    />
+                  </Tooltip>
+                  <Item
+                    icon={<Service/>}
+                    primary={activeService === "breakfast" ? "reggeli" : "félpanzió" }
+                    secondary="ellátás"
+                  />
+                  <Item
+                    icon={<Money/>}
+                    primary={price !== 1 ? (price)
+                      .toLocaleString("hu-HU", {
+                        style: "currency",
+                        currency: "HUF",
+                        maximumFractionDigits: 0,
+                        minimumFractionDigits: 0
+                      }) : "Nincs megadva"}
+                    secondary="fizetni"
+                  />
                 </Grid>
               </Grid>
               <Grid

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import moment from "moment"
 import {Link} from "react-router-dom"
-import {Card, CardContent, Grid, Typography, Tooltip, ListItem, ListItemText, ListItemIcon, CardActions, Button} from '@material-ui/core'
+import {Card, CardContent, Grid, Typography, Tooltip, CardActions, Button} from '@material-ui/core'
 import {SPECIAL_REQUESTS_FS, TIMESTAMP} from '../../../utils/firebase'
 import {withStore} from "../../App/Store"
 
@@ -14,6 +14,8 @@ import Person from "@material-ui/icons/PersonRounded"
 import Service from "@material-ui/icons/RoomServiceRounded"
 import Subject from "@material-ui/icons/SubjectRounded"
 import {toRoute, routes} from '../../../utils'
+
+import {Item} from "../../shared"
 
 class SpecialRequest extends Component {
   state = {
@@ -164,22 +166,6 @@ class SpecialRequest extends Component {
     )
   }
 }
-
-
-const Item = ({
-  icon, primary, secondary, ...props
-}) =>
-  <Grid item md={4} sm={6} {...props}>
-    <ListItem>
-      <ListItemIcon>
-        {icon}
-      </ListItemIcon>
-      <ListItemText
-        primary={primary}
-        secondary={secondary}
-      />
-    </ListItem>
-  </Grid>
 
 
 export default withStore(SpecialRequest)
