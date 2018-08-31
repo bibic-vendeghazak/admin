@@ -29,12 +29,7 @@ export const ROOMS_DB = DB.ref("rooms")
 export const FOODS_DB = DB.ref("foods")
 export const ROOM_SERVICES_DB = DB.ref("roomServices")
 export const SERVICES_DB = DB.ref("services")
-export const SERVER_MESSAGE_DB = DB.ref("serverMessage")
 export const RESERVATION_DATES_DB = DB.ref("reservationDates")
 export const PARAGRAPHS_DB = DB.ref("paragraphs")
 
 export const TIMESTAMP = firebase.firestore.FieldValue.serverTimestamp()
-
-export const getAdminName = uid => ADMINS
-  .child(`${uid}/name`)
-  .once("value")

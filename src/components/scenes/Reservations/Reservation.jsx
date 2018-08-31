@@ -21,7 +21,7 @@ import Service from "@material-ui/icons/RoomServiceRounded"
 
 import {Tip, Background} from '../../shared'
 
-import {RESERVATIONS_FS, AUTH, getAdminName, TIMESTAMP} from "../../../utils/firebase"
+import {RESERVATIONS_FS, TIMESTAMP} from "../../../utils/firebase"
 import {routes, colors, toRoute} from "../../../utils"
 import {Card, Button, CardActions, Hidden, Divider, CardContent, ListItem, Typography, ListItemIcon, ListItemText, Grid, Tooltip} from "@material-ui/core"
 import {withStore} from "../../App/Store"
@@ -49,25 +49,25 @@ class Reservation extends Component {
     RESERVATIONS_FS
       .doc(this.props.match.params.reservationId)
       .onSnapshot(snap => this.setState(snap.data()))
-
-
-    getAdminName(AUTH.currentUser.uid).then(admin => this.setState({admin: admin.val()}))
-
   }
 
 
-  handleAccept = () =>
-    this.props.openDialog(
+  handleAccept = () => {
+    const {
+      openDialog, profile, history, match
+    } = this.props
+    openDialog(
       {title: "Biztos jóváhagyja ezt a foglalást?"},
-      () => RESERVATIONS_FS.doc(this.props.match.params.reservationId)
+      () => RESERVATIONS_FS.doc(match.params.reservationId)
         .update({
           handled: true,
-          lastHandledBy: this.state.admin,
+          lastHandledBy: profile.name,
           timestamp: TIMESTAMP
         }),
       "Foglalás jóváhagyva. A foglaló értesítve lett.",
-      () => this.props.history.push(routes.RESERVATIONS)
+      () => history.push(routes.RESERVATIONS)
     )
+  }
 
   handleDelete = () =>
     this.props.openDialog(
