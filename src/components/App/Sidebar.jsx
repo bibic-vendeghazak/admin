@@ -134,7 +134,7 @@ const Sidebar = ({
           }
           to={routes.SPECIAL_REQUESTS}
         >
-          Külön ajánlatok
+          Külön ajánlat
         </DrawerItem>
         <DrawerItem
           {...{drawerItemStyle}}
