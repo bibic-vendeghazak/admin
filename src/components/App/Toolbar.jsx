@@ -1,4 +1,4 @@
-import React from "react"
+import React, {Fragment} from "react"
 import {Route, Link, Switch} from "react-router-dom"
 import moment from 'moment'
 
@@ -7,6 +7,8 @@ import {routes, toRoute} from "../../utils"
 import {Typography, IconButton, Tooltip} from '@material-ui/core'
 import Close from "@material-ui/icons/CloseRounded"
 import Today from "@material-ui/icons/TodayRounded"
+import Next from "@material-ui/icons/NavigateNext"
+import Before from "@material-ui/icons/NavigateBeforeRounded"
 
 
 export const Title = () =>
@@ -61,17 +63,45 @@ export const RightAction = () =>
     <Route
       component={({match: {params: {
         year, month, day
-      }}}) =>
-        day ?
-          <CloseButton to={toRoute(routes.CALENDAR, year, month)}/> :
-          <Tooltip title="Ugrás ide: ma">
-            <IconButton
-              component={Link}
-              to={toRoute(routes.CALENDAR, moment().format("YYYY/MM"))}
-            >
-              <Today style={{color: "white"}}/>
-            </IconButton>
-          </Tooltip>
+      }}}) => {
+        const date = moment(new Date([year, month, day].join("/")))
+        return (
+          day ?
+            <CloseButton to={toRoute(routes.CALENDAR, year, month)}/> :
+            <Fragment>
+              <Tooltip title="Előző hónap">
+                <IconButton
+                  component={Link}
+                  to={toRoute(routes.CALENDAR, date.clone().add(-1, "month").format("YYYY/MM"))}
+                >
+                  <Before style={{color: "white"}}/>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Ugrás ide: ma">
+                <IconButton
+                  component={Link}
+                  to={toRoute(routes.CALENDAR, moment().format("YYYY/MM"))}
+                >
+                  <Today style={{
+                    color: "white",
+                    margin: "0 32px"
+                  }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Következő hónap">
+                <IconButton
+                  component={Link}
+                  to={toRoute(routes.CALENDAR, date.clone().add(1, "month").format("YYYY/MM"))}
+                >
+                  <Next style={{color: "white"}}/>
+                </IconButton>
+              </Tooltip>
+
+            </Fragment>
+
+        )
+      }
       }
       path={toRoute(routes.CALENDAR, ":year", ":month", ":day?")}
     />
@@ -88,3 +118,4 @@ const CloseButton = ({to}) =>
       <Close style={{color: "white"}}/>
     </IconButton>
   </Tooltip>
+

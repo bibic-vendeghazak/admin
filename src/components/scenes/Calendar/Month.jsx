@@ -6,8 +6,6 @@ import {withStyles} from '@material-ui/core'
 import {routes, colors, toRoute} from '../../../utils'
 
 import Days from './Days'
-import MonthHeader from './MonthHeader'
-import MonthControls from './MonthControls'
 // import MonthFooter from './MonthFooter'
 
 class Month extends Component {
@@ -62,7 +60,6 @@ class Month extends Component {
 
     return (
       <div className={classes.monthWrapper}>
-        <MonthHeader classes={classes.monthHeader}/>
 
         <ul className={classes.monthBody}>
 
@@ -95,20 +92,7 @@ class Month extends Component {
             }}
           />
 
-          {/*
-            <PlaceholderDays
-              to={42 - currentMonthDays - extraDaysBefore}
-            />
-          */}
-
         </ul>
-
-        <MonthControls {...{
-          previousMonth,
-          nextMonth
-        }}
-        />
-        {/* <MonthFooter classes={classes.monthFooter} {...{currentDate}}/> */}
 
       </div>
     )
@@ -121,29 +105,6 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column"
   },
-  monthHeader: {
-    margin: 0,
-    padding: 0,
-    display: "grid",
-    gridTemplateColumns: "repeat(7, 1fr)",
-    color: "#fff",
-    listStyleType: "none",
-    textTransform: "capitalize",
-    fontFamily: "sans-serif",
-    fontWeight: "bold",
-    "& li" : {
-      display: "grid",
-      justifyContent: "center",
-      height: 24,
-      alignItems: "center",
-      padding: "16px 0",
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      backgroundColor: theme.palette.primary.main
-    },
-    "& .weekend-tile" : {backgroundColor: theme.palette.secondary.main}
-  },
   monthBody: {
     flex: 1,
     fontFamily: "sans-serif",
@@ -155,7 +116,7 @@ const styles = theme => ({
     listStyleType: "none",
     fontWeight: "bold",
     "& .day-tile": {
-      backgroundColor: "#d4d4d4",
+      // backgroundColor: "#d4d4d4",
       display: "flex",
       position: "relative",
       borderBottom: '1px solid #333',
