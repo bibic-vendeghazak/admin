@@ -9,7 +9,8 @@ import {
   RESERVATIONS_FS,
   FEEDBACKS_FS,
   GALLERIES_DB,
-  RESERVATION_DATES_DB
+  RESERVATION_DATES_DB,
+  SPECIAL_REQUESTS_FS
 } from "../../utils/firebase"
 import {routes} from "../../utils"
 
@@ -63,7 +64,8 @@ export class Database extends Component {
     rooms: [],
     roomPictures: [],
     unhandledReservationCount: 0,
-    unhandledFeedbackCount: 0
+    unhandledFeedbackCount: 0,
+    unhandledSpecialRequestCount: 0
   }
 
 
@@ -75,12 +77,15 @@ export class Database extends Component {
           message: "Sikeres bejelentkezés."
         })
         this.setState({isLoggedIn: true})
-        RESERVATIONS_FS.where("handled", "==", false).onSnapshot(snap => {
+        RESERVATIONS_FS.where("handled", "==", false).onSnapshot(snap =>
           this.setState({unhandledReservationCount: snap.size})
-        })
-        FEEDBACKS_FS.where("accepted", "==", false).onSnapshot(snap => {
+        )
+        FEEDBACKS_FS.where("accepted", "==", false).onSnapshot(snap =>
           this.setState({unhandledFeedbackCount: snap.size})
-        })
+        )
+        SPECIAL_REQUESTS_FS.where("accepted", "==", false).onSnapshot(snap =>
+          this.setState({unhandledSpecialRequestCount: snap.size})
+        )
         ADMINS.child(user.uid).once("value", snap => {
           this.setState({profile: snap.val()})
         })
