@@ -4,7 +4,7 @@ import {Card, CardContent, Grid, Typography, Tooltip, ListItem, ListItemText, Li
 import {SPECIAL_REQUESTS_FS, TIMESTAMP} from '../../../utils/firebase'
 import {withStore} from "../../App/Store"
 
-import From from "@material-ui/icons/FlightLandRounded"
+import From from "@material-ui/icons/AccessTimeRounded"
 import Message from "@material-ui/icons/MessageRounded"
 import Tel from "@material-ui/icons/CallRounded"
 import Email from "@material-ui/icons/EmailRounded"
