@@ -1,10 +1,12 @@
 import React from "react"
-import {Route, Switch} from "react-router-dom"
+import {Route, Link, Switch} from "react-router-dom"
 import moment from 'moment'
 
 import {routes, toRoute} from "../../utils"
 
-import {Typography} from '@material-ui/core'
+import {Typography, IconButton} from '@material-ui/core'
+import Close from "@material-ui/icons/CloseRounded"
+
 
 export const Title = () =>
   <Typography
@@ -17,7 +19,13 @@ export const Title = () =>
       <Route component={() => "Szobák"} path={routes.ROOMS}/>
       <Route component={() => "Bemutatkozás"} path={routes.INTRO}/>
       <Route component={() => "Tanúsítványok"} path={routes.CERTIFICATES}/>
-      <Route component={() => "Üzenetek"} path={routes.MESSAGES}/>
+      <Route
+        component={
+          ({match: {params: {p1}}}) =>
+            p1 ? "Külön ajánlat" : "Külön ajánlatok"
+        }
+        path={toRoute(routes.SPECIAL_REQUESTS, ":p1")}
+      />
       <Route
         component={
           ({match: {params: {
@@ -40,7 +48,13 @@ export const RightAction = () =>
     <Route component={() => ""} path={routes.ROOMS}/>
     <Route component={() => ""} path={routes.INTRO}/>
     <Route component={() => ""} path={routes.CERTIFICATES}/>
-    <Route component={() => ""} path={routes.SPECIAL_OFFER}/>
+    <Route
+      component={() =>
+        <CloseButton
+          to={routes.SPECIAL_REQUESTS}
+        />}
+      path={toRoute(routes.SPECIAL_REQUESTS, ":specialRequestId")}
+    />
     <Route
       component={() => ""}
       path={toRoute(routes.CALENDAR, ":year", ":month", ":day?")}
@@ -53,3 +67,12 @@ export const RightAction = () =>
     <Route component={() => ""} path={routes.STATS}/>
     <Route component={() => ""}/>
   </Switch>
+
+
+const CloseButton = ({to}) =>
+  <IconButton
+    component={Link}
+    {...{to}}
+  >
+    <Close style={{color: "white"}}/>
+  </IconButton>
