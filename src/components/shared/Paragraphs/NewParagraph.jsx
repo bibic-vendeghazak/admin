@@ -6,7 +6,7 @@ import {withStore} from "../../App/Store"
 
 
 const NewParagraph = ({
-  sendNotification, path
+  sendNotification, path, relativeFAB
 }) => {
   const handleCreateNewParagraph = () =>
     DB.ref(`paragraphs${path}`)
@@ -20,15 +20,28 @@ const NewParagraph = ({
       }))
       .catch(sendNotification)
 
+      let style
+
+      if (relativeFAB) {
+        style ={
+          position: "relative",
+          left: "calc(100% - 16px)",
+          transform: "translateX(-100%)",
+          bottom: -8
+        }
+      } else {
+        style={
+          position: "fixed",
+          right: 32,
+          bottom: 32
+        }
+      }
+
   return (
     <Button
       color="secondary"
       onClick={handleCreateNewParagraph}
-      style={{
-        position: "fixed",
-        right: 32,
-        bottom: 32
-      }}
+      style={style}
       variant="extendedFab"
     >
       <Add/>

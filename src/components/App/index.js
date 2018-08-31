@@ -131,7 +131,12 @@ const App = ({
               path={routes.ROOMS}
             />
             <Route
-              component={Paragraphs}
+              component={(props) => 
+                <div style={{maxWidth: 540, margin: "0 auto"}}>
+                  <Paragraphs relativeFAB {...props}/>
+                  <Gallery relativeFAB {...props}/>
+                </div>
+              }
               path={routes.CERTIFICATES}
             />
             <Route
