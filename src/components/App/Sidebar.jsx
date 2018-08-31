@@ -148,7 +148,7 @@ const Sidebar = ({
           }
           to={routes.FEEDBACKS}
         >
-            Visszajelzések
+            Visszajelzés
         </DrawerItem>
       </List>
       <Divider className={divider}/>
