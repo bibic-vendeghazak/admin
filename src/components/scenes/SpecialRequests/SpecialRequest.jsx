@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import moment from "moment"
 import {Card, CardContent, Grid, Typography, Tooltip, ListItem, ListItemText, ListItemIcon, CardActions, Button} from '@material-ui/core'
-import {SPECIAL_REQUESTS_FS, TIMESTAMP, getAdminName, AUTH} from '../../../utils/firebase'
+import {SPECIAL_REQUESTS_FS, TIMESTAMP} from '../../../utils/firebase'
 import {withStore} from "../../App/Store"
 
 import From from "@material-ui/icons/FlightLandRounded"
@@ -12,7 +12,7 @@ import Adult from "@material-ui/icons/PeopleRounded"
 import Person from "@material-ui/icons/PersonRounded"
 import Service from "@material-ui/icons/RoomServiceRounded"
 import Subject from "@material-ui/icons/SubjectRounded"
-import Admin from "@material-ui/icons/PermIdentityRounded"
+import {toRoute, routes} from '../../../utils'
 
 class SpecialRequest extends Component {
   state = {
@@ -27,7 +27,6 @@ class SpecialRequest extends Component {
     peopleCount: 0,
     id: "",
     lastHandledBy: "",
-    adminComment: "",
     message: ""
   }
 
@@ -38,8 +37,6 @@ class SpecialRequest extends Component {
         id: snap.id,
         ...snap.data()
       }))
-
-    getAdminName(AUTH.currentUser.uid).then(snap => this.setState({admin: snap.val()}))
   }
 
 
@@ -51,22 +48,26 @@ class SpecialRequest extends Component {
       this.props.history.goBack
     )
 
-  handleSubmit = () =>
-    this.props.openDialog(
+  handleSubmit = () => {
+    const {
+      openDialog, profile
+    } = this.props
+    openDialog(
       {title: "Megjelöli kezeltként ezt az egyedi foglalást"},
       () => SPECIAL_REQUESTS_FS.doc(this.state.id).update({
         timestamp: TIMESTAMP,
-        lastHandledBy: this.state.admin,
+        lastHandledBy: profile.name,
         accepted: true
       }),
       "Megjelölve kezeltként."
     )
+  }
 
 
   render() {
 
     const {
-      accepted, id, timestamp, lastHandledBy, name, email, tel, subject, from, service, peopleCount, adminComment, message
+      accepted, id, timestamp, lastHandledBy, name, email, tel, subject, from, service, peopleCount, message
     } = this.state
 
     return (
@@ -127,15 +128,6 @@ class SpecialRequest extends Component {
               }
               secondary="időpont"
             />
-            <Tooltip title="Csak az admin látja!">
-              <Item
-                icon={<Admin/>}
-                md={6}
-                primary={adminComment}
-                secondary="admin megjegyzés"
-                style={{cursor: "pointer"}}
-              />
-            </Tooltip>
           </Grid>
         </CardContent>
         <CardActions>
