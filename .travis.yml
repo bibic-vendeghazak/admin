@@ -5,6 +5,7 @@ script:
   - yarn build
   - yarn test
 deploy:
+  skip_cleanup: true
   provider: script
   script: bash scripts/deploy.sh
   on:
