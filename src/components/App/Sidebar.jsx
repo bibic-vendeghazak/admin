@@ -1,5 +1,5 @@
 import React from "react"
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import moment from "moment"
 import {NavLink} from "react-router-dom"
 import {withStore} from "./Store"

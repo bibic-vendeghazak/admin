@@ -1,6 +1,6 @@
 import React, {Component} from "react"
-import PropTypes from 'prop-types'
-import moment from 'moment'
+import PropTypes from "prop-types"
+import moment from "moment"
 import {
   AUTH,
   ADMINS,

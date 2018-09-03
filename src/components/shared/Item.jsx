@@ -1,5 +1,5 @@
-import React from 'react'
-import {Grid, ListItem, ListItemText, ListItemIcon} from '@material-ui/core'
+import React from "react"
+import {Grid, ListItem, ListItemText, ListItemIcon} from "@material-ui/core"
 
 const Item = ({
   icon, primary, secondary, ...props
@@ -10,8 +10,10 @@ const Item = ({
         {icon}
       </ListItemIcon>
       <ListItemText
-        primary={primary}
-        secondary={secondary}
+        {...{
+          primary,
+          secondary
+        }}
       />
     </ListItem>
   </Grid>

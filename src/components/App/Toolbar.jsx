@@ -1,61 +1,58 @@
 import React, {Fragment} from "react"
 import {Route, Link, Switch} from "react-router-dom"
-import moment from 'moment'
+import moment from "moment"
 
 import {routes, toRoute} from "../../utils"
 
-import {Typography, IconButton, Tooltip} from '@material-ui/core'
+import {Typography, IconButton, Tooltip} from "@material-ui/core"
 import Close from "@material-ui/icons/CloseRounded"
 import Today from "@material-ui/icons/TodayRounded"
 import Next from "@material-ui/icons/NavigateNext"
 import Before from "@material-ui/icons/NavigateBeforeRounded"
 
+const {
+  ROOMS, INTRO, CERTIFICATES,
+  SPECIAL_REQUESTS, CALENDAR, RESERVATIONS,
+  FEEDBACKS, FOODS, EVENTS, SERVICES
+} = routes
 
 export const Title = () =>
-  <Typography
-    color="inherit"
-    noWrap
-    style={{flexGrow: 1}}
-    variant="title"
-  >
+  <Typography color="inherit" noWrap style={{flexGrow: 1}} variant="title">
     <Switch>
-      <Route component={() => "Szobák"} path={routes.ROOMS}/>
-      <Route component={() => "Bemutatkozás"} path={routes.INTRO}/>
-      <Route component={() => "Tanúsítványok"} path={routes.CERTIFICATES}/>
+      <Route component={() => "Szobák"} path={ROOMS}/>
+      <Route component={() => "Bemutatkozás"} path={INTRO}/>
+      <Route component={() => "Tanúsítványok"} path={CERTIFICATES}/>
       <Route
         component={
           ({match: {params: {p1}}}) =>
             p1 ? "Külön ajánlat" : "Külön ajánlatok"
         }
-        path={toRoute(routes.SPECIAL_REQUESTS, ":p1?")}
+        path={toRoute(SPECIAL_REQUESTS, ":p1?")}
       />
       <Route
         component={
           ({match: {params: {
             year, month, day
           }}}) => moment([year, month-1, day || "01"]).format(day ? "YYYY MMMM DD, dddd" : "YYYY MMMM")}
-        path={toRoute(routes.CALENDAR, ":year", ":month", ":day?")}
+        path={toRoute(CALENDAR, ":year", ":month", ":day?")}
       />
-      <Route component={({match: {params: {p1}}}) => p1 ? "Foglalás" : "Foglalások"} path={toRoute(routes.RESERVATIONS, ":p1?")}/>
-      <Route component={() => "Statisztika / Üzenetek"} path={routes.FEEDBACKS}/>
-      <Route component={() => "Ételek galéria"} path={routes.FOODS}/>
-      <Route component={() => "Rendezvények galéria"} path={routes.EVENTS}/>
-      <Route component={() => "Szolgáltatások galéria"} path={routes.SERVICES}/>
+      <Route component={({match: {params: {p1}}}) => p1 ? "Foglalás" : "Foglalások"} path={toRoute(RESERVATIONS, ":p1?")}/>
+      <Route component={() => "Statisztika / Üzenetek"} path={FEEDBACKS}/>
+      <Route component={() => "Ételek galéria"} path={FOODS}/>
+      <Route component={() => "Rendezvények galéria"} path={EVENTS}/>
+      <Route component={() => "Szolgáltatások galéria"} path={SERVICES}/>
       <Route component={() => "Admin kezelőfelület"}/>
     </Switch>
   </Typography>
 
 
-const pathsWithClose = [routes.ROOMS, routes.RESERVATIONS, routes.SPECIAL_REQUESTS]
+const pathsWithClose = [ROOMS, RESERVATIONS, SPECIAL_REQUESTS]
 
 export const RightAction = () =>
   <Switch>
     {pathsWithClose.map(path =>
       <Route
-        component={() =>
-          <CloseButton
-            to={path}
-          />}
+        component={() => <CloseButton to={path}/>}
         key={path}
         path={toRoute(path, ":parameter")}
       />

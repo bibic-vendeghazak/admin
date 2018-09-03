@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import {BrowserRouter as Router} from "react-router-dom"
-import {MuiThemeProvider as Material} from '@material-ui/core/styles'
+import {MuiThemeProvider as Material} from "@material-ui/core/styles"
 import {Database} from "./components/App/Store"
 
 

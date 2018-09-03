@@ -1,11 +1,12 @@
 import React, {Component} from "react"
+import PropTypes from "prop-types"
 import {DB} from "../../../utils/firebase"
 
 
 import {Button, TextField, Dialog, DialogActions, DialogContent, Grid, DialogTitle} from "@material-ui/core"
-import Delete from '@material-ui/icons/DeleteRounded'
+import Delete from "@material-ui/icons/DeleteRounded"
 
-import {Loading} from '..'
+import {Loading} from ".."
 import {toRoute} from "../../../utils"
 import {withStore} from "../../App/Store"
 
@@ -161,5 +162,14 @@ class GalleryItemEdit extends Component {
   }
 }
 
+GalleryItemEdit.propTypes = {
+  folder: PropTypes.string,
+  path: PropTypes.string,
+  match: PropTypes.object,
+  history: PropTypes.object,
+  sendNotification: PropTypes.func,
+  openDialog: PropTypes.func,
+  hasText: PropTypes.bool
+}
 
 export default withStore(GalleryItemEdit)

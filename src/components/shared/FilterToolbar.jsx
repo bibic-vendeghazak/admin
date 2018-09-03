@@ -1,10 +1,10 @@
-import React, {Fragment, Component} from 'react'
-import moment from 'moment'
+import React, {Fragment, Component} from "react"
+import moment from "moment"
 
-import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from '@material-ui/core'
+import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from "@material-ui/core"
 
-import Search from '@material-ui/icons/SearchRounded'
-import Calendar from '@material-ui/icons/EventRounded'
+import Search from "@material-ui/icons/SearchRounded"
+import Calendar from "@material-ui/icons/EventRounded"
 
 
 const withToolbar = WrappedComponent =>
@@ -33,9 +33,13 @@ const withToolbar = WrappedComponent =>
     }
 
     handleRoom = (roomId, roomsLength) =>
-      this.setState(({filteredRooms}) => ({filteredRooms: (filteredRooms.length ? filteredRooms : Array(roomsLength)
-        .fill(true))
-        .map((e, i) => i === roomId ? !e : e)}))
+      this.setState(({filteredRooms}) =>
+        ({filteredRooms: (filteredRooms.length ?
+          filteredRooms :
+          Array(roomsLength)
+            .fill(true))
+          .map((e, i) => i === roomId ? !e : e)})
+      )
 
     render() {
       const {
@@ -147,7 +151,11 @@ const withToolbar = WrappedComponent =>
                       justify="flex-end"
                       md={9}
                     >
-                      {rooms && (filteredRooms.length ? filteredRooms : Array(rooms.length).fill(true))
+                      {rooms &&
+                      (filteredRooms.length ?
+                        filteredRooms :
+                        Array(rooms.length)
+                          .fill(true))
                         .map((active, i) =>
                           <Chip
                             avatar={<Avatar>{i+1}</Avatar>}

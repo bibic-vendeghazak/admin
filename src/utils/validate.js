@@ -1,7 +1,8 @@
 import moment from "moment"
 
 
-const isValidRoomId = (roomId=0, roomCount) => (0 < roomId) && (roomId <= roomCount)
+const isValidRoomId = (roomId=0, roomCount) =>
+  (0 < roomId) && (roomId <= roomCount)
 const isValidId = (id, from, roomId) => id === `${moment(from).format("YYYYMMDD")}-sz${roomId}`
 const isValidName = name => (/[\s.áéíóöőúüűÁÉÍÓÖŐÚÜŰa-zA-Z-]/).test(name)
 const isValidEmail = email => (/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/).test(email)

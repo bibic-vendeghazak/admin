@@ -25,15 +25,9 @@ const Rooms = ({
           }}
         >
           {rooms.length ? rooms.map(({
-            key, unavailable, name, isBooked, id
+            unavailable, name, isBooked, id
           }) =>
-            <Grid
-              item
-              key={key}
-              lg={4}
-              sm={6}
-              xs={12}
-            >
+            <Grid item key={id} lg={4} sm={6} xs={12}>
               <Room
                 pictures={roomPictures[id] ? roomPictures[id] : null}
                 {...{

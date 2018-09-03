@@ -1,6 +1,7 @@
 import React from "react"
+import PropTypes from "prop-types";
 import {Button} from "@material-ui/core"
-import Add from '@material-ui/icons/ShortTextRounded'
+import Add from "@material-ui/icons/ShortTextRounded"
 import {DB} from "../../../utils/firebase"
 import {withStore} from "../../App/Store"
 
@@ -49,6 +50,12 @@ const NewParagraph = ({
     </Button>
 
   )
+}
+
+NewParagraph.propTypes = {
+  sendNotification: PropTypes.func,
+  path: PropTypes.string,
+  relativeFAB: PropTypes.bool
 }
 
 export default withStore(NewParagraph)

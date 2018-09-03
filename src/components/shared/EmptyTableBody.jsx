@@ -1,7 +1,7 @@
-import React from 'react'
-
+import React from "react"
+import PropTypes from "prop-types"
 import {TableRow, TableCell, Typography} from "@material-ui/core"
-import Loading from './Loading'
+import Loading from "./Loading"
 
 
 const EmptyTableBody = ({title=<Loading isEmpty/>}) =>
@@ -16,5 +16,6 @@ const EmptyTableBody = ({title=<Loading isEmpty/>}) =>
     </TableCell>
   </TableRow>
 
+EmptyTableBody.propTypes = {title: PropTypes.element}
 
 export default EmptyTableBody

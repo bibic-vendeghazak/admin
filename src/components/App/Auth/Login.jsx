@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
+import React, {Component} from "react"
+import PropTypes from "prop-types"
 
+import {Button, CardHeader, Card, CardActions, CardContent, Divider, TextField} from "@material-ui/core"
 
-import {Button, CardHeader, Card, CardActions, CardContent, Divider, TextField} from '@material-ui/core'
-
-import {AUTH} from '../../../utils/firebase'
-import {withStore} from '../Store'
+import {AUTH} from "../../../utils/firebase"
+import {withStore} from "../Store"
 
 const initialState = {
   email: "",
@@ -13,6 +13,8 @@ const initialState = {
 
 
 class Login extends Component {
+
+  static propTypes = {sendNotification: PropTypes.func.isRequired}
 
   state = initialState
 
@@ -27,7 +29,7 @@ class Login extends Component {
     }
   }
 
-  handleEnterPress = ({key}) => key === 'Enter' && this.handleLogin()
+  handleEnterPress = ({key}) => key === "Enter" && this.handleLogin()
 
   handleInputChange = ({target: {
     name, value

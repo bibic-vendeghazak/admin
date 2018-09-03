@@ -5,7 +5,7 @@ import Population from "./Population"
 import Prices from "./Prices"
 import Availability from "./Availability"
 import Description from "./Description"
-import {Gallery} from '../../shared'
+import {Gallery} from "../../shared"
 
 import {ROOMS_DB, ROOM_SERVICES_DB} from "../../../utils/firebase"
 

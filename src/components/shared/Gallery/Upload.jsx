@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import PropTypes from "prop-types"
 import {Route, Link} from "react-router-dom"
 
 import {routes, toRoute} from "../../../utils"
@@ -7,7 +8,7 @@ import {Tip, Modal} from ".."
 import {Grid, Button, Tooltip, GridList, GridListTile, GridListTileBar, IconButton, LinearProgress, Input, InputAdornment} from "@material-ui/core"
 
 import Upload from "@material-ui/icons/CloudUploadRounded"
-import Cancel from '@material-ui/icons/CloseRounded'
+import Cancel from "@material-ui/icons/CloseRounded"
 import {withStore} from "../../App/Store"
 
 class UploadPictures extends Component {
@@ -33,16 +34,21 @@ class UploadPictures extends Component {
 
 
   handleDelete = name =>
-    this.setState(({filesToUpload}) => ({filesToUpload: filesToUpload.filter(({file: {name: fileName}}) => name !== fileName)}))
+    this.setState(({filesToUpload}) =>
+      ({filesToUpload: filesToUpload
+        .filter(({file: {name: fileName}}) => name !== fileName)})
+    )
 
   handleChange = ({target: {files}}) =>
     Object.values(files).forEach(file => {
       const reader = new FileReader()
       reader.onloadend = () => {
-        this.setState(({filesToUpload}) => ({filesToUpload: filesToUpload.concat({
-          file,
-          src: reader.result
-        })}))
+        this.setState(({filesToUpload}) =>
+          ({filesToUpload: filesToUpload.concat({
+            file,
+            src: reader.result
+          })})
+        )
       }
       reader.readAsDataURL(file)
     })
@@ -68,7 +74,9 @@ class UploadPictures extends Component {
               code: "success",
               message: `${file.name} néhány másodperc múlva megjelenik a galériában.`
             })
-            this.setState(({finishedCount}) => ({finishedCount: finishedCount+1}))
+            this.setState(({finishedCount}) =>
+              ({finishedCount: finishedCount+1})
+            )
           }
           )
       ))
@@ -218,6 +226,10 @@ const UploadFAB = ({
     </Button>
   </Tooltip>
 
+UploadFAB.propTypes = {
+  path: PropTypes.string,
+  style: PropTypes.object
+}
 
 export default withStore(UploadPictures)
 
