@@ -5,15 +5,19 @@
     "eslint:recommended",
     "plugin:react/recommended"
   ],
+  "settings": {
+    "version": "16.4.2"
+  },
   "parser":"babel-eslint",
   "rules": {
     "require-jsdoc": "error",
     "max-len": ["error", {
       "ignoreTemplateLiterals": true,
       "ignoreStrings": true,
-      "ignorePattern": true
+      "ignoreRegExpLiterals": true
       }],
     "block-spacing":["warn", "never"],
+    "quotes":"error",
     "semi": [2, "never"],
     "no-trailing-spaces":"error",
     "multiline-comment-style":"error",
