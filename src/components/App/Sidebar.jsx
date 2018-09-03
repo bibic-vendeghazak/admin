@@ -59,10 +59,12 @@ const styles = ({
 const Sidebar = ({
   classes : {
     divider, primary, button, activeLink, nested
-  }, handleDrawerToggle,
-  unhandledReservationCount, unhandledFeedbackCount, unhandledSpecialRequestCount,profile: {
-    name="Bíbic vendégházak",
-    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"
+  },
+  handleDrawerToggle,
+  unhandledReservationCount, unhandledFeedbackCount,
+  unhandledSpecialRequestCount,
+  profile: {
+    name, src
   }
 }) => {
   const drawerItemStyle={

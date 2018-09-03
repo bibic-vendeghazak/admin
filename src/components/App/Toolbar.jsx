@@ -64,12 +64,12 @@ export const RightAction = () =>
         const date = moment(new Date([year, month, day].join("/")))
         return (
           day ?
-            <CloseButton to={toRoute(routes.CALENDAR, year, month)}/> :
+            <CloseButton to={toRoute(CALENDAR, year, month)}/> :
             <Fragment>
               <Tooltip title="Előző hónap">
                 <IconButton
                   component={Link}
-                  to={toRoute(routes.CALENDAR, date.clone().add(-1, "month").format("YYYY/MM"))}
+                  to={toRoute(CALENDAR, date.clone().add(-1, "month").format("YYYY/MM"))}
                 >
                   <Before style={{color: "white"}}/>
                 </IconButton>
@@ -77,7 +77,7 @@ export const RightAction = () =>
               <Tooltip title="Ugrás ide: ma">
                 <IconButton
                   component={Link}
-                  to={toRoute(routes.CALENDAR, moment().format("YYYY/MM"))}
+                  to={toRoute(CALENDAR, moment().format("YYYY/MM"))}
                 >
                   <Today style={{
                     color: "white",
@@ -89,18 +89,14 @@ export const RightAction = () =>
               <Tooltip title="Következő hónap">
                 <IconButton
                   component={Link}
-                  to={toRoute(routes.CALENDAR, date.clone().add(1, "month").format("YYYY/MM"))}
+                  to={toRoute(CALENDAR, date.clone().add(1, "month").format("YYYY/MM"))}
                 >
                   <Next style={{color: "white"}}/>
                 </IconButton>
               </Tooltip>
-
             </Fragment>
-
-        )
-      }
-      }
-      path={toRoute(routes.CALENDAR, ":year", ":month", ":day?")}
+        )}}
+      path={toRoute(CALENDAR, ":year", ":month", ":day?")}
     />
     <Route component={() => ""}/>
   </Switch>

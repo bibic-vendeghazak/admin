@@ -47,8 +47,8 @@ export class Database extends Component {
     isLoggedIn: false,
     mobileOpen: false,
     profile: {
-      name: null,
-      src: null
+      name: "Bíbic vendégházak",
+      src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"
     },
     snackbar: {
       open: false,
@@ -72,10 +72,15 @@ export class Database extends Component {
   componentDidMount() {
     AUTH.onAuthStateChanged(user => {
       if (user) {
+        ADMINS.child(user.uid).once("value", snap => {
+          this.setState({profile: snap.val()})
+        })
         this.handleSendNotification({
           code: "success",
           message: "Sikeres bejelentkezés."
         })
+
+        // Fetch counts
         this.setState({isLoggedIn: true})
         RESERVATIONS_FS.where("handled", "==", false).onSnapshot(snap =>
           this.setState({unhandledReservationCount: snap.size})
@@ -86,9 +91,6 @@ export class Database extends Component {
         SPECIAL_REQUESTS_FS.where("accepted", "==", false).onSnapshot(snap =>
           this.setState({unhandledSpecialRequestCount: snap.size})
         )
-        ADMINS.child(user.uid).once("value", snap => {
-          this.setState({profile: snap.val()})
-        })
 
 
         ROOMS_DB.on("value", snap => {
@@ -96,15 +98,14 @@ export class Database extends Component {
           RESERVATION_DATES_DB
             .child(moment().format("YYYY/MM/DD"))
             .once("value", snap => {
-              snap.forEach(() => {
-                if (snap.exists) {
+              if (snap.exists()) {
+                snap.forEach(() => {
                   Object.keys(snap.val()).map(key => key.substring(1))
                     .forEach(roomId => {
-                      rooms[roomId-1]["isBooked"] = true
-                      // rooms.key = reservation.key
+                      rooms[roomId-1].isBooked = true
                     })
-                }
-              })
+                })
+              }
             }).then(() => this.setState({rooms}))
             .catch(this.handleSendNotification)
         })
