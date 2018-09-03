@@ -11,7 +11,7 @@ const Gallery = props =>
       actionComponent={Upload}
       editItemComponent={GalleryItemEdit}
       folder="galleries"
-      hasText
+      hasText={props.hasText !== false ? true : false}
       sortableItemComponent={GalleryItem}
       {...props}
     />

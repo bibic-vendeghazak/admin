@@ -76,6 +76,10 @@ class TextParagraph extends Component {
   }
 
   render() {
+    if (!this.props.item) {
+      return null
+    }
+
     const {
       value, isEditing
     } = this.state

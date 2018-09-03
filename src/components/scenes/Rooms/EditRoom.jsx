@@ -97,7 +97,9 @@ export default class EditRoom extends Component {
                 }}
               />
             </Section>
-            <Section title="Szoba képek"><Gallery relativeFAB/></Section>
+            <Section title="Szoba képek">
+              <Gallery hasText={false} relativeFAB/>
+            </Section>
             <Section title="Szoba leírása">
               <Description {...{
                 roomId,

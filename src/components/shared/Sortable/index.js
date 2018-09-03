@@ -92,17 +92,20 @@ class Sortable extends Component {
       useDragHandle,
       relativeFAB,
       containerProps,
-      itemProps
+      itemProps,
+      prefix
     } = this.props
+
     return (
       <Fragment>
         <Grid style={{padding: 8}}>
           <Route
             exact
-            path={toRoute(path, ":listItemId", routes.EDIT)}
+            path={toRoute(path, ":listItemId", prefix ? routes[prefix] : routes.EDIT)}
             render={props =>
               <WrappedComponent
                 Component={editItemComponent}
+                url={url}
                 {...{
                   hasText,
                   folder,

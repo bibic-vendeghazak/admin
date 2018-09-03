@@ -20,6 +20,7 @@ const routes = {
   RESERVATIONS: "/foglalasok",
   FEEDBACKS: "/visszajelzesek",
   STATS: "/statisztikak",
+  GALLERY: "galeria",
   EDIT: "szerkeszt",
   BLOCK: "blokkolas",
   NEW: "uj",

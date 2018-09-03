@@ -21,22 +21,22 @@ const NewParagraph = ({
       }))
       .catch(sendNotification)
 
-      let style
+  let style
 
-      if (relativeFAB) {
-        style ={
-          position: "relative",
-          left: "calc(100% - 16px)",
-          transform: "translateX(-100%)",
-          bottom: -8
-        }
-      } else {
-        style={
-          position: "fixed",
-          right: 32,
-          bottom: 32
-        }
-      }
+  if (relativeFAB) {
+    style ={
+      position: "relative",
+      left: "calc(100% - 16px)",
+      transform: "translateX(-100%)",
+      bottom: -8
+    }
+  } else {
+    style={
+      position: "fixed",
+      right: 32,
+      bottom: 32
+    }
+  }
 
   return (
     <Button

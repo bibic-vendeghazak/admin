@@ -19,10 +19,12 @@ class GalleryItemEdit extends Component {
 
   componentDidMount() {
     const {
-      folder, path, match: {params: {listItemId}}
+      url,
+      folder, match: {params: {listItemId}}
     } = this.props
+    console.log(toRoute(folder, url, listItemId))
     DB
-      .ref(toRoute(folder, path, listItemId))
+      .ref(toRoute(folder, url, listItemId))
       .once("value", snap => {
         if (snap.exists()) {
           this.setState(snap.val())
@@ -33,12 +35,12 @@ class GalleryItemEdit extends Component {
 
   handleDeleteGalleryItem = () => {
     const {
-      path, match: {params: {listItemId}}
+      url, match: {params: {listItemId}}
     } = this.props
 
     this.props.openDialog(
       {title: "Biztos törli a képet?"},
-      () => DB.ref(toRoute("galleries", path, listItemId)).remove(),
+      () => DB.ref(toRoute("galleries", url, listItemId)).remove(),
       "A kép sikeresen törölve",
       this.handleClose
     )
@@ -46,7 +48,8 @@ class GalleryItemEdit extends Component {
 
     handleSubmitText = () => {
       const {
-        folder, path, match: {params: {listItemId}}
+        url,
+        folder, match: {params: {listItemId}}
       } = this.props
       const {
         title, desc
@@ -55,7 +58,7 @@ class GalleryItemEdit extends Component {
       this.props.openDialog(
         {title: "Menti a változtatásokat?"},
         () => DB
-          .ref(toRoute(folder, path, listItemId))
+          .ref(toRoute(folder, url, listItemId))
           .update({
             title,
             desc
@@ -65,7 +68,7 @@ class GalleryItemEdit extends Component {
     }
 
   handleClose = () => {
-    this.props.history.push(this.props.path)
+    this.props.history.goBack()
   }
 
   handleTextChange = ({target: {
