@@ -23,7 +23,7 @@ export const AUTH = firebase.auth()
 
 export const RESERVATIONS_FS = FS.collection("reservations")
 export const FEEDBACKS_FS = FS.collection("feedbacks")
-export const SPECIAL_REQUESTS_FS = FS.collection("special-requests")
+export const MESSAGES_FS = FS.collection("messages")
 export const GALLERIES_DB = DB.ref("galleries")
 export const ADMINS = DB.ref("admins")
 export const ROOMS_DB = DB.ref("rooms")

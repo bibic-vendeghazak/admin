@@ -1,15 +1,15 @@
-import React, {Component, Fragment} from 'react'
-import moment from 'moment'
+import React, {Component, Fragment} from "react"
+import moment from "moment"
 import {TableRow, TableCell, Tooltip, Button, Grid, IconButton, Hidden} from "@material-ui/core"
 import {Background} from "../../shared"
-import New from '@material-ui/icons/NewReleasesRounded'
-import {translateService} from './Stats/mutations'
-import Close from '@material-ui/icons/CloseRounded'
-import Delete from '@material-ui/icons/DeleteRounded'
-import Done from '@material-ui/icons/DoneRounded'
-import {colors} from '../../../utils'
-import {withStore} from '../../App/Store'
-import {FEEDBACKS_FS} from '../../../utils/firebase'
+import New from "@material-ui/icons/NewReleasesRounded"
+import {translateService} from "./Stats/mutations"
+import Close from "@material-ui/icons/CloseRounded"
+import Delete from "@material-ui/icons/DeleteRounded"
+import Done from "@material-ui/icons/DoneRounded"
+import {colors} from "../../../utils"
+import {withStore} from "../../App/Store"
+import {FEEDBACKS_FS} from "../../../utils/firebase"
 import Star from "@material-ui/icons/Star"
 
 class Feedback extends Component {
@@ -20,6 +20,8 @@ class Feedback extends Component {
     this.setState(({showRatings}) => ({showRatings: !showRatings}))
 
   handleAcceptFeedback = () => {
+    console.log(this.props)
+    
     this.props.openDialog(
       {title: "Jóváhagyja ezt a visszajelzést?"},
       () => FEEDBACKS_FS.doc(this.props.id).update({accepted: true}),
@@ -38,7 +40,7 @@ class Feedback extends Component {
   render() {
     const {showRatings} = this.state
     const {
-      roomId, ratings, accepted, message, timestamp, name
+      roomId, ratings, accepted, content, timestamp
     } = this.props
     return (
       <TableRow
@@ -58,7 +60,6 @@ class Feedback extends Component {
               {roomId}
             </Background>
           </TableCell>
-          <TableCell padding="dense">{name || "-"}</TableCell>
         </Hidden>
         <TableCell padding="dense">
           {showRatings ?
@@ -83,7 +84,7 @@ class Feedback extends Component {
             <Tooltip title={`Beküldve: ${moment(new Date(timestamp)).fromNow()}`}>
               <span
                 style={{maxWidth: "50vw"}}
-              >{message}</span>
+              >{content || "Nincs üzenet"}</span>
             </Tooltip>
           }
 

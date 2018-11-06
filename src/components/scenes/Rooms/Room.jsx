@@ -1,7 +1,7 @@
 import React from "react"
 import {Link} from "react-router-dom"
 import {Button, Card, CardActions, CardMedia, Typography, Grid, Tooltip} from "@material-ui/core"
-import empty from '../../../assets/empty-state.svg'
+import empty from "../../../assets/empty-state.svg"
 import {routes, toRoute} from "../../../utils"
 
 const Room = ({
@@ -19,7 +19,7 @@ const Room = ({
     >
       <CardMedia
         image={pictures ? Object.values(pictures).find(({order}) => !order).SIZE_640 : empty}
-        style={{paddingTop: '56.25%'}} // 16:9
+        style={{paddingTop: "56.25%"}} // 16:9
       />
     </Tooltip>
     <CardActions>
@@ -34,14 +34,14 @@ const Room = ({
           item
           xs={6}
         >
-          <Typography variant="body2">{name} •</Typography>
+          <Typography variant="body1">{name} •</Typography>
           <Typography
             color={unavailable || isBooked ? "error" : "textPrimary"}
             style={{
               fontStyle: "italic",
               marginLeft: 4
             }}
-            variant="body1"
+            variant="body2"
           >
             {unavailable ?
               "blokkolva" :

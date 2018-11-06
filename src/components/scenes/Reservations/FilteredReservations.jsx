@@ -93,7 +93,7 @@ const FilteredReservations = ({
           </Hidden>
           <Hidden mdDown>
             <TableCell numeric>
-              <Typography variant="caption">
+              <Typography >
                 {timestamp && moment(timestamp.toDate()).fromNow()}
               </Typography>
             </TableCell>

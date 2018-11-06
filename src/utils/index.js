@@ -1,6 +1,7 @@
+import {isValidReservation} from "./validate"
+import theme from "./theme"
+import {routes, toRoute} from "./routes"
+import colors from "./colors"
+import moment from "./moment"
 
-export {isValidReservation} from "./validate"
-export {theme} from "./theme"
-export {moment} from "./moment"
-export {routes, toRoute} from "./routes"
-export {colors} from "./colors"
+export {moment, colors, routes, toRoute, theme, isValidReservation}

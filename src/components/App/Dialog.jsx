@@ -4,7 +4,6 @@ import {withStore} from "./Store"
 
 import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from "@material-ui/core"
 
-
 const EnhancedDialog = ({
   dialog: {
     open, title, content, submitLabel, cancelLabel

@@ -80,7 +80,7 @@ const withToolbar = WrappedComponent =>
                       lg={3}
                       md={12}
                     >
-                      <Typography variant="subheading">
+                      <Typography variant="subtitle1">
                           Dátum szűrése
                       </Typography>
                     </Grid>
@@ -141,7 +141,7 @@ const withToolbar = WrappedComponent =>
                       md={3}
                       xs={12}
                     >
-                      <Typography variant="subheading">
+                      <Typography variant="subtitle1">
                         Szoba szűrése
                       </Typography>
                     </Grid>

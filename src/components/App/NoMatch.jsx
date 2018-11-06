@@ -14,7 +14,7 @@ const NoMatch = () =>
     style={{minHeight: "calc(100vh - 64px)"}}
   >
     <Paper style={{padding: 32}}>
-      <Typography variant="display1">Itt nincs semmi</Typography>
+      <Typography variant="h1">Itt nincs semmi</Typography>
       <Button color="primary" component={Link} to={routes.RESERVATIONS} variant="contained">
         <Back/> Vissza a foglalásokhoz
       </Button>

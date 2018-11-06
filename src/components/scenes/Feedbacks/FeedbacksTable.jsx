@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react"
 
 import {EmptyTableBody, withToolbar} from "../../shared"
-import {Table, TableBody, TableHead, TableRow, TableCell, Hidden} from '@material-ui/core'
-import FilteredFeedbacks from './FilteredFeedbacks'
-import {withStore} from '../../App/Store'
+import {Table, TableBody, TableHead, TableRow, TableCell, Hidden} from "@material-ui/core"
+import FilteredFeedbacks from "./FilteredFeedbacks"
+import {withStore} from "../../App/Store"
 
 const FeedbacksTable = ({
   unhandledFeedbacks,
@@ -16,7 +16,6 @@ const FeedbacksTable = ({
         <Hidden mdDown>
           <TableCell padding="checkbox"></TableCell>
           <TableCell numeric padding="dense">szoba</TableCell>
-          <TableCell padding="dense">név</TableCell>
         </Hidden>
         <TableCell padding="dense">üzenet/értékelés</TableCell>
         <TableCell numeric padding="checkbox"></TableCell>

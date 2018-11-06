@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
+import React, {Component} from "react"
 
-import {withStore} from '../../App/Store'
-import {Grid, Typography, Paper} from '@material-ui/core'
-import Stats from './Stats'
-import {FEEDBACKS_FS} from '../../../utils/firebase'
-import FeedbacksTable from './FeedbacksTable'
-import {Tip} from '../../shared'
+import {withStore} from "../../App/Store"
+import {Grid, Typography, Paper} from "@material-ui/core"
+import Stats from "./Stats"
+import {FEEDBACKS_FS} from "../../../utils/firebase"
+import FeedbacksTable from "./FeedbacksTable"
+import {Tip} from "../../shared"
 
 
 class Feedbacks extends Component {
@@ -31,9 +31,10 @@ class Feedbacks extends Component {
         const handledFeedbacks = []
         snap.forEach(reservation => {
           const feedback = {
-            key: reservation.id,
-            ...reservation.data()
+            ...reservation.data(),
+            id: reservation.id
           }
+
           if (feedback.accepted) {
             handledFeedbacks.push(feedback)
           } else {
@@ -57,14 +58,14 @@ class Feedbacks extends Component {
     return (
       <Grid container direction="column" spacing={16} style={{padding: 16}}>
         <Grid item>
-          <Typography style={{margin: 16}} variant="title">Statisztika</Typography>
+          <Typography style={{margin: 16}} variant="h6">Statisztika</Typography>
           <Stats
             feedbacks={handledFeedbacks}
             isLoading={isLoading}
           />
         </Grid>
         <Grid item>
-          <Typography style={{margin: 16}} variant="title">Üzenetek (utolsó 100)</Typography>
+          <Typography style={{margin: 16}} variant="h6">Üzenetek (utolsó 100)</Typography>
           <Paper style={{paddingTop: 16}}>
             <Tip>
               A keresés mezővel kikereshetőek üzenetek, vagy kiszűrhető az összes visszajelzés ami 5-t kapott pl. a kávéra így: &quot;kávé:5&quot; (ugyanígy más értékelés is szűrhető)

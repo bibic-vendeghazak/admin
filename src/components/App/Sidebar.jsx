@@ -62,7 +62,7 @@ const Sidebar = ({
   },
   handleDrawerToggle,
   unhandledReservationCount, unhandledFeedbackCount,
-  unhandledSpecialRequestCount,
+  unhandledMessageCount,
   profile: {
     name, src
   }
@@ -128,7 +128,7 @@ const Sidebar = ({
           {...{drawerItemStyle}}
           icon={
             <Badge
-              badgeContent={unhandledSpecialRequestCount}
+              badgeContent={unhandledMessageCount}
               color="secondary"
             >
               <SpecialReqests/>

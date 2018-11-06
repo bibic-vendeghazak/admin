@@ -15,7 +15,7 @@ const Tip = ({children}) =>
         fontSize: 10,
         lineHeight: "10px"
       }}
-      variant="subheading"
+      variant="subtitle1"
     >
     Tipp: {children}
     </Typography>

@@ -5,6 +5,8 @@ import {Button, CardHeader, Card, CardActions, CardContent, Divider, TextField} 
 
 import {AUTH} from "../../../utils/firebase"
 import {withStore} from "../Store"
+import logo from "../../../assets/bibic.png"
+
 
 const initialState = {
   email: "",
@@ -60,7 +62,7 @@ class Login extends Component {
               <a href="https://bibic-vendeghazak-api.firebaseapp.com">
                 <img
                   alt="Bíbic vendégházak logo"
-                  src="https://bibic-vendeghazak.github.io/web/assets/images/other/logo-brown.png"
+                  src={logo}
                   style={{marginBottom: -24}}
                   width={48}
                 />

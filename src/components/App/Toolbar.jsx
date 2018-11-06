@@ -17,7 +17,7 @@ const {
 } = routes
 
 export const Title = () =>
-  <Typography color="inherit" noWrap style={{flexGrow: 1}} variant="title">
+  <Typography color="inherit" noWrap style={{flexGrow: 1}} variant="h6">
     <Switch>
       <Route component={() => "Szobák"} path={ROOMS}/>
       <Route component={() => "Bemutatkozás"} path={INTRO}/>

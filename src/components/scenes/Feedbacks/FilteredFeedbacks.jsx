@@ -1,18 +1,18 @@
-import React, {Component} from 'react'
+import React, {Component} from "react"
 import {EmptyTableBody} from "../../shared"
-import {withStore} from '../../App/Store'
-import {translateService} from './Stats/mutations'
-import Feedback from './Feedback'
+import {withStore} from "../../App/Store"
+import {translateService} from "./Stats/mutations"
+import Feedback from "./Feedback"
 
 
 const filterByQuery = query => ({
-  roomId, message, ratings
+  roomId, content, ratings
 }) => {
   if (query[0].includes(":")) {
     const [name, value] = query[0].split(":")
     return ratings[translateService(name)] === parseInt((value), 10)
   } else {
-    const results = [roomId.toString(), message.toLowerCase()]
+    const results = [roomId.toString(), content.toLowerCase()]
     return query[0]==="" ||
       query.some(word => results.join(" ").includes(word))
   }
@@ -35,9 +35,7 @@ class FilteredFeedbacks extends Component {
       .filter(filterByQuery(query))
       .filter(filterByRoom(filteredRooms))
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-      .map(({
-        key, ...feedback
-      }) => <Feedback id={key} key={key} {...feedback}/>)
+      .map(feedback => <Feedback key={feedback.id} {...feedback}/>)
     )
   }
 

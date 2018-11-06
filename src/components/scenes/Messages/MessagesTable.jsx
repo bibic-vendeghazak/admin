@@ -1,11 +1,11 @@
 import React from 'react'
 import {Table, TableHead, TableBody, TableRow, TableCell} from '@material-ui/core'
 import {withToolbar, EmptyTableBody, Loading} from '../../shared'
-import FilteredSpecialRequests from './FilteredSpecialRequests'
+import FilteredMessages from './FilteredMessages'
 
 
-const SpecialRequestsTable = ({
-  specialRequests, isFetched, query
+const MessagesTable = ({
+  Messages, isFetched, query
 }) =>
   <Table>
     <TableHead>
@@ -15,7 +15,6 @@ const SpecialRequestsTable = ({
         <TableCell numeric>e-mail</TableCell>
         <TableCell numeric>telefon</TableCell>
         <TableCell numeric>rendezvény célja</TableCell>
-        <TableCell numeric>időpont</TableCell>
         <TableCell numeric>igényelt ellátás</TableCell>
         <TableCell numeric>fő</TableCell>
         <TableCell></TableCell>
@@ -23,8 +22,8 @@ const SpecialRequestsTable = ({
     </TableHead>
     <TableBody>
       {isFetched ?
-        <FilteredSpecialRequests {...{
-          specialRequests,
+        <FilteredMessages {...{
+          Messages,
           query
         }}
         />
@@ -33,4 +32,4 @@ const SpecialRequestsTable = ({
     </TableBody>
   </Table>
 
-export default withToolbar(SpecialRequestsTable)
+export default withToolbar(MessagesTable)

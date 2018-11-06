@@ -1,15 +1,14 @@
-import React from 'react'
-import moment from "moment"
+import React from "react"
 
 import {Link, withRouter} from "react-router-dom"
-import {TableRow, TableCell, Tooltip, IconButton} from '@material-ui/core'
+import {TableRow, TableCell, Tooltip, IconButton} from "@material-ui/core"
 
-import New from '@material-ui/icons/NewReleasesRounded'
-import Details from '@material-ui/icons/OpenInNewRounded'
-import {routes, toRoute} from '../../../utils'
+import New from "@material-ui/icons/NewReleasesRounded"
+import Details from "@material-ui/icons/OpenInNewRounded"
+import {routes, toRoute} from "../../../utils"
 
-const SpecialRequestRow = ({
-  name, accepted, email, tel, subject, from, service, peopleCount, id, history
+const MessageRow = ({
+  name, accepted, email, tel, subject, service, peopleCount, id, history
 }) =>
   <TableRow
     hover
@@ -24,7 +23,6 @@ const SpecialRequestRow = ({
     <TableCell numeric><a href={`mailto:${email}`}>{email}</a></TableCell>
     <TableCell numeric><a href={`tel:${tel}`}>{tel}</a></TableCell>
     <TableCell numeric>{subject}</TableCell>
-    <TableCell numeric>{moment(from.toDate()).format("YYYY MMM. D.")}</TableCell>
     <TableCell numeric>{service}</TableCell>
     <TableCell numeric>{peopleCount}</TableCell>
     <TableCell numeric>
@@ -39,4 +37,4 @@ const SpecialRequestRow = ({
     </TableCell>
   </TableRow>
 
-export default withRouter(SpecialRequestRow)
+export default withRouter(MessageRow)

@@ -2,6 +2,10 @@ const functions = require("firebase-functions")
 const utils = require("./utils")
 const email = require("../email")
 const moment = require("../moment")
+const exists = require("./exists")
+
+
+module.exports.exists = exists.reservationExists
 
 const reservationRef = functions
   .region("europe-west1")

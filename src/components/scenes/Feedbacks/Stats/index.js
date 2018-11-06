@@ -110,7 +110,7 @@ class Stats extends Component {
         <Grid item xs={12}>
 
           <Paper style={{padding: 16}}>
-            <Typography variant="caption">Összesített értékelés (utolsó {period.start.fromNow(true)})</Typography>
+            <Typography >Összesített értékelés (utolsó {period.start.fromNow(true)})</Typography>
             {isLoading ? <Loading/> :
               <ResponsiveContainer height={chartHeight} width="100%">
                 <AreaChart
@@ -177,7 +177,7 @@ class Stats extends Component {
         </Grid>
         <Grid item md={4} sm={6} xs={12}>
           <Paper style={{padding: 16}}>
-            <Typography variant="caption">Értékelések kategóriákra lebontva (utolsó {period.start.fromNow(true)})
+            <Typography >Értékelések kategóriákra lebontva (utolsó {period.start.fromNow(true)})
             </Typography>
             <ResponsiveContainer height={chartHeight} width="90%" >
               <RadarChart
@@ -211,7 +211,7 @@ class Stats extends Component {
 
         <Grid item md={8} sm={6} xs={12}>
           <Paper style={{padding: 16}}>
-            <Typography variant="caption">
+            <Typography >
               <Link style={{marginRight: 8}} to={toRoute(routes.ROOMS, roomId)}>Szoba {roomId}</Link>
              értékelése</Typography>
             {isLoading ? <Loading/> :

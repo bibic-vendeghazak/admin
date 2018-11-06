@@ -1,4 +1,4 @@
-const colors = {
+export default {
   grey: "#eee",
   orange: "#b35d41",
   lightOrange: "#cc8c78",
@@ -14,5 +14,3 @@ const colors = {
   room5: "#405572",
   room6: "#5e7240"
 }
-
-export {colors}

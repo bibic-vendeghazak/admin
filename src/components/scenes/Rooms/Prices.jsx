@@ -22,7 +22,7 @@ import Edit from "@material-ui/icons/EditRounded"
 import Close from "@material-ui/icons/CloseRounded"
 import Breakfast from "@material-ui/icons/FreeBreakfastRounded"
 
-import Store from '../../App/Store'
+import Store from "../../App/Store"
 import {ROOMS_DB} from "../../../utils/firebase"
 
 
@@ -43,7 +43,9 @@ export default class Prices extends Component {
 
   render() {
     const {roomId} = this.props
-    const {prices, value} = this.state
+    const {
+prices, value
+} = this.state
 
     return (
       <Card>
@@ -104,7 +106,9 @@ class PriceType extends Component{
         </TableHead>
         <TableBody>
           <Store.Consumer>
-            {({sendNotification, openDialog}) =>
+            {({
+sendNotification, openDialog
+}) =>
               Object.keys(prices).map(adultCount =>
                 Object.keys(prices[adultCount]).map(childCount => {
                   const {
@@ -114,7 +118,8 @@ class PriceType extends Component{
                     <Price
                       key={`${adultCount }_${ childCount}`}
                       {...{
-                        sendNotification, openDialog,
+                        sendNotification,
+openDialog,
                         priceType,
                         roomId,
                         price,
@@ -145,7 +150,10 @@ class Price extends Component {
     const {
       price, name
     } = this.props
-    this.setState({price, name})
+    this.setState({
+price,
+name
+})
     document.addEventListener("keyup", this.toggleWithKeyBoard, false)
   }
 
@@ -153,7 +161,10 @@ class Price extends Component {
   UNSAFE_componentWillReceiveProps({
     name, price
   }) {
-    this.setState({name, price})
+    this.setState({
+name,
+price
+})
   }
 
   componentWillUnmount() {
@@ -234,7 +245,7 @@ class Price extends Component {
     return (
       <TableRow>
         <TableCell padding="checkbox">
-          <Typography variant="caption">{name}</Typography>
+          <Typography >{name}</Typography>
         </TableCell>
         <TableCell padding="none">
           {isEditing ?

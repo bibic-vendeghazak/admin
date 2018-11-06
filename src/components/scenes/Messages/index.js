@@ -1,37 +1,37 @@
 import React, {Component, Fragment} from 'react'
 import {Route} from "react-router-dom"
 import {Paper} from '@material-ui/core'
-import SpecialRequestsTable from './SpecialRequestsTable'
-import {SPECIAL_REQUESTS_FS} from '../../../utils/firebase'
+import MessagesTable from './MessagesTable'
+import {MESSAGES_FS} from '../../../utils/firebase'
 import {toRoute, routes} from '../../../utils'
-import SpecialRequest from './SpecialRequest'
+import Message from './Message'
 
 
-class SpecialRequests extends Component {
+class Messages extends Component {
   state = {
-    specialRequests: null,
+    Messages: null,
     isFetched: false
   }
 
 
   componentDidMount() {
-    this.fetchSpecialRequests()
+    this.fetchMessages()
   }
 
-  fetchSpecialRequests = () => {
+  fetchMessages = () => {
     this.setState({isFetched: false})
-    SPECIAL_REQUESTS_FS
+    MESSAGES_FS
       .get()
       .then(snap => {
-        const specialRequests = []
-        snap.forEach(specialRequest => {
-          specialRequests.push({
-            id: specialRequest.id,
-            ...specialRequest.data()
+        const Messages = []
+        snap.forEach(Message => {
+          Messages.push({
+            id: Message.id,
+            ...Message.data()
           })
         })
         this.setState({
-          specialRequests,
+          Messages,
           isFetched: true
         })
       })
@@ -39,7 +39,7 @@ class SpecialRequests extends Component {
 
   render() {
     const {
-      specialRequests, isFetched
+      Messages, isFetched
     } = this.state
     return (
       <Fragment>
@@ -48,9 +48,9 @@ class SpecialRequests extends Component {
           path={routes.SPECIAL_REQUESTS}
           render={() =>
             <Paper>
-              <SpecialRequestsTable
+              <MessagesTable
                 {...{
-                  specialRequests,
+                  Messages,
                   isFetched
                 }}
                 showDateFilter={false}
@@ -60,8 +60,8 @@ class SpecialRequests extends Component {
           }
         />
         <Route
-          component={SpecialRequest}
-          path={toRoute(routes.SPECIAL_REQUESTS, ":specialRequestId")}
+          component={Message}
+          path={toRoute(routes.SPECIAL_REQUESTS, ":messageId")}
         />
 
       </Fragment>
@@ -69,4 +69,4 @@ class SpecialRequests extends Component {
   }
 }
 
-export default SpecialRequests
+export default Messages

@@ -23,7 +23,7 @@ import {
 import {Title, RightAction} from "./Toolbar"
 import Dialog from "./Dialog"
 import Notification from "./Notification"
-import SpecialRequests from "../scenes/SpecialRequests"
+import Messages from "../scenes/Messages"
 
 const drawerWidth = 240
 
@@ -119,7 +119,7 @@ const App = ({
               path={routes.FEEDBACKS}
             />
             <Route
-              component={SpecialRequests}
+              component={Messages}
               path={routes.SPECIAL_REQUESTS}
             />
             <Route

@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import moment from "moment"
 import {Link} from "react-router-dom"
 import {Card, CardContent, Grid, Typography, Tooltip, CardActions, Button} from '@material-ui/core'
-import {SPECIAL_REQUESTS_FS, TIMESTAMP} from '../../../utils/firebase'
+import {MESSAGES_FS, TIMESTAMP} from '../../../utils/firebase'
 import {withStore} from "../../App/Store"
 
 import From from "@material-ui/icons/AccessTimeRounded"
-import Message from "@material-ui/icons/MessageRounded"
+import MessageIcon from "@material-ui/icons/MessageRounded"
 import Tel from "@material-ui/icons/CallRounded"
 import Email from "@material-ui/icons/EmailRounded"
 import Adult from "@material-ui/icons/PeopleRounded"
@@ -17,7 +17,7 @@ import {toRoute, routes} from '../../../utils'
 
 import {Item} from "../../shared"
 
-class SpecialRequest extends Component {
+class Message extends Component {
   state = {
     name: "",
     accepted: false,
@@ -34,8 +34,8 @@ class SpecialRequest extends Component {
   }
 
   componentDidMount() {
-    SPECIAL_REQUESTS_FS
-      .doc(this.props.match.params.specialRequestId)
+    MESSAGES_FS
+      .doc(this.props.match.params.messageId)
       .onSnapshot(snap => this.setState({
         id: snap.id,
         ...snap.data()
@@ -46,7 +46,7 @@ class SpecialRequest extends Component {
   handleDelete = () =>
     this.props.openDialog(
       {title: "Biztosan törli ezt az egyedi foglalást"},
-      () => SPECIAL_REQUESTS_FS.doc(this.state.id).delete(),
+      () => MESSAGES_FS.doc(this.state.id).delete(),
       "Sikeresen törölve.",
       this.props.history.goBack
     )
@@ -57,7 +57,7 @@ class SpecialRequest extends Component {
     } = this.props
     openDialog(
       {title: "Megjelöli kezeltként ezt az egyedi foglalást"},
-      () => SPECIAL_REQUESTS_FS.doc(this.state.id).update({
+      () => MESSAGES_FS.doc(this.state.id).update({
         timestamp: TIMESTAMP,
         lastHandledBy: profile.name,
         accepted: true
@@ -108,7 +108,7 @@ class SpecialRequest extends Component {
               secondary="rendezvény célja"
             />
             <Item
-              icon={<Message/>}
+              icon={<MessageIcon/>}
               primary={message}
               secondary="üzenet"
             />
@@ -168,4 +168,4 @@ class SpecialRequest extends Component {
 }
 
 
-export default withStore(SpecialRequest)
+export default withStore(Message)
