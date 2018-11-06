@@ -8,6 +8,7 @@ build
 .history
 functions/lib
 functions/index.js
+coverage
 
 # misc
 npm-debug.log*
