@@ -9,7 +9,7 @@ const EmptyTableBody = ({title=<Loading isEmpty/>}) =>
     <TableCell colSpan={10}>
       <Typography
         align="center"
-        variant="subheading"
+        variant="subtitle1"
       >
         {title}
       </Typography>

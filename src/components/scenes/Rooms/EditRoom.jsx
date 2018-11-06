@@ -132,6 +132,6 @@ const Section = ({
     item
     style={{margin: 8}}
   >
-    <Typography variant="subheading">{title}</Typography>
+    <Typography variant="subtitle1">{title}</Typography>
     {children}
   </Grid>

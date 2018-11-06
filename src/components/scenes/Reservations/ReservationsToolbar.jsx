@@ -35,7 +35,7 @@ const ReservationsToolbar = ({
         lg={3}
         md={12}
       >
-        <Typography variant="subheading">
+        <Typography variant="subtitle1">
               Dátum szűrése
         </Typography>
       </Grid>
@@ -94,7 +94,7 @@ const ReservationsToolbar = ({
           md={3}
           xs={12}
         >
-          <Typography variant="subheading">
+          <Typography variant="subtitle1">
                 Szoba szűrése
           </Typography>
         </Grid>
