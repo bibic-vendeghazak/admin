@@ -1,7 +1,9 @@
 import React from 'react'
 import moment from 'moment'
 
-import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from '@material-ui/core'
+import {
+Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden
+} from '@material-ui/core'
 
 import Search from '@material-ui/icons/SearchRounded'
 import Calendar from '@material-ui/icons/EventRounded'
@@ -52,10 +54,8 @@ const ReservationsToolbar = ({
           xs={12}
         >
           <TextField
-            InputProps={{
-              startAdornment: <InputAdornment position="start"><Calendar color="disabled"/></InputAdornment>,
-              endAdornment: <InputAdornment position="end">tól</InputAdornment>
-            }}
+            InputProps={{startAdornment: <InputAdornment position="start"><Calendar color="disabled"/></InputAdornment>,
+              endAdornment: <InputAdornment position="end">tól</InputAdornment>}}
             fullWidth
             name="from"
             onChange={onDateChange}
@@ -69,10 +69,8 @@ const ReservationsToolbar = ({
           xs={12}
         >
           <TextField
-            InputProps={{
-              startAdornment: <InputAdornment position="start"><Calendar color="disabled"/></InputAdornment>,
-              endAdornment: <InputAdornment position="end">ig</InputAdornment>
-            }}
+            InputProps={{startAdornment: <InputAdornment position="start"><Calendar color="disabled"/></InputAdornment>,
+              endAdornment: <InputAdornment position="end">ig</InputAdornment>}}
             fullWidth
             name="to"
             onChange={onDateChange}
