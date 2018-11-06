@@ -3,7 +3,7 @@
 </p>
 
 # Bíbic vendégházak - Admin dashboard 
-[![Travis CI Status](https://travis-ci.org/bibic-vendeghazak/admin.svg?branch=develop)](https://travis-ci.org/bibic-vendeghazak/admin) [![Coverage Status](https://coveralls.io/repos/github/bibic-vendeghazak/admin/badge.svg?branch=develop)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop)
+![Travis CI Status](https://img.shields.io/travis/bibic-vendeghazak/admin.svg?branch=develop) [![Coverage Status](https://img.shields.io/coveralls/bibic-vendeghazak/admin/develop.svg)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop)
 
 It is only available in Hungarian 🇭🇺 at the moment. A future release would add Internationalization 🌐
 
