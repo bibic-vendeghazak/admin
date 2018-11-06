@@ -1,0 +1,26 @@
+{
+  "rooms": {
+    "editRoom": {
+
+    },
+    "room": {
+      "unavailable": {
+        "long": "A szoba nem elérhető foglalásra.",
+        "short": "blokkolt" 
+      },
+      "booked": {
+        "yes": {
+          "long": "A szobában jelenleg tartózkodnak.",
+          "short": "foglalt"
+        },
+        "no": {
+          "long": "A szoba jelenleg üres.",
+          "short": "szabad"
+        }
+      }
+    }
+  },
+  "button": {
+    "details": "részletek"
+  }
+}
