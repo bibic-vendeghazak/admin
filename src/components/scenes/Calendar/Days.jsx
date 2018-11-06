@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from 'prop-types'
 import {Link, withRouter} from "react-router-dom"
-import moment from "moment"
+import {moment} from "../../../lib"
 import {routes, toRoute} from "../../../utils"
 import {Tooltip} from "@material-ui/core"
 
@@ -25,10 +25,8 @@ const Days = ({
         const reservation = dayReservations[key] = {roomId}
         Object.assign(
           reservation,
-          {
-            from: currentDay.isSame(dayFrom, "day"),
-            to: currentDay.isSame(dayTo, "day")
-          }
+          {from: currentDay.isSame(dayFrom, "day"),
+            to: currentDay.isSame(dayTo, "day")}
         )
       }
     })

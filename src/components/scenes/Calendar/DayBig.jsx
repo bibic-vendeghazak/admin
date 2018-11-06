@@ -1,14 +1,16 @@
-import React, {Component, Fragment} from "react"
-import moment from "moment"
+import React, {Component, } from "react"
+import {moment} from "../../../lib"
 import {routes, toRoute} from "../../../utils"
-import {RESERVATIONS_FS, RESERVATION_DATES_DB} from "../../../utils/firebase"
+import {RESERVATIONS_FS, RESERVATION_DATES_DB} from "../../../lib/firebase"
 
 import {
   Card,
   Table,
   TableBody
 } from "@material-ui/core"
-import {EmptyTableBody, Tip, Loading} from "../../shared"
+import {
+  EmptyTableBody, Tip, Loading
+} from "../../shared"
 
 import TableHead from '../Reservations/TableHead'
 import FilteredReservations from '../Reservations/FilteredReservations'
@@ -43,10 +45,8 @@ export default class DayBig extends Component {
    * @returns {null} -
    */
   fetchReservations = date => {
-    this.setState({
-      noReservation: false,
-      reservations: []
-    })
+    this.setState({noReservation: false,
+      reservations: []})
     RESERVATION_DATES_DB.child(date.format("YYYY/MM/DD")).once("value", snap => {
       if (snap.exists()) {
         Object.values(snap.val()).forEach(room =>
@@ -56,18 +56,14 @@ export default class DayBig extends Component {
             .then(
               reservation => this.setState(({reservations}) => ({reservations: [
                 ...reservations,
-                {
-                  key: reservation.id,
-                  ...reservation.data()
-                }
+                {key: reservation.id,
+                  ...reservation.data()}
               ]})
               ))
         )
       } else {
-        this.setState({
-          noReservation: true,
-          reservations: []
-        })
+        this.setState({noReservation: true,
+          reservations: []})
       }
     })
   }
@@ -100,11 +96,9 @@ export default class DayBig extends Component {
 
 
   render() {
-    const {
-      reservations, noReservation
-    } = this.state
+    const {reservations, noReservation} = this.state
     return (
-      <Fragment>
+      <>
         <Card>
           <Table>
             <TableHead/>
@@ -123,7 +117,7 @@ export default class DayBig extends Component {
         <Tip>
           Előző nap - ← | Következő nap - → | Esc - Vissza a naptárra
         </Tip>
-      </Fragment>
+      </>
     )
   }
 }

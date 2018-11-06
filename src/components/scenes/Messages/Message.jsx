@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import moment from "moment"
 import {Link} from "react-router-dom"
 import {Card, CardContent, Grid, Typography, Tooltip, CardActions, Button} from '@material-ui/core'
-import {MESSAGES_FS, TIMESTAMP} from '../../../utils/firebase'
+import {MESSAGES_FS, TIMESTAMP} from '../../../lib/firebase'
 import {withStore} from "../../App/Store"
 
 import From from "@material-ui/icons/AccessTimeRounded"

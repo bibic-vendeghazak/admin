@@ -1,17 +1,17 @@
 import React, {Component} from "react"
 import PropTypes from "prop-types"
 
-import {Button, CardHeader, Card, CardActions, CardContent, Divider, TextField} from "@material-ui/core"
+import {
+Button, CardHeader, Card, CardActions, CardContent, Divider, TextField
+} from "@material-ui/core"
 
-import {AUTH} from "../../../utils/firebase"
+import {AUTH} from "../../../lib/firebase"
 import {withStore} from "../Store"
 import logo from "../../../assets/bibic.png"
 
 
-const initialState = {
-  email: "",
-  password: ""
-}
+const initialState = {email: "",
+  password: ""}
 
 
 class Login extends Component {
@@ -21,9 +21,7 @@ class Login extends Component {
   state = initialState
 
   handleLogin = () => {
-    const {
-      email, password
-    } = this.state
+    const {email, password} = this.state
     if (email !== "" && password !== "") {
       AUTH.signInWithEmailAndPassword(email, password)
         .then(() => this.setState(initialState))
@@ -33,9 +31,7 @@ class Login extends Component {
 
   handleEnterPress = ({key}) => key === "Enter" && this.handleLogin()
 
-  handleInputChange = ({target: {
-    name, value
-  }}) => this.setState({[name]: value})
+  handleInputChange = ({target: {name, value}}) => this.setState({[name]: value})
 
   render() {
     return (
@@ -53,10 +49,8 @@ class Login extends Component {
           subheader="🔒 • ADMIN KEZELŐFELÜLET"
           title={
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between"
-              }}
+              style={{display: "flex",
+                justifyContent: "space-between"}}
             >
               Bíbic vendégházak
               <a href="https://bibic-vendeghazak-api.firebaseapp.com">

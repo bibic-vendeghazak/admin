@@ -3,18 +3,19 @@ import {Link} from "react-router-dom"
 import {Button, Card, CardActions, CardMedia, Typography, Grid, Tooltip} from "@material-ui/core"
 import empty from "../../../assets/empty-state.svg"
 import {routes, toRoute} from "../../../utils"
+import hu from "../../../lang/hu"
 
-const Room = ({
+export const Room = ({
   unavailable, isBooked, id, name, pictures
-}) => (
+}) =>
   <Card style={{margin: 8}}>
     <Tooltip
       title={
         unavailable ?
-          "A szoba nem elérhető foglalásra." :
+          hu.rooms.room.unavailable.long :
           isBooked ?
-            "A szobában jelenleg tartózkodnak." :
-            "A szoba jelenleg üres."
+            hu.rooms.room.booked.yes.long :
+            hu.rooms.room.booked.no.long
       }
     >
       <CardMedia
@@ -44,10 +45,10 @@ const Room = ({
             variant="body2"
           >
             {unavailable ?
-              "blokkolva" :
+              hu.rooms.room.unavailable.short :
               isBooked ?
-                "foglalt" :
-                "szabad"
+                hu.rooms.room.booked.yes.short :
+                hu.rooms.room.booked.no.short
             }
           </Typography>
         </Grid>
@@ -62,12 +63,11 @@ const Room = ({
             to={toRoute(routes.ROOMS, id)}
             variant="outlined"
           >
-          Részletek
+            {hu.button.details}
           </Button>
         </Grid>
       </Grid>
     </CardActions>
   </Card>
-)
 
 export default Room

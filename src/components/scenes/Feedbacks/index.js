@@ -3,7 +3,7 @@ import React, {Component} from "react"
 import {withStore} from "../../App/Store"
 import {Grid, Typography, Paper} from "@material-ui/core"
 import Stats from "./Stats"
-import {FEEDBACKS_FS} from "../../../utils/firebase"
+import {FEEDBACKS_FS} from "../../../lib/firebase"
 import FeedbacksTable from "./FeedbacksTable"
 import {Tip} from "../../shared"
 

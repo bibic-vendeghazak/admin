@@ -1,10 +1,14 @@
-import React, {Fragment} from "react"
-import {Route, Link, Switch} from "react-router-dom"
-import moment from "moment"
+import React from "react"
+import {
+  Route, Link, Switch
+} from "react-router-dom"
+import {moment} from "../../lib"
 
 import {routes, toRoute} from "../../utils"
 
-import {Typography, IconButton, Tooltip} from "@material-ui/core"
+import {
+  Typography, IconButton, Tooltip
+} from "@material-ui/core"
 import Close from "@material-ui/icons/CloseRounded"
 import Today from "@material-ui/icons/TodayRounded"
 import Next from "@material-ui/icons/NavigateNext"
@@ -17,11 +21,25 @@ const {
 } = routes
 
 export const Title = () =>
-  <Typography color="inherit" noWrap style={{flexGrow: 1}} variant="h6">
+  <Typography
+    color="inherit"
+    noWrap
+    style={{flexGrow: 1}}
+    variant="h6"
+  >
     <Switch>
-      <Route component={() => "Szobák"} path={ROOMS}/>
-      <Route component={() => "Bemutatkozás"} path={INTRO}/>
-      <Route component={() => "Tanúsítványok"} path={CERTIFICATES}/>
+      <Route
+        component={() => "Szobák"}
+        path={ROOMS}
+      />
+      <Route
+        component={() => "Bemutatkozás"}
+        path={INTRO}
+      />
+      <Route
+        component={() => "Tanúsítványok"}
+        path={CERTIFICATES}
+      />
       <Route
         component={
           ({match: {params: {p1}}}) =>
@@ -36,11 +54,26 @@ export const Title = () =>
           }}}) => moment([year, month-1, day || "01"]).format(day ? "YYYY MMMM DD, dddd" : "YYYY MMMM")}
         path={toRoute(CALENDAR, ":year", ":month", ":day?")}
       />
-      <Route component={({match: {params: {p1}}}) => p1 ? "Foglalás" : "Foglalások"} path={toRoute(RESERVATIONS, ":p1?")}/>
-      <Route component={() => "Statisztika / Üzenetek"} path={FEEDBACKS}/>
-      <Route component={() => "Ételek galéria"} path={FOODS}/>
-      <Route component={() => "Rendezvények galéria"} path={EVENTS}/>
-      <Route component={() => "Szolgáltatások galéria"} path={SERVICES}/>
+      <Route
+        component={({match: {params: {p1}}}) => p1 ? "Foglalás" : "Foglalások"}
+        path={toRoute(RESERVATIONS, ":p1?")}
+      />
+      <Route
+        component={() => "Statisztika / Üzenetek"}
+        path={FEEDBACKS}
+      />
+      <Route
+        component={() => "Ételek galéria"}
+        path={FOODS}
+      />
+      <Route
+        component={() => "Rendezvények galéria"}
+        path={EVENTS}
+      />
+      <Route
+        component={() => "Szolgáltatások galéria"}
+        path={SERVICES}
+      />
       <Route component={() => "Admin kezelőfelület"}/>
     </Switch>
   </Typography>
@@ -65,7 +98,7 @@ export const RightAction = () =>
         return (
           day ?
             <CloseButton to={toRoute(CALENDAR, year, month)}/> :
-            <Fragment>
+            <>
               <Tooltip title="Előző hónap">
                 <IconButton
                   component={Link}
@@ -79,10 +112,8 @@ export const RightAction = () =>
                   component={Link}
                   to={toRoute(CALENDAR, moment().format("YYYY/MM"))}
                 >
-                  <Today style={{
-                    color: "white",
-                    margin: "0 32px"
-                  }}
+                  <Today style={{color: "white",
+                    margin: "0 32px"}}
                   />
                 </IconButton>
               </Tooltip>
@@ -94,7 +125,7 @@ export const RightAction = () =>
                   <Next style={{color: "white"}}/>
                 </IconButton>
               </Tooltip>
-            </Fragment>
+            </>
         )}}
       path={toRoute(CALENDAR, ":year", ":month", ":day?")}
     />

@@ -1,4 +1,4 @@
-import React, {Fragment} from "react"
+import React from "react"
 import {Route, withRouter} from "react-router-dom"
 import EditReservation from "./EditReservation"
 import {ExtendedFAB, Tip} from "../../shared"
@@ -16,7 +16,7 @@ const Reservations = ({rooms}) =>
       exact
       path={routes.RESERVATIONS}
       render={() =>
-        <Fragment>
+        <>
           <Paper style={{paddingTop: 16}}>
             <Tip>A foglalások sorbarendezhetőek az oszlopcímekre kattintva.</Tip>
             <Tip>Az új foglalások mindig a lista tetején jelennek meg.</Tip>
@@ -27,7 +27,7 @@ const Reservations = ({rooms}) =>
             label="Új foglalás"
             to={toRoute(routes.RESERVATIONS, routes.NEW)}
           />
-        </Fragment>
+        </>
       }
     />
     <Route

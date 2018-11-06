@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import moment from "moment"
+import {moment} from "../../lib"
 import {NavLink} from "react-router-dom"
 import {withStore} from "./Store"
 import {routes, toRoute} from "../../utils"
@@ -39,13 +39,9 @@ import VerifiedUser from "@material-ui/icons/VerifiedUserRounded"
 import VideoLibrary from "@material-ui/icons/VideoLibraryRounded"
 
 
-const styles = ({
-  spacing: {unit}, palette: {primary: {dark}}
-}) => ({
-  primary: {
-    color: "white",
-    paddingTop: unit
-  },
+const styles = ({spacing: {unit}, palette: {primary: {dark}}}) => ({
+  primary: {color: "white",
+    paddingTop: unit},
   button: {"&:hover": {backgroundColor: dark}},
   activeLink: {backgroundColor: dark},
   divider: {backgroundColor: "white"},
@@ -63,9 +59,7 @@ const Sidebar = ({
   handleDrawerToggle,
   unhandledReservationCount, unhandledFeedbackCount,
   unhandledMessageCount,
-  profile: {
-    name, src
-  }
+  profile: {name, src}
 }) => {
   const drawerItemStyle={
     primary,
@@ -98,12 +92,11 @@ const Sidebar = ({
       </DrawerItem>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Foglalás</ListSubheader>
+        <ListSubheader disableSticky
+style={{color: "white"}}>Foglalás</ListSubheader>
         <DrawerItem
-          {...{drawerItemStyle: {
-            nested,
-            ...drawerItemStyle
-          }}}
+          {...{drawerItemStyle: {nested,
+            ...drawerItemStyle}}}
           icon={
             <Badge
               badgeContent={unhandledReservationCount}
@@ -117,10 +110,8 @@ const Sidebar = ({
             Szobafoglalás
         </DrawerItem>
         <DrawerItem
-          {...{drawerItemStyle: {
-            nested,
-            ...drawerItemStyle
-          }}}
+          {...{drawerItemStyle: {nested,
+            ...drawerItemStyle}}}
           icon={<DateRange/>}
           to={toRoute(routes.CALENDAR, moment().format("YYYY/MM"))}
         >Naptár</DrawerItem>
@@ -155,7 +146,8 @@ const Sidebar = ({
       </List>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Szekciók</ListSubheader>
+        <ListSubheader disableSticky
+style={{color: "white"}}>Szekciók</ListSubheader>
         <DrawerItem
           component={NavLink}
           {...{drawerItemStyle}}
@@ -204,7 +196,8 @@ const Sidebar = ({
       </List>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Közösségi média</ListSubheader>
+        <ListSubheader disableSticky
+style={{color: "white"}}>Közösségi média</ListSubheader>
         <DrawerItem
           {...{drawerItemStyle}}
           href={routes.MESSENGER}
@@ -229,7 +222,8 @@ const Sidebar = ({
       </List>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Egyéb</ListSubheader>
+        <ListSubheader disableSticky
+style={{color: "white"}}>Egyéb</ListSubheader>
         <DrawerItem
           {...{drawerItemStyle}}
           icon={<Settings/>}
@@ -279,10 +273,8 @@ const DrawerItem = ({
       button
       className={nested}
       classes={{button}}
-      {...{
-        ...typeProps,
-        ...props
-      }}
+      {...{...typeProps,
+        ...props}}
     >
       <ListItemIcon style={{color: "white"}}>
         {icon}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Grid, Typography, Tooltip, Card, CardHeader, CardActions, IconButton} from '@material-ui/core'
 import {Link} from 'react-router-dom'
-import {RESERVATIONS_FS} from "../../../utils/firebase"
+import {RESERVATIONS_FS} from "../../../lib/firebase"
 import {Loading, Background} from '../../shared'
 import {routes, toRoute, colors} from '../../../utils'
 

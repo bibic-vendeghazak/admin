@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from "react"
-import {PARAGRAPHS_DB} from "../../../utils/firebase"
+import React, {Component, } from "react"
+import {PARAGRAPHS_DB} from "../../../lib/firebase"
 
 import {Grid, TextField, CardActions, Button, Divider, Card, CardContent, Typography, CardHeader, Tooltip} from "@material-ui/core"
 import {SortableHandle} from "react-sortable-hoc"
@@ -124,7 +124,7 @@ class TextParagraph extends Component {
         <CardActions>
           <Grid container justify="flex-end">
             {isEditing ?
-              <Fragment>
+              <>
                 <Button
                   onClick={this.handleCloseEdit}
                   size="small"
@@ -137,8 +137,8 @@ class TextParagraph extends Component {
                 >
                   Mentés
                 </Button>
-              </Fragment> :
-              <Fragment>
+              </> :
+              <>
                 <Button
                   color="secondary"
                   onClick={this.handleDeleteParagraph}
@@ -153,7 +153,7 @@ class TextParagraph extends Component {
                 >
                   Módosít
                 </Button>
-              </Fragment>
+              </>
             }
           </Grid>
         </CardActions>

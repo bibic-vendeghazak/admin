@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import {Route, Link} from "react-router-dom"
 
 import {routes, toRoute} from "../../../utils"
-import {FileStore} from "../../../utils/firebase"
+import {FileStore} from "../../../lib/firebase"
 import {Tip, Modal} from ".."
 import {Grid, Button, Tooltip, GridList, GridListTile, GridListTileBar, IconButton, LinearProgress, Input, InputAdornment} from "@material-ui/core"
 

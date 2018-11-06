@@ -11,8 +11,8 @@ import {
   Typography
 } from '@material-ui/core'
 
-import Store from '../../App/Store'
-import {ROOM_SERVICES_DB} from '../../../utils/firebase'
+import Store from '../../../App/Store'
+import {ROOM_SERVICES_DB} from '../../../../lib/firebase'
 
 
 class Service extends Component {

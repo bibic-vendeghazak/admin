@@ -1,10 +1,10 @@
 import React, {Component} from "react"
 import {Route} from "react-router-dom"
-import moment from "moment"
+import {moment} from "../../../lib"
 import Month from "./Month"
 import DayBig from "./DayBig"
 import {routes, toRoute} from "../../../utils"
-import {RESERVATIONS_FS} from "../../../utils/firebase"
+import {RESERVATIONS_FS} from "../../../lib/firebase"
 
 export default class Calendar extends Component {
 
@@ -24,14 +24,12 @@ export default class Calendar extends Component {
         const {
           from, to, roomId
         } = reservation.data()
-        this.setState(({reservations}) => ({reservations: {
-          ...reservations,
+        this.setState(({reservations}) => ({reservations: {...reservations,
           [reservation.id]: {
             from,
             to,
             roomId
-          }
-        }}))
+          }}}))
       })
     })
   }
@@ -41,18 +39,14 @@ export default class Calendar extends Component {
     this.updateURL(params)
   }
 
-  updateURL = ({
-    year, month
-  }) => {
+  updateURL = ({year, month}) => {
     this.setState({currentDate: moment().year(year).month(month-1)})
   }
 
 
   render() {
     const {history} = this.props
-    const {
-      currentDate, reservations
-    } = this.state
+    const {currentDate, reservations} = this.state
 
 
     return (
@@ -74,14 +68,10 @@ export default class Calendar extends Component {
         />
         <Route
           path={toRoute(routes.CALENDAR, ":year", ":month", ":day")}
-          render={({
-            match, history
-          }) =>
+          render={({match, history}) =>
             <DayBig
-              {...{
-                match,
-                history
-              }}
+              {...{match,
+                history}}
             />
           }
         />

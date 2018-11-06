@@ -5,7 +5,7 @@ import FilteredReservations from './FilteredReservations'
 
 import moment from 'moment'
 
-import {RESERVATIONS_FS} from "../../../utils/firebase"
+import {RESERVATIONS_FS} from "../../../lib/firebase"
 
 
 import {Table, TableBody} from "@material-ui/core"

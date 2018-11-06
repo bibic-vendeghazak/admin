@@ -22,8 +22,8 @@ import Edit from "@material-ui/icons/EditRounded"
 import Close from "@material-ui/icons/CloseRounded"
 import Breakfast from "@material-ui/icons/FreeBreakfastRounded"
 
-import Store from "../../App/Store"
-import {ROOMS_DB} from "../../../utils/firebase"
+import Store from "../../../App/Store"
+import {ROOMS_DB} from "../../../../lib/firebase"
 
 
 export default class Prices extends Component {

@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from "react"
+import React, {Component, } from "react"
 import moment from "moment"
 import {TableRow, TableCell, Tooltip, Button, Grid, IconButton, Hidden} from "@material-ui/core"
 import {Background} from "../../shared"
@@ -9,7 +9,7 @@ import Delete from "@material-ui/icons/DeleteRounded"
 import Done from "@material-ui/icons/DoneRounded"
 import {colors} from "../../../utils"
 import {withStore} from "../../App/Store"
-import {FEEDBACKS_FS} from "../../../utils/firebase"
+import {FEEDBACKS_FS} from "../../../lib/firebase"
 import Star from "@material-ui/icons/Star"
 
 class Feedback extends Component {
@@ -108,7 +108,7 @@ class Feedback extends Component {
               </IconButton>
             </Tooltip>
             {!accepted &&
-                <Fragment>
+                <>
                   <Hidden mdDown>
                     <Button
                       color="primary"
@@ -126,7 +126,7 @@ class Feedback extends Component {
                       <Done/>
                     </IconButton>
                   </Hidden>
-                </Fragment>
+                </>
             }
           </Grid>
         </TableCell>

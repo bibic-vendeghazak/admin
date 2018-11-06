@@ -8,7 +8,7 @@ import {
   CardContent, Grid, Typography
 } from "@material-ui/core"
 
-import {ROOMS_DB} from '../../../utils/firebase'
+import {ROOMS_DB} from '../../../../lib/firebase'
 
 export default class Description extends Component {
 

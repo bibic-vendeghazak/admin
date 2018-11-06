@@ -5,15 +5,15 @@ import Population from "./Population"
 import Prices from "./Prices"
 import Availability from "./Availability"
 import Description from "./Description"
-import {Gallery} from "../../shared"
+import {Gallery} from "../../../shared"
 
-import {ROOMS_DB, ROOM_SERVICES_DB} from "../../../utils/firebase"
+import {ROOMS_DB, ROOM_SERVICES_DB} from "../../../../lib/firebase"
 
 import {Typography, Grid} from "@material-ui/core"
-import Store from "../../App/Store"
+import {withStore} from "../../../App/Store"
 
 
-export default class EditRoom extends Component {
+export class EditRoom extends Component {
 
 
   handleRoomEdit(event) {
@@ -72,57 +72,54 @@ export default class EditRoom extends Component {
   }
 
   render(){
-    let {roomId} = this.props.match.params
-    roomId = parseInt(roomId, 10)
+    const roomId = parseInt(this.props.roomId, 10)
+    const {sendNotification, openDialog} = this.props
     return(
-      <Store.Consumer>
-        {({
-          sendNotification, openDialog
-        }) =>
-          <Grid
-            container
-            direction="column"
-            style={{
-              maxWidth: 540,
-              margin: "16px auto"
+      <Grid
+        container
+        direction="column"
+        style={{
+          maxWidth: 540,
+          margin: "16px auto"
+        }}
+      >
+        <Section
+          title="Szoba állapota"
+        >
+          <Availability
+            {...{
+              roomId,
+              openDialog
             }}
-          >
-            <Section
-              title="Szoba állapota"
-            >
-              <Availability
-                {...{
-                  roomId,
-                  openDialog
-                }}
-              />
-            </Section>
-            <Section title="Szoba képek">
-              <Gallery hasText={false} relativeFAB/>
-            </Section>
-            <Section title="Szoba leírása">
-              <Description {...{
-                roomId,
-                sendNotification
-              }}
-              />
-            </Section>
-            <Section title="Szolgáltatások"><Services {...{roomId}}/></Section>
-            <Section title="Fekhely">
-              <Population
-                {...{
-                  roomId,
-                  openDialog
-                }}
-              />
-            </Section>
-            <Section title="Ártáblázat"><Prices {...{roomId}}/></Section>
-          </Grid>
-        }
-      </Store.Consumer>
+          />
+        </Section>
+        <Section title="Szoba képek">
+          <Gallery hasText={false} relativeFAB/>
+        </Section>
+        <Section title="Szoba leírása">
+          <Description {...{
+            roomId,
+            sendNotification
+          }}
+          />
+        </Section>
+        <Section title="Szolgáltatások"><Services {...{roomId}}/></Section>
+        <Section title="Fekhely">
+          <Population
+            {...{
+              roomId,
+              openDialog
+            }}
+          />
+        </Section>
+        <Section title="Ártáblázat"><Prices {...{roomId}}/></Section>
+      </Grid>
     )
   }
 }
+
+
+export default withStore(EditRoom)
 
 
 const Section = ({

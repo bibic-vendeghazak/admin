@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from "react"
+import React, {Component, } from "react"
 import moment from "moment"
 import {Link} from "react-router-dom"
 
@@ -21,7 +21,7 @@ import Service from "@material-ui/icons/RoomServiceRounded"
 
 import {Tip, Background, Item} from '../../shared'
 
-import {RESERVATIONS_FS, TIMESTAMP} from "../../../utils/firebase"
+import {RESERVATIONS_FS, TIMESTAMP} from "../../../lib/firebase"
 import {routes, colors, toRoute} from "../../../utils"
 import {Card, Button, CardActions, Hidden, Divider, CardContent, Typography, Grid, Tooltip} from "@material-ui/core"
 import {withStore} from "../../App/Store"
@@ -182,7 +182,7 @@ class Reservation extends Component {
                   />
                   <Tooltip
                     title={
-                      <Fragment>
+                      <>
                         {children.length && children.map(({
                           name, count
                         }) =>
@@ -190,7 +190,7 @@ class Reservation extends Component {
                             {name} éves korig: {count} fő<br/>
                           </span>
                         )}
-                      </Fragment>
+                      </>
                     }
                   >
                     <Item

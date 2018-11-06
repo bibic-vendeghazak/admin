@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types";
 import {Button} from "@material-ui/core"
 import Add from "@material-ui/icons/ShortTextRounded"
-import {DB} from "../../../utils/firebase"
+import {DB} from "../../../lib/firebase"
 import {withStore} from "../../App/Store"
 
 

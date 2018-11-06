@@ -1,52 +1,22 @@
-import React, {Fragment} from "react"
-import {Route} from "react-router-dom"
-import {withStore} from "../../App/Store"
+import React from "react"
+import {Grid} from "@material-ui/core"
 
 import Room from "./Room"
 import EditRoom from "./EditRoom"
-import {routes, toRoute} from "../../../utils"
-import {Grid} from "@material-ui/core"
 import {Loading} from "../../shared"
+import {withStore} from "../../App/Store"
 
 
-const Rooms = ({
-  rooms, roomPictures
-}) =>
-  <Fragment>
-    <Route
-      exact
-      path={routes.ROOMS}
-      render={() =>
-        <Grid
-          container
-          style={{
-            padding: 8,
-            maxWidth: 960
-          }}
-        >
-          {rooms.length ? rooms.map(({
-            unavailable, name, isBooked, id
-          }) =>
-            <Grid item key={id} lg={4} sm={6} xs={12}>
-              <Room
-                pictures={roomPictures[id] ? roomPictures[id] : null}
-                {...{
-                  unavailable,
-                  name,
-                  isBooked,
-                  id
-                }}
-              />
-            </Grid>) : <Loading/>
-          }
-        </Grid>
+export const Rooms = ({rooms, roomPictures, match: {params: {roomId}}}) =>
+  roomId ?
+    <EditRoom roomId={roomId}/> :
+    <Grid container style={{padding: 8, maxWidth: 960}}>
+      {rooms.length ? rooms.map(room =>
+        <Grid item key={room.id} lg={4} sm={6} xs={12}>
+          <Room {...room} pictures={roomPictures[room.id]}/>
+        </Grid>) :
+        <Loading/>
       }
-    />
-    <Route
-      component={EditRoom}
-      path={toRoute(routes.ROOMS, ":roomId")}
-    />
-  </Fragment>
-
+    </Grid>
 
 export default withStore(Rooms)

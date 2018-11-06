@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import PropTypes from "prop-types"
-import moment from "moment"
+import {moment} from "../../lib"
 import {
   AUTH,
   ADMINS,
@@ -11,7 +11,7 @@ import {
   GALLERIES_DB,
   RESERVATION_DATES_DB,
   MESSAGES_FS
-} from "../../utils/firebase"
+} from "../../lib/firebase"
 import {routes} from "../../utils"
 
 const Store = React.createContext()
@@ -27,10 +27,8 @@ export const withStore = Wrapped =>
       return (
         <Store.Consumer>
           {values => (
-            <Wrapped {...{
-              ...values,
-              ...this.props
-            }}
+            <Wrapped {...{...values,
+              ...this.props}}
             />
           )}
         </Store.Consumer>
@@ -46,14 +44,10 @@ export class Database extends Component {
   state = {
     isLoggedIn: false,
     mobileOpen: false,
-    profile: {
-      name: "Bíbic vendégházak",
-      src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"
-    },
-    snackbar: {
-      open: false,
-      message: {}
-    },
+    profile: {name: "Bíbic vendégházak",
+      src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"},
+    snackbar: {open: false,
+      message: {}},
     dialog: {
       open: false,
       title: "Biztos benne, hogy folytatni akarja?",
@@ -75,10 +69,8 @@ export class Database extends Component {
         ADMINS.child(user.uid).once("value", snap => {
           this.setState({profile: snap.val()})
         })
-        this.handleSendNotification({
-          code: "success",
-          message: "Sikeres bejelentkezés."
-        })
+        this.handleSendNotification({code: "success",
+          message: "Sikeres bejelentkezés."})
 
         // Fetch counts
         this.setState({isLoggedIn: true})
@@ -119,37 +111,25 @@ export class Database extends Component {
           this.setState({roomServices: snap.val()})
         })
         this.setState({isLoggedIn: true})
-      } else this.handleSendNotification({
-        code: "success",
-        message: "Kijelentkezve."
-      })
+      } else this.handleSendNotification({code: "success",
+        message: "Kijelentkezve."})
     })
   }
 
 
-  handleSendNotification = ({
-    code, message
-  }) =>
-    this.setState(state => ({
-      ...state,
+  handleSendNotification = ({code, message}) =>
+    this.setState(state => ({...state,
       snackbar: {
         ...state.snackbar,
         open: true,
-        message: {
-          code,
-          message
-        }
-      }
-    }))
+        message: {code,
+          message}
+      }}))
 
   handleCloseNotification = () =>
-    this.setState(state => ({
-      ...state,
-      snackbar: {
-        ...state.snackbar,
-        open: false
-      }
-    }))
+    this.setState(state => ({...state,
+      snackbar: {...state.snackbar,
+        open: false}}))
 
     handleLogout = () => {
       AUTH.signOut().then(() => {
@@ -183,10 +163,8 @@ export class Database extends Component {
       acceptDialog: () => {
         submit()
           .then(() => {
-            this.handleSendNotification({
-              code: "success",
-              message: success
-            })
+            this.handleSendNotification({code: "success",
+              message: success})
           })
           .then(() => handleClose ? handleClose() : this.handleCloseDialog())
           .catch(this.handleSendNotification)
@@ -195,13 +173,9 @@ export class Database extends Component {
     }))
 
   handleCloseDialog = () =>
-    this.setState(state => ({
-      ...state,
-      dialog: {
-        ...state.dialog,
-        open: false
-      }
-    }))
+    this.setState(state => ({...state,
+      dialog: {...state.dialog,
+        open: false}}))
 
 
   render() {

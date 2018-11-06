@@ -1,8 +1,8 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component, } from 'react'
 import {Route} from "react-router-dom"
 import {Paper} from '@material-ui/core'
 import MessagesTable from './MessagesTable'
-import {MESSAGES_FS} from '../../../utils/firebase'
+import {MESSAGES_FS} from '../../../lib/firebase'
 import {toRoute, routes} from '../../../utils'
 import Message from './Message'
 
@@ -42,7 +42,7 @@ class Messages extends Component {
       Messages, isFetched
     } = this.state
     return (
-      <Fragment>
+      <>
         <Route
           exact
           path={routes.SPECIAL_REQUESTS}
@@ -64,7 +64,7 @@ class Messages extends Component {
           path={toRoute(routes.SPECIAL_REQUESTS, ":messageId")}
         />
 
-      </Fragment>
+      </>
     )
   }
 }

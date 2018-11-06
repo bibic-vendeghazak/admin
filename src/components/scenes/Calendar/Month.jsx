@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
-import moment from 'moment'
+import {moment} from '../../../lib'
 
 import {withStyles} from '@material-ui/core'
 
-import {routes, colors, toRoute} from '../../../utils'
+import {
+routes, colors, toRoute
+} from '../../../utils'
 
 import Days from './Days'
 // import MonthFooter from './MonthFooter'
@@ -16,9 +18,7 @@ class Month extends Component {
 
 
   handleKeyUp = ({keyCode}) => {
-    const {
-      currentDate, history
-    } = this.props
+    const {currentDate, history} = this.props
     const previousMonth = moment(currentDate)
       .clone()
       .subtract(1, "month")
@@ -68,10 +68,8 @@ class Month extends Component {
             from={previousMonthDays - extraDaysBefore}
             isPlaceholder
             to={previousMonthDays}
-            {...{
-              currentDate: previousMonth,
-              reservations
-            }}
+            {...{currentDate: previousMonth,
+              reservations}}
           />
 
           {/* Current month */}
@@ -86,10 +84,8 @@ class Month extends Component {
           <Days
             isPlaceholder
             to={42 - currentMonthDays - extraDaysBefore}
-            {...{
-              currentDate: nextMonth,
-              reservations
-            }}
+            {...{currentDate: nextMonth,
+              reservations}}
           />
 
         </ul>
@@ -99,8 +95,7 @@ class Month extends Component {
   }
 }
 
-const styles = theme => ({
-  monthWrapper: {
+const styles = theme => ({monthWrapper: {
     height: "calc(100vh - 64px)",
     display: "flex",
     flexDirection: "column"
@@ -161,30 +156,18 @@ const styles = theme => ({
       borderTopRightRadius: 4,
       borderBottomRightRadius: 4
     },
-    "& .room-1": {
-      backgroundColor: colors.room1,
-      marginTop: 0
-    },
-    "& .room-2": {
-      backgroundColor: colors.room2,
-      marginTop: 7
-    },
-    "& .room-3": {
-      backgroundColor: colors.room3,
-      marginTop: 14
-    },
-    "& .room-4": {
-      backgroundColor: colors.room4,
-      marginTop: 21
-    },
-    "& .room-5": {
-      backgroundColor: colors.room5,
-      marginTop: 28
-    },
-    "& .room-6": {
-      backgroundColor: colors.room6,
-      marginTop: 35
-    },
+    "& .room-1": {backgroundColor: colors.room1,
+      marginTop: 0},
+    "& .room-2": {backgroundColor: colors.room2,
+      marginTop: 7},
+    "& .room-3": {backgroundColor: colors.room3,
+      marginTop: 14},
+    "& .room-4": {backgroundColor: colors.room4,
+      marginTop: 21},
+    "& .room-5": {backgroundColor: colors.room5,
+      marginTop: 28},
+    "& .room-6": {backgroundColor: colors.room6,
+      marginTop: 35},
     "& .today": {
       fontSize: ".7em",
       display: "grid",
@@ -197,7 +180,6 @@ const styles = theme => ({
       backgroundColor: theme.palette.secondary.main,
       borderRadius: "50%"
     }
-  }
-})
+  }})
 
 export default withStyles(styles)(Month)

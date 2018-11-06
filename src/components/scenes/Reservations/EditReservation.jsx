@@ -1,14 +1,16 @@
-import React, {Component, Fragment} from "react"
-import moment from "moment"
+import React, {Component, } from "react"
+import {moment} from "../../../lib"
 
-import {RESERVATIONS_FS, TIMESTAMP} from "../../../utils/firebase"
+import {RESERVATIONS_FS, TIMESTAMP} from "../../../lib/firebase"
 
-import {Switch, Grid, TextField, FormControlLabel, InputAdornment, Select, MenuItem, FormControl, InputLabel, Input, Tooltip} from '@material-ui/core'
+import {
+  Switch, Grid, TextField, FormControlLabel, InputAdornment, Select, MenuItem, FormControl, InputLabel, Input, Tooltip
+} from '@material-ui/core'
 
 import Autorenew from '@material-ui/icons/AutorenewRounded'
 
 import {Modal} from "../../shared"
-import {isValidReservation} from "../../../utils"
+import {validateReservation} from "../../../utils"
 import {withStore} from "../../App/Store"
 
 class EditReservation extends Component {
@@ -26,18 +28,14 @@ class EditReservation extends Component {
         address: "lakcím",
         adults: 1,
         children: [
-          {
-            name: "0-6",
-            count: 0
-          }, {
-            name: "6-12",
-            count: 0
-          }
+          {name: "0-6",
+            count: 0}, {name: "6-12",
+            count: 0}
         ],
         from: moment().startOf("day").hours(14).toDate(),
         to: moment().startOf("day").hours(10).add(1, "day").toDate(),
         handled: true,
-        activeService: "breakfast",
+        foodService: "breakfast",
         price: 1
       },
       priceError: null
@@ -50,9 +48,7 @@ class EditReservation extends Component {
       .get()
       .then(snap => {
         if (snap.exists) {
-          const {
-            from, to
-          } = snap.data()
+          const {from, to} = snap.data()
           this.setState({reservation: {
             ...snap.data(),
             from: from.toDate(),
@@ -67,24 +63,18 @@ class EditReservation extends Component {
   handleInputChange = ({target: {
     name, value, type
   }}) => {
-    this.setState(({reservation}) => ({reservation: {
-      ...reservation,
-      [name]: type === "number" ? parseInt(value, 10) : value
-    }}), () => name!=="price" && this.handleGetPrice())
+    this.setState(({reservation}) => ({reservation: {...reservation,
+      [name]: type === "number" ? parseInt(value, 10) : value}}), () => name!=="price" && this.handleGetPrice())
   }
 
   handleChildrenChange = ({target: {value}}, type) => {
     const {children} = this.state.reservation
     children[type].count = parseInt(value, 10) || 0
-    this.setState(({reservation}) => ({reservation: {
-      ...reservation,
-      children
-    }}), this.handleGetPrice)
+    this.setState(({reservation}) => ({reservation: {...reservation,
+      children}}), this.handleGetPrice)
   }
 
-  handleDateChange = ({target: {
-    name, value
-  }}) => {
+  handleDateChange = ({target: {name, value}}) => {
     let from,to
     switch (name) {
     case "from":
@@ -113,15 +103,13 @@ class EditReservation extends Component {
       lastHandledBy: profile.name
     }
 
-    const reservationStatus = isValidReservation(newReservation, rooms.length)
-    return reservationStatus === "OK" ?
+    const reservationStatus = validateReservation({...newReservation, roomLength: rooms.length})
+    return reservationStatus ?
       reservationId ?
         RESERVATIONS_FS.doc(reservationId).set(newReservation) :
         RESERVATIONS_FS.add(newReservation) :
-      Promise.reject({
-        code: "error",
-        message: `Érvénytelen ${reservationStatus}!`
-      })
+      Promise.reject({code: "error",
+        message: reservationStatus})
   }
 
   handleComplexityChange = () =>
@@ -132,11 +120,11 @@ class EditReservation extends Component {
 
   handleGetPrice = () => {
     const {
-      from, to, roomId, adults, children, activeService
+      from, to, roomId, adults, children, foodService
     } = this.state.reservation
     const {rooms} = this.props
     if (rooms.length) {
-      const roomPrice = rooms[roomId-1].prices.table[activeService]
+      const roomPrice = rooms[roomId-1].prices.table[foodService]
       console.log(roomPrice)
       let price = 0
       let priceError = "Egyedi árazás szükséges"
@@ -149,13 +137,9 @@ class EditReservation extends Component {
           priceError = null
         }
       }
-      this.setState(({reservation}) => ({
-        priceError,
-        reservation: {
-          ...reservation,
-          price
-        }
-      }))
+      this.setState(({reservation}) => ({priceError,
+        reservation: {...reservation,
+          price}}))
     }
   }
 
@@ -164,7 +148,7 @@ class EditReservation extends Component {
       isFullReservation, priceError, reservation: {
         name, tel, email,
         roomId, adults, children,
-        from, to, message, address, price, activeService
+        from, to, message, address, price, foodService
       }
     } = this.state
     const {
@@ -299,7 +283,7 @@ class EditReservation extends Component {
           </Grid>
         </Grid>
         {isFullReservation &&
-           <Fragment>
+           <>
              <Grid
                container
                spacing={16}
@@ -366,9 +350,7 @@ class EditReservation extends Component {
                    value={adults || ""}
                  />
                </Grid>
-               {children.map(({
-                 name, count
-               }, index) =>
+               {children.map(({name, count}, index) =>
                  <Grid
                    item
                    key={index}
@@ -392,15 +374,13 @@ class EditReservation extends Component {
                  xs={6}
                >
                  <TextField
-                   InputProps={{
-                     startAdornment: <InputAdornment position="start">HUF</InputAdornment>,
+                   InputProps={{startAdornment: <InputAdornment position="start">HUF</InputAdornment>,
                      endAdornment:
                      <InputAdornment>
                        <Tooltip title="Automatikus árazás">
                          <Autorenew color="disabled"/>
                        </Tooltip>
-                     </InputAdornment>
-                   }}
+                     </InputAdornment>}}
                    error={Boolean(priceError)}
                    fullWidth
                    label={priceError || "Ár"}
@@ -424,12 +404,12 @@ class EditReservation extends Component {
                      input={
                        <Input
                          id="service"
-                         name="activeService"
+                         name="foodService"
                        />
                      }
-                     name="activeService"
+                     name="foodService"
                      onChange={this.handleInputChange}
-                     value={activeService}
+                     value={foodService}
                    >
                      <MenuItem value="breakfast">reggeli</MenuItem>
                      <MenuItem value="halfBoard">félpanzió</MenuItem>
@@ -447,7 +427,7 @@ class EditReservation extends Component {
                  value={message}
                />
              </Grid>
-           </Fragment>}
+           </>}
       </Modal>
     )
   }

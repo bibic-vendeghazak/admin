@@ -33,7 +33,7 @@ const routes = {
 
 /**
  * Construct a route path from the parameters
- * @param  {...string} parts individual parts of the desired path
+ * @param  {...string} individual parts of the desired path
  * @returns {string} a string of parts joined by a /
  */
 const toRoute = (...parts) => [...parts].join("/")

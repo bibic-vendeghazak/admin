@@ -6,8 +6,7 @@ import {Database} from "./components/App/Store"
 
 
 import {theme} from "./utils"
-import "./utils/moment"
-import "./utils/firebase"
+import "./lib/firebase"
 import App from "./components/App"
 
 ReactDOM.render(

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import moment from 'moment'
 
-import {ROOMS_DB} from '../../../utils/firebase'
+import {moment} from '../../../../lib'
+import {ROOMS_DB} from '../../../../lib/firebase'
 import {
   TextField,
   Grid,

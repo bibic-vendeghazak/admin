@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component, } from 'react'
 
 
 import {
@@ -10,9 +10,9 @@ import {
   CardContent,
   CardActions
 } from '@material-ui/core'
-import {ROOMS_DB} from '../../../utils/firebase'
+import {ROOMS_DB} from '../../../../lib/firebase'
 
-import {Tip} from '../../shared'
+import {Tip} from '../../../shared'
 
 export default class Population extends Component {
 
@@ -55,7 +55,7 @@ export default class Population extends Component {
       count, isEditing
     } = this.state
     return(
-      <Fragment>
+      <>
         <Card>
           <CardContent>
             <Grid
@@ -99,7 +99,7 @@ export default class Population extends Component {
           </CardActions>
         </Card>
         <Tip>A maximum személyek megváltoztatása módosítja az ártáblázatot.</Tip>
-      </Fragment>
+      </>
     )
   }
 }

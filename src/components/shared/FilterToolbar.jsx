@@ -1,4 +1,4 @@
-import React, {Fragment, Component} from "react"
+import React, {Component} from "react"
 import moment from "moment"
 
 import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from "@material-ui/core"
@@ -49,8 +49,8 @@ const withToolbar = WrappedComponent =>
         showQueryFilter, showDateFilter, showRoomFilter, rooms, ...props
       } = this.props
       return (
-        <Fragment>
-          <Fragment>
+        <>
+          <>
             <Grid
               container
               style={{padding: "16px 16px 0 16px"}}
@@ -74,7 +74,7 @@ const withToolbar = WrappedComponent =>
                 style={{margin: "16px 0"}}
               >
                 {showDateFilter &&
-                  <Fragment>
+                  <>
                     <Grid
                       item
                       lg={3}
@@ -126,7 +126,7 @@ const withToolbar = WrappedComponent =>
                         />
                       </Grid>
                     </Grid>
-                  </Fragment>
+                  </>
                 }
                 {showRoomFilter &&
                   <Grid
@@ -174,14 +174,14 @@ const withToolbar = WrappedComponent =>
                 }
               </Grid>
             </Grid>
-          </Fragment>
+          </>
           <WrappedComponent
             {...{
               ...props,
               ...this.state
             }}
           />
-        </Fragment>
+        </>
       )
     }
   }

@@ -1,4 +1,4 @@
-import React, {Fragment} from "react"
+import React from "react"
 import {Route, Redirect, Switch} from "react-router-dom"
 import {withStore} from "./Store"
 import Sidebar from "./Sidebar"
@@ -128,7 +128,7 @@ const App = ({
             />
             <Route
               component={Rooms}
-              path={routes.ROOMS}
+              path={toRoute(routes.ROOMS, ":roomId?")}
             />
             <Route
               component={props =>
@@ -150,13 +150,13 @@ const App = ({
             />
             <Route
               component={props =>
-                <Fragment>
+                <>
                   <Gallery {...props}/>
                   <Tip>
                     Az első három kép fel lesz tüntetve a főoldalon a
                     Szolgáltatásaink szekció alatt.
                   </Tip>
-                </Fragment>
+                </>
               }
               path={routes.SERVICES}
             />
