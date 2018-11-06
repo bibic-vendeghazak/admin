@@ -9,10 +9,10 @@ install:
 script:
   - yarn build
   - yarn test:coverage
-deploy:
-  skip_cleanup: true
-  provider: script
-  script: bash scripts/deploy.sh
-  on:
-    all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^develop|master$
+# deploy:
+#   skip_cleanup: true
+#   provider: script
+#   script: bash scripts/deploy.sh
+#   on:
+#     all_branches: true
+#     condition: $TRAVIS_BRANCH =~ ^develop|master$
