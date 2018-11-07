@@ -2,9 +2,9 @@ import React from "react"
 import PropTypes from "prop-types"
 import {moment} from "../../lib"
 import {NavLink} from "react-router-dom"
-import {withStore} from "./Store"
+import {withStore} from "../../db"
 import {routes, toRoute} from "../../utils"
-import Logout from "./Auth/Logout"
+import Logout from "../Auth/Logout"
 
 import {
   Avatar,
@@ -88,12 +88,13 @@ const Sidebar = ({
         href={routes.WEB}
         icon={<Language/>}
       >
-      Weblap megtekintése
+      Weblap
       </DrawerItem>
       <Divider className={divider}/>
       <List disablePadding>
         <ListSubheader disableSticky
-style={{color: "white"}}>Foglalás</ListSubheader>
+          style={{color: "white"}}
+        >Foglalás</ListSubheader>
         <DrawerItem
           {...{drawerItemStyle: {nested,
             ...drawerItemStyle}}}
@@ -147,7 +148,8 @@ style={{color: "white"}}>Foglalás</ListSubheader>
       <Divider className={divider}/>
       <List disablePadding>
         <ListSubheader disableSticky
-style={{color: "white"}}>Szekciók</ListSubheader>
+          style={{color: "white"}}
+        >Szekciók</ListSubheader>
         <DrawerItem
           component={NavLink}
           {...{drawerItemStyle}}
@@ -197,7 +199,8 @@ style={{color: "white"}}>Szekciók</ListSubheader>
       <Divider className={divider}/>
       <List disablePadding>
         <ListSubheader disableSticky
-style={{color: "white"}}>Közösségi média</ListSubheader>
+          style={{color: "white"}}
+        >Közösségi média</ListSubheader>
         <DrawerItem
           {...{drawerItemStyle}}
           href={routes.MESSENGER}
@@ -223,7 +226,8 @@ style={{color: "white"}}>Közösségi média</ListSubheader>
       <Divider className={divider}/>
       <List disablePadding>
         <ListSubheader disableSticky
-style={{color: "white"}}>Egyéb</ListSubheader>
+          style={{color: "white"}}
+        >Egyéb</ListSubheader>
         <DrawerItem
           {...{drawerItemStyle}}
           icon={<Settings/>}

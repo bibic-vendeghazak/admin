@@ -1,11 +1,11 @@
-import React, {Component, } from "react"
+import React, {Component} from "react"
 import {PARAGRAPHS_DB} from "../../../lib/firebase"
 
 import {Grid, TextField, CardActions, Button, Divider, Card, CardContent, Typography, CardHeader, Tooltip} from "@material-ui/core"
 import {SortableHandle} from "react-sortable-hoc"
 
 import DragIndicator from "@material-ui/icons/DragIndicator"
-import {withStore} from "../../App/Store"
+import {withStore} from "../../../db"
 
 const DragHandle = SortableHandle(
   () => (

@@ -1,5 +1,5 @@
 import React from "react"
-import {withStore} from "./Store"
+import {withStore} from "../../db"
 
 import {Snackbar} from "@material-ui/core"
 import Done from "@material-ui/icons/DoneRounded"

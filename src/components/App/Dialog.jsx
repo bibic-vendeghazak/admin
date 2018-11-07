@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import {withStore} from "./Store"
+import {withStore} from "../../db"
 
 import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from "@material-ui/core"
 

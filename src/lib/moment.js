@@ -9,3 +9,6 @@ import {extendMoment} from "moment-range"
  */
 
 export default extendMoment(moment)
+
+export const TODAY = moment().startOf("day")
+export const TOMORROW = TODAY.clone().add(1, "day")

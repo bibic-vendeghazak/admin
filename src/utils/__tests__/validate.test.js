@@ -124,20 +124,11 @@ describe("validateReservation", () => {
     it("address", () =>
       expect(validateReservation({...params, address: ""})).toContain("lakcím"))
 
-    it("arrival is too early", () =>
-      expect(validateReservation({...params, from: moment()})).toContain("érkezés"))
-
-    it("departure is too early", () =>
-      expect(validateReservation({...params, to: moment()})).toContain("távozás"))
-
     it("period length is less than 1 night", () =>
       expect(validateReservation({...params, to: params.from})).toContain("éjszakát"))
 
     it("message", () =>
       expect(validateReservation({...params, message: 0})).toContain("üzenet"))
-
-    it("message less than 40 char", () =>
-      expect(validateReservation({...params, message: "lorem ipsum"})).toContain("rövid"))
 
     it("adult is 0", () =>
       expect(validateReservation({...params, adults: 0})).toContain("felnőtt"))
@@ -146,13 +137,6 @@ describe("validateReservation", () => {
       expect(validateReservation({...params,
         children: [ {name: "0-6", count: -1} ]})).toContain("gyerek"))
 
-    it("people count is higher than max people", () =>
-      expect(validateReservation({...params, adults: 4})).toContain("száma"))
-
-    it("people count is higher than max people 2", () =>
-      expect(validateReservation({
-        ...params, adults: 1, children: [{name: "0-6", count: 3}]
-      })).toContain("száma"))
 
     it("invalid food service", () =>
       expect(validateReservation({...params, foodService: "invalid"})).toContain("ellátás"))

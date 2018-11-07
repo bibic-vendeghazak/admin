@@ -9,7 +9,7 @@ import {Grid, Button, Tooltip, GridList, GridListTile, GridListTileBar, IconButt
 
 import Upload from "@material-ui/icons/CloudUploadRounded"
 import Cancel from "@material-ui/icons/CloseRounded"
-import {withStore} from "../../App/Store"
+import {withStore} from "../../../db"
 
 class UploadPictures extends Component {
 

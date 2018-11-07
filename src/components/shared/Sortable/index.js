@@ -1,4 +1,4 @@
-import React, {Component, } from "react"
+import React, {Component} from "react"
 import PropTypes from "prop-types"
 import {Route, withRouter} from "react-router-dom"
 import {arrayMove} from "react-sortable-hoc"
@@ -9,7 +9,7 @@ import {Loading, Tip} from ".."
 import Sort from "./Sort"
 import {Grid} from "@material-ui/core"
 
-import {withStore} from "../../App/Store"
+import {withStore} from "../../../db"
 
 const orderList = (a, b) => a[1].order - b[1].order
 

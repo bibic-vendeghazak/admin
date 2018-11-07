@@ -8,7 +8,7 @@ import Delete from "@material-ui/icons/DeleteRounded"
 
 import {Loading} from ".."
 import {toRoute} from "../../../utils"
-import {withStore} from "../../App/Store"
+import {withStore} from "../../../db"
 
 class GalleryItemEdit extends Component {
   state = {
@@ -127,7 +127,7 @@ class GalleryItemEdit extends Component {
               <Button
                 color="secondary"
                 onClick={this.handleDeleteGalleryItem}
-                variant="flat"
+                variant="text"
               >
                 <Delete/>
                   Kép törlése
