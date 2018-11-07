@@ -2,7 +2,7 @@
 node_modules
 
 # Own stuff
-db
+rules
 main.css
 build
 .history
