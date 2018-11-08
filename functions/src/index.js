@@ -19,7 +19,8 @@ exports.reservationCreated = reservations.reservationCreated
 exports.reservationChanged = reservations.reservationChanged
 exports.reservationDeleted = reservations.reservationDeleted
 
-exports.reservationExists = functions.region("europe-west1").https.onRequest(reservations.exists)
+exports.reservationExists = functions.region("europe-west1").https
+  .onRequest(reservations.exists)
 
 // Return overlaps in a month 📅
 exports.getOverlaps = functions.region("europe-west1").https

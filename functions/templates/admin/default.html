@@ -1,0 +1,22 @@
+<ul style="list-style-type:none">
+  <li>Név: {{name}}</li>
+  </li>
+  <li>E-mail cím: {{email}}</li>
+  <li>Telefonszám: {{tel}}</li>
+  <li>Lakcím: {{address}}</li>
+  <li><a href="{{ADMIN_ROOT}}/foglalasok/{{reservationId}}">Ugrás a foglalásra</a></li>
+  <li>Szoba száma: {{roomId}}</li>
+  <li>Érkezés*: {{from}}</li>
+  <li>Távozás*: {{to}}</li>
+  <li>Felnőttek száma: {{adults}}</li>
+  {{#kids}}
+    <li>Gyerekek {{name}}: {{count}}</li>
+  {{/kids}}
+  <li>Megjegyzés: {{message}}</li>
+  <li>Ellátás: {{foodService}}</li>
+  <li>Fizetendő összeg: {{price}}</li>
+  <li>Foglalási azonosító: {{reservationId}} </li>
+  <li>Foglalást utoljára kezelte: {{lastHandledBy}}</li>
+  <li>Utoljára módosítva: {{timestamp}}</li>
+</ul>
+<span>*Legkorábbi érkezés 14:00, legkorábbi távozás 10:00</span>

@@ -9,6 +9,7 @@ build
 functions/lib
 functions/index.js
 coverage
+*.min.html
 
 # misc
 npm-debug.log*

@@ -73,10 +73,10 @@
 
 <body style="background:#FFF">
   <div itemscope itemtype="http://schema.org/LodgingReservation">
-    <meta itemprop="reservationNumber" content="${reservationId}">
+    <meta itemprop="reservationNumber" content={{reservationId}}>
     <link itemprop="reservationStatus" href="http://schema.org/Confirmed">
     <div itemprop="underName" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="${name}"> </div>
+      <meta itemprop="name" content={{name}}> </div>
     <div itemprop="reservationFor" itemscope itemtype="http://schema.org/LodgingBusiness">
       <meta itemprop="name" content="Bíbic vendégházak">
       <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
@@ -86,8 +86,8 @@
         <meta itemprop="postalCode" content="7561">
         <meta itemprop="addressCountry" content="HU"> </div>
       <meta itemprop="telephone" content="+36 30 433 6698"> </div>
-    <meta itemprop="checkinDate" content=">${moment(from.toDate()).format(" LLL ")}">
-    <meta itemprop="checkoutDate" content=">${moment(to.toDate()).format(" LLL ")}"> </div>
+    <meta itemprop="checkinDate" content={{from}}>
+    <meta itemprop="checkoutDate" content={{to}}> </div>
   <div class="mj-container" style="background-color:#FFF">
     <table role="presentation" cellpadding="0" cellspacing="0" style="background:url(https://topolio.s3-eu-west-1.amazonaws.com/uploads/5ace578cb3982/1523475292.jpg) top center #1F1511;font-size:0;width:100%"
       border="0" background="https://topolio.s3-eu-west-1.amazonaws.com/uploads/5ace578cb3982/1523475292.jpg">
@@ -109,8 +109,8 @@
                             </tr>
                             <tr>
                               <td style="word-wrap:break-word;font-size:0;padding:8px 20px" align="center">
-                                <div style="cursor:auto;color:#FFF;font-family:Helvetica,sans-serif;font-size:11px;line-height:22px;text-align:center">
-                                  <h1 style="font-family:Cabin,sans-serif;color:#FFF;font-size:32px;line-height:.1">Foglalás rögzítve</h1>
+                                <div style="cursor:auto;color:#FFF;font-family:Helvetica,sans-serif;font-size:10px;line-height:22px;text-align:center">
+                                  <h1 style="font-family:Cabin,sans-serif;color:#FFF;font-size:32px;line-height:.1">Köszöntjük</h1>
                                 </div>
                               </td>
                             </tr>
@@ -130,6 +130,7 @@
       </tbody>
     </table>
     <div style="margin:0 auto;max-width:600px">
+      <p style="text-align:center">Kedves {{name}}! Foglalását sikeresen jóváhagytuk.</p>
       <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0;width:100%" align="center" border="0">
         <tbody>
           <tr>
@@ -145,7 +146,7 @@
                               <tr>
                                 <th scope="col">
                                   <h3 style="line-height:100%">
-                                    <strong>Foglal&#xF3; adatai</strong>
+                                    <strong>Foglalás adatai</strong>
                                   </h3>
                                 </th>
                                 <th scope="col"></th>
@@ -157,7 +158,7 @@
                                   <span style="font-size:14px">N&#xE9;v</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${name}</span>
+                                  <span style="font-size:14px">{{name}}</span>
                                 </td>
                               </tr>
                               <tr>
@@ -165,7 +166,7 @@
                                   <span style="font-size:14px">Telefonsz&#xE1;m</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${tel}</span>
+                                  <span style="font-size:14px">{{tel}}</span>
                                 </td>
                               </tr>
                               <tr>
@@ -173,7 +174,7 @@
                                   <span style="font-size:14px">Lakcím</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${address}</span>
+                                  <span style="font-size:14px">{{address}}</span>
                                 </td>
                               </tr>
                               <tr>
@@ -181,7 +182,7 @@
                                   <span style="font-size:14px">Szobaszám</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${roomId}</span>
+                                  <span style="font-size:14px">{{roomId}}</span>
                                 </td>
                               </tr>
                               <tr>
@@ -189,40 +190,41 @@
                                   <span style="font-size:14px">Felnőtt</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${adults} fő</span>
+                                  <span style="font-size:14px">{{adults}} fő</span>
                                 </td>
-                              </tr>${children.map(({name, count})=>`
+                              </tr>
+                              {{#children}}
+                                <tr>
+                                  <td>
+                                    <span style="font-size:14px">{{name}} éves korig</span>
+                                  </td>
+                                  <td style="text-align:right">
+                                    <span style="font-size:14px">{{count}} fő</span>
+                                  </td>
+                                </tr>
+                              {{/children}}
                               <tr>
                                 <td>
-                                  <span style="font-size:14px">${name} éves korig</span>
+                                  <span style="font-size:14px">Érkezés*</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${count} fő</span>
-                                </td>
-                              </tr>`).join("")}
-                              
-                              <tr>
-                                <td>
-                                  <span style="font-size:14px">Érkezés</span>
-                                </td>
-                                <td style="text-align:right">
-                                  <span style="font-size:14px">${moment(from.toDate()).format("LLL")}</span>
+                                  <span style="font-size:14px">{{from}}</span>
                                 </td>
                               </tr>
                               <tr>
                                 <td>
-                                  <span style="font-size:14px">T&#xE1;voz&#xE1;s</span>
+                                  <span style="font-size:14px">Távozás*</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${moment(to.toDate()).format("LLL")}</span>
+                                  <span style="font-size:14px">{{to}}</span>
                                 </td>
                               </tr>
                               <tr>
                                 <td>
-                                  <span style="font-size:14px">Megjegyz&#xE9;s</span>
+                                  <span style="font-size:14px">Megjegyzés</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${message}</span>
+                                  <span style="font-size:14px">{{message}}</span>
                                 </td>
                               </tr>
                               <tr>
@@ -230,7 +232,7 @@
                                   <span style="font-size:14px">Ellátás</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${translateService(activeService)}</span>
+                                  <span style="font-size:14px">{{foodService}}</span>
                                 </td>
                               </tr>
                               <tr>
@@ -238,18 +240,15 @@
                                   <span style="font-size:14px">Fizetendő összeg</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${price}</span>
+                                  <span style="font-size:14px">{{price}}</span>
                                 </td>
-                              </tr>
-                              <tr>
-                                <p style="font-size:1px;margin:0 auto;border-top:1px dashed #ACACAC;width:100% "></p>
                               </tr>
                               <tr>
                                 <td>
                                   <span style="font-size:14px">Jóváhagyta</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${lastHandledBy}</span>
+                                  <span style="font-size:14px">{{lastHandledBy}}</span>
                                 </td>
                               </tr>
                               <tr>
@@ -257,29 +256,30 @@
                                   <span style="font-size:14px">Azonosító</span>
                                 </td>
                                 <td style="text-align:right">
-                                  <span style="font-size:14px">${id}</span>
+                                  <span style="font-size:14px">{{id}}</span>
                                 </td>
                               </tr>
                               <tr>
-                                <td>
-                                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                                    <tbody>
-                                      <tr>
-                                        <td style="border:none;border-radius:none;color:#fff;cursor:auto;padding:10px 25px"
-                                          bgcolor="#b35d41">
-                                          <a href="${calendarLink}" style="text-decoration:none;background:#b35d41;color:#fff;font-family:Ubuntu,Helvetica,Arial,sans-serif,Helvetica,Arial,sans-serif;font-size:13px;font-weight:400;line-height:120%;text-transform:none;margin:0"
-                                            target="_blank">Hozzáadás a Google Naptárhoz</a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
+                                <td></td>
+                                <td style="text-align:right">
+                                  <span style="font-size:10px">*legkorábbi érkezés 14:00, legkésőbbi távozás 10:00</span>
                                 </td>
-                                <td style="padding-top:36px;text-align:right">
-                                  <img src="cid:qr-code-123" alt="QR-kód " width="160"> </td>
                               </tr>
-                            </tbody>
-                          </table>
-                          <p></p>
+                              <tr>
+                                <td colspan="100%%" style="text-align:center">
+                                  <img style="margin:32px;min-height: 180px;min-width: 180px;background: #eee" src="cid:qr-code-123" alt="QR-kód " width="180" height="180"> </td>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="100%" style="border:none;border-radius:none;color:#fff;cursor:auto;padding:6px 15px;text-align:center"
+                                  bgcolor="#b35d41">
+                                  <a href={{calendarLink}} style="text-decoration:none;background:#b35d41;color:#fff;font-family:Ubuntu,Helvetica,Arial,sans-serif,Helvetica,Arial,sans-serif;font-size:10px;font-weight:400;line-height:110%;text-transform:none;margin:0"
+                                    target="_blank">Hozzáadás a Google Naptárhoz</a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><p style="font-size: 8px;margin:0">.ics a csatolmányban</p></td>
+                              </tr>
                         </div>
                       </td>
                     </tr>
