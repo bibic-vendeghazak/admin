@@ -84,7 +84,7 @@ class Reservation extends Component {
   render() {
     const {
       email, name, tel, message, handled, from, to, roomId, adults, children,
-      price, address, timestamp, lastHandledBy, id, activeService
+      price, address, timestamp, lastHandledBy, id, foodService
     } = this.state
     const {reservationId} = this.props.match.params
     return (
@@ -217,7 +217,7 @@ class Reservation extends Component {
                   </Tooltip>
                   <Item
                     icon={<Service/>}
-                    primary={activeService === "breakfast" ? "reggeli" : "félpanzió" }
+                    primary={foodService === "breakfast" ? "reggeli" : "félpanzió" }
                     secondary="ellátás"
                   />
                   <Item
