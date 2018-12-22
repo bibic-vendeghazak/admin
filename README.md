@@ -2,9 +2,9 @@
 <a href="https://bibicvendeghazak.hu"><img width=96 src="https://bibic-vendeghazak-web.firebaseapp.com/android-chrome-192x192.png" alt="Bíbic vendégházak logo"></a>
 </p>
 
-***Admin dashboard*** ![Travis CI Status](https://img.shields.io/travis/bibic-vendeghazak/admin.svg?branch=develop) [![Coverage Status](https://img.shields.io/coveralls/bibic-vendeghazak/admin/develop.svg)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop) [![Greenkeeper badge](https://badges.greenkeeper.io/bibic-vendeghazak/admin.svg)](https://greenkeeper.io/)
+***Admin dashboard*** [![Travis CI Status](https://img.shields.io/travis/bibic-vendeghazak/admin.svg?branch=master)](https://travis-ci.org/bibic-vendeghazak/admin) [![Coverage Status](https://img.shields.io/coveralls/bibic-vendeghazak/admin/master.svg)](https://coveralls.io/github/bibic-vendeghazak/admin) [![Greenkeeper badge](https://badges.greenkeeper.io/bibic-vendeghazak/admin.svg)](https://greenkeeper.io/)
 
-It is only available in Hungarian 🇭🇺 at the moment. A future release would add Internationalization 🌐
+It is only available in Hungarian 🇭🇺 at the moment. A future release would add [Internationalization](https://github.com/bibic-vendeghazak/admin/issues/7) 🌐
 
 ![Site preview](https://raw.githubusercontent.com/bibic-vendeghazak/admin/master/preview/preview-2018-08-20.png)
 
