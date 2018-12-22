@@ -1,6 +1,6 @@
 const constants = require("../constants")
 const utils = require("./utils")
-const parse = require("./parse")
+import { feedbackToHTML, reservationToHTML } from "./utils"
 
 module.exports.adminText = reservation => {
   const {name, email, lastHandledBy, timestamp} = parse.parseReservation(reservation)
@@ -107,3 +107,13 @@ E-mail: ${email}
 Telefonszám: ${tel}
 Tartalom: ${message}
 `
+
+
+
+// Feedbacks -----------------
+
+
+
+export const feedbackHTML = feedback =>
+  feedbackToHTML("./templates/user/feedback.min.html", feedback)
+
