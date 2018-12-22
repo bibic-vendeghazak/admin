@@ -14,6 +14,15 @@ import {
 import {routes} from "../../utils"
 import {TODAY} from "../../lib/moment"
 
+
+const initialDialog = {
+  open: false,
+  title: "Biztos benne, hogy folytatni akarja?",
+  content: "",
+  cancelLabel: "Mégse",
+  submitLabel: "Igen"
+}
+
 const Store = React.createContext()
 
 /**
@@ -48,13 +57,7 @@ export class Database extends Component {
       src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"},
     snackbar: {open: false,
       message: {}},
-    dialog: {
-      open: false,
-      title: "Biztos benne, hogy folytatni akarja?",
-      content: "",
-      cancelLabel: "Mégse",
-      submitLabel: "Igen"
-    },
+    dialog: initialDialog,
     rooms: [],
     roomPictures: [],
     unhandledReservationCount: 0,
@@ -161,22 +164,21 @@ export class Database extends Component {
         ...dialog,
         open: true
       },
-      acceptDialog: () => {
-        submit()
-          .then(() => {
-            this.handleSendNotification({code: "success",
-              message: success})
-          })
-          .then(() => handleClose ? handleClose() : this.handleCloseDialog())
-          .catch(this.handleSendNotification)
-        this.handleCloseDialog()
+      acceptDialog: async () => {
+        try {
+          await submit()
+          await this.handleSendNotification({code: "success", message: success})
+          handleClose ? handleClose() : this.handleCloseDialog()
+        } catch (error) {
+          this.handleSendNotification(error)
+        } finally {
+          this.handleCloseDialog()
+        }
       }
     }))
 
   handleCloseDialog = () =>
-    this.setState(state => ({...state,
-      dialog: {...state.dialog,
-        open: false}}))
+    this.setState(state => ({...state, dialog: initialDialog}))
 
 
   render() {
