@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import {Link} from "react-router-dom"
 import {routes, toRoute} from "../../../utils"
 import {Button, Paper, Tooltip} from "@material-ui/core"
@@ -57,4 +58,14 @@ const GalleryItem = ({
     </Paper>
   </Tooltip>
 
+
+GalleryItem.propTypes = {
+  item: PropTypes.shape({
+    key: PropTypes.string,
+    fileName: PropTypes.string,
+    SIZE_360: PropTypes.string,
+    title: PropTypes.string
+  }),
+  path: PropTypes.string
+}
 export default GalleryItem

@@ -1,4 +1,6 @@
-import React from 'react'
+import React from "react"
+import PropTypes from "prop-types"
+
 
 const Background = ({
   color, children
@@ -19,5 +21,9 @@ const Background = ({
     {children}
   </span>
 
+Background.propTypes = {
+  color: PropTypes.string,
+  children: PropTypes.node
+}
 
 export default Background

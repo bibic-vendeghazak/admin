@@ -1,15 +1,15 @@
+import {startOfDay} from "date-fns"
 
-// Global variables
-const ADMIN_ROOT = "https://bibic-vendeghazak-api.firebaseapp.com"
-const WEB = "https://bibic-vendeghazak-web.firebaseapp.com"
-const ADDRESS = "Nagybajom, Bibic vendégházak, Iskola köz, Hungary"
-const APP_NAME = "Bíbic vendégházak"
-const ADMIN_EMAIL = "szallasfoglalas@bibicvendeghazak.hu"
-const NO_REPLY = "no-reply@bibicvendeghazak.hu"
-const ADMIN_RESERVATION_EMAIL = `${APP_NAME} 🏠 <${ADMIN_EMAIL}>`
-const FOOTER = `Üdvözlettel ${APP_NAME}`
-const TEL = "+36 30 433 6698"
+// Global variable
+export const ADMIN_ROOT = "https://bibic-vendeghazak-api.firebaseapp.com"
+export const WEB = "https://bibic-vendeghazak-web.firebaseapp.com"
+export const ADDRESS = "Nagybajom, Bibic vendégházak, Iskola köz, Hungary"
+export const APP_NAME = "Bíbic vendégházak"
+export const ADMIN_EMAIL = "szallasfoglalas@bibicvendeghazak.hu"
+export const NO_REPLY = "no-reply@bibicvendeghazak.hu"
+export const ADMIN_RESERVATION_EMAIL = `${APP_NAME} 🏠 <${ADMIN_EMAIL}>`
+export const FOOTER = `Üdvözlettel ${APP_NAME}`
+export const TEL = "+36 30 433 6698"
 
-module.exports = {
-  ADMIN_ROOT, APP_NAME, ADMIN_EMAIL, ADMIN_RESERVATION_EMAIL, FOOTER, NO_REPLY, TEL, WEB, ADDRESS
-}
+
+export const TODAY = startOfDay(new Date())

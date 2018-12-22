@@ -5,31 +5,40 @@
   "dependencies": {
     "@material-ui/core": "^3.7.1",
     "@material-ui/icons": "^3.0.1",
-    "firebase": "^5.4.0",
-    "moment": "^2.22.2",
+    "firebase": "^5.7.1",
+    "moment": "^2.23.0",
     "moment-range": "^4.0.1",
     "qrcode-react": "^0.1.16",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
-    "react-sortable-hoc": "^0.8.3",
-    "recharts": "^1.1.0",
+    "react-sortable-hoc": "^0.8.4",
+    "recharts": "^1.4.2",
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
     "start": "react-scripts start",
-    "test": "react-scripts test",
+    "test": "CI=true react-scripts test",
+    "test:watch": "react-scripts test --coverage --coverageReporters html --watch",
+    "test:coverage": "react-scripts test --coverage --coverageReporters text-lcov | npx coveralls && rm -rf coverage",
     "build": "react-scripts build",
     "deploy": "npm run build && firebase deploy --only hosting"
   },
   "devDependencies": {
-    "eslint-config-prettier": "^3.0.1",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.11.1",
     "source-map-explorer": "^1.6.0"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

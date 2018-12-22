@@ -1,13 +1,14 @@
 import React, {Component} from "react"
-import {DB} from "../../../utils/firebase"
+import PropTypes from "prop-types"
+import {DB} from "../../../lib/firebase"
 
 
 import {Button, TextField, Dialog, DialogActions, DialogContent, Grid, DialogTitle} from "@material-ui/core"
-import Delete from '@material-ui/icons/DeleteRounded'
+import Delete from "@material-ui/icons/DeleteRounded"
 
-import {Loading} from '..'
+import {Loading} from ".."
 import {toRoute} from "../../../utils"
-import {withStore} from "../../App/Store"
+import {withStore} from "../../../db"
 
 class GalleryItemEdit extends Component {
   state = {
@@ -18,10 +19,12 @@ class GalleryItemEdit extends Component {
 
   componentDidMount() {
     const {
-      folder, path, match: {params: {listItemId}}
+      url,
+      folder, match: {params: {listItemId}}
     } = this.props
+    console.log(toRoute(folder, url, listItemId))
     DB
-      .ref(toRoute(folder, path, listItemId))
+      .ref(toRoute(folder, url, listItemId))
       .once("value", snap => {
         if (snap.exists()) {
           this.setState(snap.val())
@@ -32,12 +35,12 @@ class GalleryItemEdit extends Component {
 
   handleDeleteGalleryItem = () => {
     const {
-      path, match: {params: {listItemId}}
+      url, match: {params: {listItemId}}
     } = this.props
 
     this.props.openDialog(
       {title: "Biztos törli a képet?"},
-      () => DB.ref(toRoute("galleries", path, listItemId)).remove(),
+      () => DB.ref(toRoute("galleries", url, listItemId)).remove(),
       "A kép sikeresen törölve",
       this.handleClose
     )
@@ -45,7 +48,8 @@ class GalleryItemEdit extends Component {
 
     handleSubmitText = () => {
       const {
-        folder, path, match: {params: {listItemId}}
+        url,
+        folder, match: {params: {listItemId}}
       } = this.props
       const {
         title, desc
@@ -54,7 +58,7 @@ class GalleryItemEdit extends Component {
       this.props.openDialog(
         {title: "Menti a változtatásokat?"},
         () => DB
-          .ref(toRoute(folder, path, listItemId))
+          .ref(toRoute(folder, url, listItemId))
           .update({
             title,
             desc
@@ -64,7 +68,7 @@ class GalleryItemEdit extends Component {
     }
 
   handleClose = () => {
-    this.props.history.push(this.props.path)
+    this.props.history.goBack()
   }
 
   handleTextChange = ({target: {
@@ -123,7 +127,7 @@ class GalleryItemEdit extends Component {
               <Button
                 color="secondary"
                 onClick={this.handleDeleteGalleryItem}
-                variant="flat"
+                variant="text"
               >
                 <Delete/>
                   Kép törlése
@@ -161,5 +165,14 @@ class GalleryItemEdit extends Component {
   }
 }
 
+GalleryItemEdit.propTypes = {
+  folder: PropTypes.string,
+  path: PropTypes.string,
+  match: PropTypes.object,
+  history: PropTypes.object,
+  sendNotification: PropTypes.func,
+  openDialog: PropTypes.func,
+  hasText: PropTypes.bool
+}
 
 export default withStore(GalleryItemEdit)

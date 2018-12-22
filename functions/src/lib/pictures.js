@@ -1,122 +1,102 @@
-const admin = require("firebase-admin")
-
 // Imports for thumbnail generating
-const sharp = require("sharp")
-const spawn = require("child-process-promise").spawn
-const path = require("path")
-const os = require("os")
-const fs = require("fs")
-const gcs = require("@google-cloud/storage")({keyFilename: "service-account-credentials.json"})
+import sharp from "sharp"
+import path from "path"
+import os from "os"
+import fs from "fs"
+import { database, storage } from "./firebase"
 
 const sizes = [360, 640, 768, 1024, 1280, 1440]
 
 
-module.exports.generateThumbnail = object =>  {
-  // Exit if the image is already a resized one.
+export const generateThumbnail = async object =>  {
   const {name: filePath, contentType} = object
   const fileName = path.basename(filePath)
 
+  // Exit if not an image
+  if (!contentType.startsWith("image/")) return console.log("✖ Not an image.")
+
+  // Exit if the image is already a resized one.
+  if (fileName.includes("thumb_")) return console.log("✖ Already processed image.")
+
+  const bucket = storage.bucket(object.bucket)
+
+  // Create paths
+  const destination = path.dirname(filePath)
+  const tempDir = os.tmpdir()
+
+  const tempFile = path.join(tempDir, fileName)
+
   const thumbFileNames = sizes.map(size => `thumb_${size}_${fileName}`)
+  const tempThumbFiles = thumbFileNames.map(thumbFileName => path.join(tempDir, thumbFileName))
+  const thumbFiles = thumbFileNames.map(thumbFileName => path.join(destination, thumbFileName))
 
-
-  const dirName = path.dirname(filePath)
-  const bucket = gcs.bucket(object.bucket)
-
-  if (fileName.includes("thumb_")) {
-    console.log("✖ Already processed image.")
-    return null
-  }
-
-  if (!contentType.startsWith("image/")) {
-    console.log("✖ Not an image.")
-    return null
-  }
   // Download file from bucket.
-  const tempFilePath = path.join(os.tmpdir(), fileName)
+  await bucket.file(filePath).download({destination: tempFile})
+  console.log("Image downloaded locally to", tempFile)
 
-  const tempThumbFilePaths = sizes.map((size, index) => path.join(os.tmpdir(), thumbFileNames[index]))
+  // Generate thumbnails using Sharp.
+  await Promise.all(
+    tempThumbFiles.map((tempThumbFile, index) =>
+      sharp(tempFile).resize(sizes[index]).toFile(tempThumbFile)
+    )
+  )
 
+  console.log("Thumbnails created. Now uploading...")
+  // Uploading the thumbnails.
+  await Promise.all(
+    thumbFiles
+      .map((thumbFile, index) =>
+        bucket.upload(tempThumbFiles[index], {
+          destination: thumbFile,
+          metadata: {contentType}
+        })
+      ))
 
-  return bucket.file(filePath).download({
-    destination: tempFilePath,
-  }).then(() => {
-    console.log("Image downloaded locally to", tempFilePath)
-    // Generate a thumbnails using Sharp.
-    return Promise
-      .all(sizes
-        .map((size, index) =>
-          sharp(tempFilePath)
-            .resize(size)
-            .toFile(tempThumbFilePaths[index])
-        ))
-  }).then(() => {
-    console.log("Thumbnails created. Now uploading...")
-
-    const thumbFilePaths = sizes.map((size, index) => path.join(dirName, thumbFileNames[index]))
-    // Uploading the thumbnails.
-    return Promise
-      .all(thumbFilePaths
-        .map((thumbFilePath, index) =>
-          bucket.upload(tempThumbFilePaths[index], {
-            destination: thumbFilePath,
-            metadata: {contentType}
-          })
-        ))
-  }).then(() => {
-    // Once the thumbnails has been uploaded delete the local files to free up disk space.
-    fs.unlinkSync(tempFilePath)
-    tempThumbFilePaths.forEach(tempThumbFilePath => fs.unlinkSync(tempThumbFilePath))
+  // Once the thumbnails has been uploaded delete the local files to free up disk space.
+  fs.unlinkSync(tempFile)
+  tempThumbFiles.forEach(tempThumbFile => fs.unlinkSync(tempThumbFile))
 
 
-    // Now get the URLs of the uploaded images, both the original's and the thumbnails'.
-    const config = {
-      action: "read",
-      expires: "03-01-2500"
-    }
-    return Promise.all([
-      bucket.file(filePath).getSignedUrl(config),
-      ...thumbFileNames
-        .map(thumbFileName =>
-          bucket
-            .file(path
-              .join(dirName, thumbFileName))
-            .getSignedUrl(config)
-        )
-    ])
-  }).then(([original, ...rest]) => {
-    // And add the URLs to the database.
-    console.log(rest)
+  // Now get the URLs of the uploaded images, both the original's and the thumbnails'.
+  const config = {action: "read", expires: "03-01-2500"}
 
-    const pictures = {fileName, SIZE_ORIGINAL: original[0]}
-    sizes.forEach((size, index) => pictures[`SIZE_${size}`] = rest[index][0])
-    return admin.database()
-      .ref(dirName)
-      .push(pictures)
-  })}
+  const [[original], ...thumbnails] = await Promise.all([
+    bucket.file(filePath).getSignedUrl(config),
+    ...thumbFiles
+      .map(thumbFile =>
+        bucket.file(thumbFile).getSignedUrl(config)
+      )
+  ])
+  // And add the URLs to the database.
+
+  const pictures = {fileName, SIZE_ORIGINAL: original}
+
+  thumbnails.forEach(([thumbnail], index) => {
+    pictures[`SIZE_${sizes[index]}`] = thumbnail
+  })
+
+  await database.ref(destination).push(pictures)
+  return console.log(`urls are pushed to the database at ${destination}.`)
+}
 
 
 
 /**
  * Delete a picture and its corresponding thumbnails
- * @param {DataSnapshot} snapshot contains the deleted file's name
- * @param {string} context.params.galleryId the location where the picture was deleted from
+ * @param {DataSnapshot} snap contains the deleted files' names
+ * @param {string} context.params.galleryId the location where the pictures were deleted from
+ * @param {string} [context.params.roomId] the id of the room where the pictures were deleted from
  */
-module.exports.deletePicture = (snapshot, {params: {galleryId}}) => {
-  const {fileName} = snapshot.val()
-  const bucket = admin.storage().bucket()
-  const baseURL = `galleries/${galleryId}`
-  const promises = sizes.map(size =>
-    bucket.file(`${baseURL}/thumb_${size}_${fileName}`)
-      .delete()
-  )
+export const deletePictures = async (snap, {params: {galleryId, roomId}}) => {
+  console.log("Image deletion detected in the database, deleting images from the Storage...")
 
-  promises
-    .push(bucket
-      .file(`${baseURL}/${fileName}`)
-      .delete()
-    )
+  const {fileName} = snap.val()
+  const baseURL = `galleries/${galleryId}${roomId ? `/${roomId}`: ""}`
 
-  return Promise
-    .all(promises)
-    .then(() => console.log(`All versions of ${fileName} are now deleted.`))
+  const files = [`${baseURL}/${fileName}`]
+  sizes.forEach(size => {files.push(`${baseURL}/thumb_${size}_${fileName}`)})
+
+  files.forEach(async file => {await storage.bucket().file(file).delete()})
+
+  return console.log(`All versions of ${fileName} are now deleted.`)
 }

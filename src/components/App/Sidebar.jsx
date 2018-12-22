@@ -1,10 +1,10 @@
 import React from "react"
-import PropTypes from 'prop-types'
-import moment from "moment"
+import PropTypes from "prop-types"
+import {moment} from "../../lib"
 import {NavLink} from "react-router-dom"
-import {withStore} from "./Store"
+import {withStore} from "../../db"
 import {routes, toRoute} from "../../utils"
-import Logout from "./Auth/Logout"
+import Logout from "../Auth/Logout"
 
 import {
   Avatar,
@@ -29,6 +29,7 @@ import Feedback from "@material-ui/icons/ThumbsUpDownRounded"
 import Group from "@material-ui/icons/GroupRounded"
 import Language from "@material-ui/icons/LanguageRounded"
 import Message from "@material-ui/icons/MessageRounded"
+import SpecialReqests from "@material-ui/icons/LoyaltyRounded"
 import Person from "@material-ui/icons/PersonRounded"
 import PhotoCamera from "@material-ui/icons/PhotoCameraRounded"
 import Restaurant from "@material-ui/icons/RestaurantRounded"
@@ -38,27 +39,32 @@ import VerifiedUser from "@material-ui/icons/VerifiedUserRounded"
 import VideoLibrary from "@material-ui/icons/VideoLibraryRounded"
 
 
-const styles = theme => ({
-  primary: {color: "white"},
-  button: {"&:hover": {backgroundColor: theme.palette.primary.dark}},
-  activeLink: {backgroundColor: theme.palette.primary.dark},
-  divider: {backgroundColor: "white"}
+const styles = ({spacing: {unit}, palette: {primary: {dark}}}) => ({
+  primary: {color: "white",
+    paddingTop: unit},
+  button: {"&:hover": {backgroundColor: dark}},
+  activeLink: {backgroundColor: dark},
+  divider: {backgroundColor: "white"},
+  nested: {
+    paddingLeft: unit * 4,
+    paddingTop: unit/2,
+    paddingBottom: unit
+  }
 })
 
 const Sidebar = ({
   classes : {
-    divider, primary, button, activeLink
-  }, handleDrawerToggle,
-  unhandledReservationCount, unhandledFeedbackCount, profile: {
-    name="Bíbic vendégházak",
-    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAAAOUlEQVR42u3OIQEAAAACIP1/2hkWWEBzVgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAYF3YDicAEE8VTiYAAAAAElFTkSuQmCC"
-  }
+    divider, primary, button, activeLink, nested
+  },
+  handleDrawerToggle,
+  unhandledReservationCount, unhandledFeedbackCount,
+  unhandledMessageCount,
+  profile: {name, src}
 }) => {
   const drawerItemStyle={
     primary,
     button,
     activeLink
-
   }
   return (
     <div onClick={handleDrawerToggle}>
@@ -82,13 +88,16 @@ const Sidebar = ({
         href={routes.WEB}
         icon={<Language/>}
       >
-      Weblap megtekintése
+      Weblap
       </DrawerItem>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Foglalás</ListSubheader>
+        <ListSubheader disableSticky
+          style={{color: "white"}}
+        >Foglalás</ListSubheader>
         <DrawerItem
-          {...{drawerItemStyle}}
+          {...{drawerItemStyle: {nested,
+            ...drawerItemStyle}}}
           icon={
             <Badge
               badgeContent={unhandledReservationCount}
@@ -99,13 +108,28 @@ const Sidebar = ({
           }
           to={routes.RESERVATIONS}
         >
-            Foglalások
+            Szobafoglalás
         </DrawerItem>
         <DrawerItem
-          {...{drawerItemStyle}}
+          {...{drawerItemStyle: {nested,
+            ...drawerItemStyle}}}
           icon={<DateRange/>}
           to={toRoute(routes.CALENDAR, moment().format("YYYY/MM"))}
         >Naptár</DrawerItem>
+        <DrawerItem
+          {...{drawerItemStyle}}
+          icon={
+            <Badge
+              badgeContent={unhandledMessageCount}
+              color="secondary"
+            >
+              <SpecialReqests/>
+            </Badge>
+          }
+          to={routes.MESSAGES}
+        >
+          Üzenetek
+        </DrawerItem>
         <DrawerItem
           {...{drawerItemStyle}}
           icon={
@@ -118,12 +142,14 @@ const Sidebar = ({
           }
           to={routes.FEEDBACKS}
         >
-            Visszajelzések
+            Visszajelzés
         </DrawerItem>
       </List>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Szekciók</ListSubheader>
+        <ListSubheader disableSticky
+          style={{color: "white"}}
+        >Szekciók</ListSubheader>
         <DrawerItem
           component={NavLink}
           {...{drawerItemStyle}}
@@ -172,7 +198,9 @@ const Sidebar = ({
       </List>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Közösségi média</ListSubheader>
+        <ListSubheader disableSticky
+          style={{color: "white"}}
+        >Közösségi média</ListSubheader>
         <DrawerItem
           {...{drawerItemStyle}}
           href={routes.MESSENGER}
@@ -197,7 +225,9 @@ const Sidebar = ({
       </List>
       <Divider className={divider}/>
       <List disablePadding>
-        <ListSubheader disableSticky style={{color: "white"}}>Egyéb</ListSubheader>
+        <ListSubheader disableSticky
+          style={{color: "white"}}
+        >Egyéb</ListSubheader>
         <DrawerItem
           {...{drawerItemStyle}}
           icon={<Settings/>}
@@ -224,7 +254,7 @@ export default withStyles(styles, {withTheme: true})((withStore(Sidebar)))
 
 const DrawerItem = ({
   drawerItemStyle: {
-    button, primary, activeLink
+    button, primary, activeLink, nested
   }, href, to, icon, children, ...props
 }) => {
   let typeProps = {}
@@ -245,11 +275,10 @@ const DrawerItem = ({
   return (
     <ListItem
       button
+      className={nested}
       classes={{button}}
-      {...{
-        ...typeProps,
-        ...props
-      }}
+      {...{...typeProps,
+        ...props}}
     >
       <ListItemIcon style={{color: "white"}}>
         {icon}

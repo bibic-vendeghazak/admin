@@ -1,6 +1,4 @@
-const admin = require("firebase-admin")
-const roomsRef = admin.database().ref("roomsRef")
-
+import { ROOMS_DB } from "./firebase"
 
 /**
  * Generates all the possible combination of children.
@@ -53,10 +51,10 @@ const generatePrices = (old, maxPeople) => {
 
 
 
-module.exports.populatePrices = (change, context) => {
+export const populate = (change, context) => {
   const {roomId} = context.params
   const {maxPeople} = change.after.val()
-  const priceTableRef = roomsRef.child(`${roomId}/prices/table`)
+  const priceTableRef = ROOMS_DB.child(`${roomId}/prices/table`)
   const priceTypes = ["breakfast", "halfBoard"]
   const promises = priceTypes.map(priceType =>
     priceTableRef

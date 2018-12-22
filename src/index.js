@@ -1,13 +1,12 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import {BrowserRouter as Router} from "react-router-dom"
-import {MuiThemeProvider as Material} from '@material-ui/core/styles'
-import {Database} from "./components/App/Store"
+import {MuiThemeProvider as Material} from "@material-ui/core/styles"
+import {Database} from "./db/Store"
 
 
 import {theme} from "./utils"
-import "./utils/moment"
-import "./utils/firebase"
+import "./lib/firebase"
 import App from "./components/App"
 
 ReactDOM.render(

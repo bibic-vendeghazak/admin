@@ -1,25 +1,24 @@
-import React, {Fragment} from "react"
+import React from "react"
 import {Route, Redirect, Switch} from "react-router-dom"
-import {withStore} from "./Store"
+import {withStore} from "../../db"
 import Sidebar from "./Sidebar"
 import NoMatch from "./NoMatch"
-import Login from "./Auth/Login"
-import Rooms from "../scenes/Rooms"
-import Reservations from "../scenes/Reservations"
-import Calendar from "../scenes/Calendar"
-import Feedbacks from "../scenes/Feedbacks"
+import Login from "../Auth/Login"
+import {
+  Reservations, Calendar, Rooms, Messages, Feedbacks
+} from "../../scenes"
 
 import {routes, toRoute, colors} from "../../utils"
 import {Tip, Paragraphs, Gallery} from "../shared"
 
 
-import {withStyles} from '@material-ui/core/styles'
-import Menu from '@material-ui/icons/MenuRounded'
+import {withStyles} from "@material-ui/core/styles"
+import Menu from "@material-ui/icons/MenuRounded"
 
 import {
   Drawer, AppBar, Toolbar,
   IconButton, Hidden
-} from '@material-ui/core'
+} from "@material-ui/core"
 import {Title, RightAction} from "./Toolbar"
 import Dialog from "./Dialog"
 import Notification from "./Notification"
@@ -31,18 +30,18 @@ const styles = theme => ({
     flexGrow: 1,
     minHeight: "100vh",
     zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-    width: '100%'
+    overflow: "hidden",
+    position: "relative",
+    display: "flex",
+    width: "100%"
   },
   appBar: {
-    position: 'fixed',
+    position: "fixed",
     marginLeft: drawerWidth,
     backgroundColor: theme.palette.primary.dark,
-    [theme.breakpoints.up('md')]: {width: `calc(100% - ${drawerWidth}px)`}
+    [theme.breakpoints.up("md")]: {width: `calc(100% - ${drawerWidth}px)`}
   },
-  navIconHide: {[theme.breakpoints.up('md')]: {display: 'none'}},
+  navIconHide: {[theme.breakpoints.up("md")]: {display: "none"}},
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     backgroundColor: theme.palette.primary.main,
@@ -50,7 +49,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    [theme.breakpoints.up('md')]: {marginLeft: drawerWidth},
+    [theme.breakpoints.up("md")]: {marginLeft: drawerWidth},
     backgroundColor: colors.grey
   }
 })
@@ -80,7 +79,7 @@ const App = ({
           <Drawer
             // Better open performance on mobile.
             ModalProps={{keepMounted: true}}
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            anchor={theme.direction === "rtl" ? "right" : "left"}
             classes={{paper: classes.drawerPaper}}
             onClose={handleDrawerToggle}
             open={mobileOpen}
@@ -115,7 +114,11 @@ const App = ({
             />
             <Route
               component={Feedbacks}
-              path={routes.FEEDBACKS}
+              path={toRoute(routes.FEEDBACKS, ":show?")}
+            />
+            <Route
+              component={Messages}
+              path={routes.MESSAGES}
             />
             <Route
               component={Paragraphs}
@@ -123,10 +126,20 @@ const App = ({
             />
             <Route
               component={Rooms}
-              path={routes.ROOMS}
+              path={toRoute(routes.ROOMS, ":roomId?")}
             />
             <Route
-              component={Paragraphs}
+              component={props =>
+                <div
+                  style={{
+                    maxWidth: 540,
+                    margin: "0 auto"
+                  }}
+                >
+                  <Paragraphs relativeFAB {...props}/>
+                  <Gallery hasText={false} relativeFAB {...props}/>
+                </div>
+              }
               path={routes.CERTIFICATES}
             />
             <Route
@@ -135,13 +148,13 @@ const App = ({
             />
             <Route
               component={props =>
-                <Fragment>
+                <>
                   <Gallery {...props}/>
                   <Tip>
                     Az első három kép fel lesz tüntetve a főoldalon a
                     Szolgáltatásaink szekció alatt.
                   </Tip>
-                </Fragment>
+                </>
               }
               path={routes.SERVICES}
             />

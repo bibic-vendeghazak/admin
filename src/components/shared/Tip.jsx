@@ -1,9 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react"
+import PropTypes from "prop-types"
 
-import {Typography, Grid} from '@material-ui/core'
+import {Typography, Grid} from "@material-ui/core"
 
-import Help from '@material-ui/icons/HelpRounded'
+import Help from "@material-ui/icons/HelpRounded"
 
 const Tip = ({children}) =>
   <Grid alignItems="center" container style={{margin: "8px 16px"}}>
@@ -15,7 +15,7 @@ const Tip = ({children}) =>
         fontSize: 10,
         lineHeight: "10px"
       }}
-      variant="subheading"
+      variant="subtitle1"
     >
     Tipp: {children}
     </Typography>

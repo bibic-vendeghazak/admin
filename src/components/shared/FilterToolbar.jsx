@@ -1,10 +1,10 @@
-import React, {Fragment, Component} from 'react'
-import moment from 'moment'
+import React, {Component} from "react"
+import moment from "moment"
 
-import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from '@material-ui/core'
+import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from "@material-ui/core"
 
-import Search from '@material-ui/icons/SearchRounded'
-import Calendar from '@material-ui/icons/EventRounded'
+import Search from "@material-ui/icons/SearchRounded"
+import Calendar from "@material-ui/icons/EventRounded"
 
 
 const withToolbar = WrappedComponent =>
@@ -33,9 +33,13 @@ const withToolbar = WrappedComponent =>
     }
 
     handleRoom = (roomId, roomsLength) =>
-      this.setState(({filteredRooms}) => ({filteredRooms: (filteredRooms.length ? filteredRooms : Array(roomsLength)
-        .fill(true))
-        .map((e, i) => i === roomId ? !e : e)}))
+      this.setState(({filteredRooms}) =>
+        ({filteredRooms: (filteredRooms.length ?
+          filteredRooms :
+          Array(roomsLength)
+            .fill(true))
+          .map((e, i) => i === roomId ? !e : e)})
+      )
 
     render() {
       const {
@@ -45,8 +49,8 @@ const withToolbar = WrappedComponent =>
         showQueryFilter, showDateFilter, showRoomFilter, rooms, ...props
       } = this.props
       return (
-        <Fragment>
-          <Fragment>
+        <>
+          <>
             <Grid
               container
               style={{padding: "16px 16px 0 16px"}}
@@ -70,13 +74,13 @@ const withToolbar = WrappedComponent =>
                 style={{margin: "16px 0"}}
               >
                 {showDateFilter &&
-                  <Fragment>
+                  <>
                     <Grid
                       item
                       lg={3}
                       md={12}
                     >
-                      <Typography variant="subheading">
+                      <Typography variant="subtitle1">
                           Dátum szűrése
                       </Typography>
                     </Grid>
@@ -122,7 +126,7 @@ const withToolbar = WrappedComponent =>
                         />
                       </Grid>
                     </Grid>
-                  </Fragment>
+                  </>
                 }
                 {showRoomFilter &&
                   <Grid
@@ -137,7 +141,7 @@ const withToolbar = WrappedComponent =>
                       md={3}
                       xs={12}
                     >
-                      <Typography variant="subheading">
+                      <Typography variant="subtitle1">
                         Szoba szűrése
                       </Typography>
                     </Grid>
@@ -147,7 +151,11 @@ const withToolbar = WrappedComponent =>
                       justify="flex-end"
                       md={9}
                     >
-                      {rooms && (filteredRooms.length ? filteredRooms : Array(rooms.length).fill(true))
+                      {rooms &&
+                      (filteredRooms.length ?
+                        filteredRooms :
+                        Array(rooms.length)
+                          .fill(true))
                         .map((active, i) =>
                           <Chip
                             avatar={<Avatar>{i+1}</Avatar>}
@@ -166,14 +174,14 @@ const withToolbar = WrappedComponent =>
                 }
               </Grid>
             </Grid>
-          </Fragment>
+          </>
           <WrappedComponent
             {...{
               ...props,
               ...this.state
             }}
           />
-        </Fragment>
+        </>
       )
     }
   }

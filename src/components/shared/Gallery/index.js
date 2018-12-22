@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react"
 import Sortable from "../Sortable"
 import Upload from "./Upload"
 import GalleryItemEdit from "./GalleryItemEdit"
 import GalleryItem from "./GalleryItem"
-import {Paper} from '@material-ui/core'
+import {Paper} from "@material-ui/core"
 
 const Gallery = props =>
   <Paper style={{padding: "8px 16px"}}>
@@ -11,7 +11,7 @@ const Gallery = props =>
       actionComponent={Upload}
       editItemComponent={GalleryItemEdit}
       folder="galleries"
-      hasText
+      hasText={props.hasText !== false ? true : false}
       sortableItemComponent={GalleryItem}
       {...props}
     />

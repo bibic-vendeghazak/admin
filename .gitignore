@@ -2,12 +2,14 @@
 node_modules
 
 # Own stuff
-db
+rules
 main.css
 build
 .history
 functions/lib
 functions/index.js
+coverage
+*.min.html
 
 # misc
 npm-debug.log*

@@ -1,15 +1,19 @@
-const functions = require("firebase-functions")
-const utils = require("./utils")
-const email = require("../email")
-const moment = require("../moment")
+import { functions } from "../firebase"
+import { sendReservationEmail } from "../email"
+import moment from "../moment"
+import { updateReservationDates } from "./utils"
+import {reservationExists} from "./exists"
+import deepEqual from "deep-equal"
+import { getOverlaps } from "./overlaps"
 
-const reservationRef = functions
-  .region("europe-west1")
-  .firestore
+export const overlaps = getOverlaps
+export const exists = reservationExists
+
+const reservationRef = functions.firestore
   .document("reservations/{reservationId}")
 
 
-module.exports.reservationCreated = reservationRef
+export const reservationCreated = reservationRef
   .onCreate((snap, {params: {reservationId}}) => {
     const reservation = snap.data()
     const {from, to, roomId, handled} = reservation
@@ -25,7 +29,7 @@ module.exports.reservationCreated = reservationRef
     }
 
     // create dates✨
-    return utils.updateReservationDates(from, to, roomId, snap.id)
+    return updateReservationDates(from, to, roomId, snap.id)
     /* if creating dates was successful, send an e-mail, but
      * do not send if the reservation was added by the admin
      * (an admin generated reservation has email@email.hu as default e-mail address)
@@ -37,20 +41,20 @@ module.exports.reservationCreated = reservationRef
         let emails = ["admin"]
         reservation.email !== "email@email.hu" && emails.push("user")
 
-        emails = emails.map(target => email.sendReservationEmail({reservationId, ...reservation}, type, target))
+        emails = emails.map(target => sendReservationEmail({reservationId, ...reservation}, type, target))
 
         return Promise.all(emails)
       })
   })
 
-module.exports.reservationDeleted = reservationRef
+export const reservationDeleted = reservationRef
   .onDelete((snap, {params: {reservationId}}) => {
     const reservation = snap.data()
     const {from, to, roomId} = reservation
     console.log(`reservation ${reservationId} deleted`)
 
     // sanitize dates 🔥
-    return utils.updateReservationDates(from, to, roomId, reservationId, true)
+    return updateReservationDates(from, to, roomId, reservationId, true)
     /* if sanitizing was successful, send an e-mail, but
      * do not send if the reservation was added by the admin
      * (an admin generated reservation has email@email.hu as default e-mail address)
@@ -62,18 +66,28 @@ module.exports.reservationDeleted = reservationRef
         const targets = ["admin"]
         reservation.email !== "email@email.hu" && targets.push("user")
         return Promise.all(targets.map(target =>
-          email.sendReservationEmail({reservationId, ...reservation}, "deleted", target)
+          sendReservationEmail({reservationId, ...reservation}, "deleted", target)
         ))
       }
       )
   })
 
-module.exports.reservationChanged = reservationRef
+export const reservationChanged = reservationRef
   .onUpdate(({before, after}, {params: {reservationId}}) => {
-    console.log(`reservation ${reservationId} changed`)
-    before = before.data()
-    after = after.data()
+    before = {...before.data()}
+    after = {...after.data()}
 
+    // To avoid sending unnecessary e-mails
+    delete before.archived
+    delete after.archived
+
+    if (deepEqual(after, before)) {
+      console.log("reservationChanged fired, but no change, exiting...")
+      return null
+    }
+
+
+    console.log(`reservation ${reservationId} changed`)
     return (
       // check if we at all need to run updateReservationDates, or there was no date or room change
       (
@@ -83,9 +97,9 @@ module.exports.reservationChanged = reservationRef
       ) ?
         (console.log("no reservation dates/room was changed") || Promise.resolve()) :
         // sanitize dates 🔥 - to avoid conflicts
-        (console.log("updating reservation dates") || utils.updateReservationDates(before.from, before.to, before.roomId, reservationId, true))
+        (console.log("updating reservation dates") || updateReservationDates(before.from, before.to, before.roomId, reservationId, true))
           .then(() => // ✨ only after add new dates
-            utils.updateReservationDates(after.from, after.to, after.roomId, reservationId)
+            updateReservationDates(after.from, after.to, after.roomId, reservationId)
           )
     )
       .then(() => {
@@ -108,7 +122,7 @@ module.exports.reservationChanged = reservationRef
         if (before.handled === false && after.handled === true) {
         // reservation accepted 🎉 - It was created by a user, an admin accepts it for the first time
           type = "accepted"
-        } else if (before.handled === true && after.handled === true && !utils.isEquivalent(before, after)) {
+        } else if (before.handled === true && after.handled === true && !deepEqual(before, after)) {
         // reservation changed 🔔 - An admin made a change on the reservation.
 
           /* check if it is the first time that we send a mail to the user
@@ -127,7 +141,7 @@ module.exports.reservationChanged = reservationRef
       * NOTE: remember to add reservationId to the reservation that will be passed to the email
       */
         return Promise.all(targets.map(target =>
-          email.sendReservationEmail({reservationId, ...after}, type, target)
+          sendReservationEmail({reservationId, ...after}, type, target)
         ))
       })
   })

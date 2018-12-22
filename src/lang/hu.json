@@ -1,0 +1,56 @@
+{
+  "rooms": {
+    "editRoom": {
+      "sections": {
+        "availability": {
+          "title": "Szoba állapota",
+          "blockedUntil": "Blokkolva eddig",
+          "available": "Nincs blokkolva",
+          "buttons": {
+            "block": "Blokkol",
+            "unblock": "Feloldás"
+          }
+        },
+        "gallery": {
+          "title": "Szoba képek"
+        },
+        "description": {
+          "title": "Szoba leírása"
+        },
+        "services": {
+          "title": "Szolgáltatások",
+          "has": "Van",
+          "hasNot": "Nincs"
+        },
+        "population": {
+          "title": "Fekhely"
+        },
+        "prices": {
+          "title": "Ártáblázat"
+        }
+      }
+    },
+    "room": {
+      "unavailable": {
+        "long": "A szoba nem elérhető foglalásra.",
+        "short": "blokkolt" 
+      },
+      "booked": {
+        "yes": {
+          "long": "A szobában jelenleg tartózkodnak.",
+          "short": "foglalt"
+        },
+        "no": {
+          "long": "A szoba jelenleg üres.",
+          "short": "szabad"
+        }
+      }
+    }
+  },
+  "button": {
+    "details": "részletek"
+  },
+  "notifications": {
+    "saved": "Mentve."
+  }
+}

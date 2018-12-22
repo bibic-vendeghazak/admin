@@ -1,11 +1,11 @@
-import React from 'react'
-import {withStore} from './Store'
+import React from "react"
+import {withStore} from "../../db"
 
-import {Snackbar} from '@material-ui/core'
-import Done from '@material-ui/icons/DoneRounded'
-import Error from '@material-ui/icons/ErrorRounded'
-import {colors} from '../../utils'
-import {Background} from '../shared'
+import {Snackbar} from "@material-ui/core"
+import Done from "@material-ui/icons/DoneRounded"
+import Error from "@material-ui/icons/ErrorRounded"
+import {colors} from "../../utils"
+import {Background} from "../shared"
 
 
 const Notification = ({

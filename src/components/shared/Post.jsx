@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardContent,
   Button
-} from '@material-ui/core'
+} from "@material-ui/core"
 
 
 export default class Post extends Component {
@@ -39,7 +39,7 @@ export default class Post extends Component {
               color="primary"
               disabled={primaryButtonDisabled}
               onClick={primaryButtonClick}
-              variant="raised"
+              variant="contained"
             >
               {primaryButtonLabel}
             </Button>
@@ -49,7 +49,7 @@ export default class Post extends Component {
               color="secondary"
               disabled={secondaryButtonDisabled}
               onClick={secondaryButtonClick}
-              variant="raised"
+              variant="contained"
             >
               {secondaryButtonLabel}
             </Button>

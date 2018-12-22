@@ -1,15 +1,15 @@
-import React, {Component, Fragment} from "react"
-import PropTypes from 'prop-types'
+import React, {Component} from "react"
+import PropTypes from "prop-types"
 import {Route, withRouter} from "react-router-dom"
 import {arrayMove} from "react-sortable-hoc"
-import {DB} from "../../../utils/firebase"
+import {DB} from "../../../lib/firebase"
 import {toRoute, routes} from "../../../utils"
 
 import {Loading, Tip} from ".."
 import Sort from "./Sort"
 import {Grid} from "@material-ui/core"
 
-import {withStore} from "../../App/Store"
+import {withStore} from "../../../db"
 
 const orderList = (a, b) => a[1].order - b[1].order
 
@@ -92,17 +92,20 @@ class Sortable extends Component {
       useDragHandle,
       relativeFAB,
       containerProps,
-      itemProps
+      itemProps,
+      prefix
     } = this.props
+
     return (
-      <Fragment>
+      <>
         <Grid style={{padding: 8}}>
           <Route
             exact
-            path={toRoute(path, ":listItemId", routes.EDIT)}
+            path={toRoute(path, ":listItemId", prefix ? routes[prefix] : routes.EDIT)}
             render={props =>
               <WrappedComponent
                 Component={editItemComponent}
+                url={url}
                 {...{
                   hasText,
                   folder,
@@ -151,7 +154,7 @@ class Sortable extends Component {
           A sorrendet &quot;fogd és vidd&quot; módszerrel lehet változtatni.
           A változtatások automatikusan mentésre kerülnek.
         </Tip>
-      </Fragment>
+      </>
     )
   }
 }

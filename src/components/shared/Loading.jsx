@@ -1,13 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import empty from '../../assets/empty-state.svg'
-import {CircularProgress, Grid, Tooltip} from '@material-ui/core'
+import React from "react"
+import PropTypes from "prop-types"
+import EmptyState from "../../assets/empty-state.svg"
+import {CircularProgress, Grid, Tooltip} from "@material-ui/core"
 
 
 // NOTE: Better empty state
 const Loading = ({isEmpty}) =>
   <Grid
-
     alignItems="center"
     container
     justify="center"
@@ -18,7 +17,7 @@ const Loading = ({isEmpty}) =>
         <Tooltip title="nincs találat">
           <img
             alt="nincs találat"
-            src={empty}
+            src={EmptyState}
             style={{userSelect: "none"}}
           />
         </Tooltip> :

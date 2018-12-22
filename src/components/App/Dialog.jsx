@@ -1,8 +1,8 @@
-import React from 'react'
-import {withStore} from "./Store"
+import React from "react"
+import PropTypes from "prop-types"
+import {withStore} from "../../db"
 
-import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from '@material-ui/core'
-
+import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button} from "@material-ui/core"
 
 const EnhancedDialog = ({
   dialog: {
@@ -36,14 +36,16 @@ const EnhancedDialog = ({
   </Dialog>
 
 
-/*
- * Dialog.propTypes = {dialog: {
- *   open: PropTypes.boolean,
- *   title: PropTypes.string,
- *   content: PropTypes.string,
- *   submitLabel: PropTypes.string,
- *   cancelLabel: PropTypes.string
- * }}
- */
+EnhancedDialog.propTypes = {
+  dialog: PropTypes.shape({
+    open: PropTypes.bool,
+    title: PropTypes.string,
+    content: PropTypes.string,
+    submitLabel: PropTypes.string,
+    cancelLabel: PropTypes.string
+  }),
+  closeDialog: PropTypes.func,
+  acceptDialog: PropTypes.func
+}
 
 export default withStore(EnhancedDialog)
