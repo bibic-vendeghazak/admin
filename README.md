@@ -1,4 +1,4 @@
-***Admin dashboard*** ![Travis CI Status](https://img.shields.io/travis/bibic-vendeghazak/admin.svg?branch=develop) [![Coverage Status](https://img.shields.io/coveralls/bibic-vendeghazak/admin/develop.svg)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop)
+***Admin dashboard*** ![Travis CI Status](https://img.shields.io/travis/bibic-vendeghazak/admin.svg?branch=develop) [![Coverage Status](https://img.shields.io/coveralls/bibic-vendeghazak/admin/develop.svg)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop) [![Greenkeeper badge](https://badges.greenkeeper.io/bibic-vendeghazak/admin.svg)](https://greenkeeper.io/)
 
 [https://bibic-vendeghazak-api.firebaseapp.com](https://bibic-vendeghazak-api.firebaseapp.com)
 The site requires login, so here is a preview:
