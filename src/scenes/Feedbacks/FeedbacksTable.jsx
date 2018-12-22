@@ -15,10 +15,10 @@ const FeedbacksTable = ({
       <TableRow>
         <Hidden mdDown>
           <TableCell padding="checkbox"></TableCell>
-          <TableCell numeric padding="dense">szoba</TableCell>
+          <TableCell align="center" padding="dense">szoba</TableCell>
         </Hidden>
         <TableCell padding="dense">üzenet/értékelés</TableCell>
-        <TableCell numeric padding="checkbox"></TableCell>
+        <TableCell align="center" padding="checkbox"></TableCell>
       </TableRow>
     </TableHead>
     <TableBody>

@@ -5,7 +5,7 @@ import {Route, Link} from "react-router-dom"
 import {routes, toRoute} from "../../../utils"
 import {FileStore} from "../../../lib/firebase"
 import {Tip, Modal} from ".."
-import {Grid, Button, Tooltip, GridList, GridListTile, GridListTileBar, IconButton, LinearProgress, Input, InputAdornment} from "@material-ui/core"
+import {Grid, Tooltip, GridList, GridListTile, GridListTileBar, IconButton, LinearProgress, Input, InputAdornment, Fab} from "@material-ui/core"
 
 import Upload from "@material-ui/icons/CloudUploadRounded"
 import Cancel from "@material-ui/icons/CloseRounded"
@@ -215,15 +215,15 @@ const UploadFAB = ({
   <Tooltip
     title="Új képek feltöltése"
   >
-    <Button
+    <Fab
       color="secondary"
       component={Link}
       style={style}
       to={toRoute(path, routes.UPLOAD)}
-      variant="fab"
+      variant="round"
     >
       <Upload/>
-    </Button>
+    </Fab>
   </Tooltip>
 
 UploadFAB.propTypes = {

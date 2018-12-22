@@ -63,7 +63,7 @@ const EnhancedTableHead = ({order, orderBy, onRequestSort}) =>
   <TableHead>
     <TableRow>
       {columns.map(({
-        id, label, numeric=true, padding="default", ...breakpoints
+        id, label, align="center", padding="default", ...breakpoints
       }) => {
         return (
           <Hidden
@@ -72,7 +72,7 @@ const EnhancedTableHead = ({order, orderBy, onRequestSort}) =>
           >
             <TableCell
               sortDirection={orderBy === id ? order : false}
-              {...{numeric, padding}}
+              {...{align, padding}}
             >
               {id !== "handled" &&
                 <Tooltip

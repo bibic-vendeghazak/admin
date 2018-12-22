@@ -101,7 +101,7 @@ class PriceType extends Component{
           <TableRow>
             <TableCell>Név</TableCell>
             <TableCell>Ár</TableCell>
-            <TableCell numeric>Módosítás</TableCell>
+            <TableCell align="center">Módosítás</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -277,7 +277,7 @@ class Price extends Component {
           }
         </TableCell>
         <TableCell
-          numeric
+          align="center"
           padding="none"
         >
           {isEditing ?

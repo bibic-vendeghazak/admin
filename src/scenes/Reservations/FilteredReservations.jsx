@@ -54,24 +54,24 @@ const FilteredReservations = ({
           title={archived ? "Archivált foglalás" : null}
         >
           <TableCell
-            numeric
+            align="center"
             padding="checkbox"
           >
             {!handled ? <Tooltip title="Új foglalás"><New color="secondary"/></Tooltip> : null}
           </TableCell>
           <Hidden mdUp>
             <TableCell
-              numeric
+              align="center"
               padding="dense"
             >#{id}</TableCell>
           </Hidden>
           <TableCell
-            numeric
+            align="center"
             padding="none"
           >{name}</TableCell>
           <Hidden smDown>
             <TableCell
-              numeric
+              align="center"
               padding="checkbox"
             >
               <Background color={colors[`room${roomId}`]}>
@@ -81,27 +81,27 @@ const FilteredReservations = ({
           </Hidden>
           <Hidden mdDown>
             <TableCell
-              numeric
+              align="center"
               padding="none"
             ><a href={`mailto:${email}`}>{email}</a></TableCell>
             <TableCell
-              numeric
+              align="center"
               padding="none"
             ><a href={`tel:${tel}`}>{tel}</a></TableCell>
           </Hidden>
           <Hidden smDown>
-            <TableCell numeric>{from && moment(from.toDate()).format("YYYY MMM. DD.")}</TableCell>
-            <TableCell numeric>{from && moment(to.toDate()).format("YYYY MMM. DD.")}</TableCell>
+            <TableCell align="center">{from && moment(from.toDate()).format("YYYY MMM. DD.")}</TableCell>
+            <TableCell align="center">{from && moment(to.toDate()).format("YYYY MMM. DD.")}</TableCell>
           </Hidden>
           <Hidden mdDown>
-            <TableCell numeric>
+            <TableCell align="center">
               <Typography >
                 {timestamp && moment(timestamp.toDate()).fromNow()}
               </Typography>
             </TableCell>
           </Hidden>
           <TableCell
-            numeric
+            align="center"
             padding="checkbox"
           >
             <Tooltip title="Részletek">

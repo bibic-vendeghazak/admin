@@ -16,16 +16,16 @@ const MessageRow = ({
     hover
     onClick={() => history.push(toRoute(routes.MESSAGES, id))}
   >
-    <TableCell numeric padding="checkbox">{!accepted &&
+    <TableCell align="center" padding="checkbox">{!accepted &&
   <Tooltip title="Kezeletlen">
     <New color="secondary"/>
   </Tooltip>
     }</TableCell>
-    <TableCell numeric>{name}</TableCell>
-    <TableCell numeric><a href={`mailto:${email}`}>{email}</a></TableCell>
-    <TableCell numeric><a href={`tel:${tel}`}>{tel}</a></TableCell>
-    <TableCell numeric>{translateSubject(subject)}</TableCell>
-    <TableCell numeric>
+    <TableCell align="center">{name}</TableCell>
+    <TableCell align="center"><a href={`mailto:${email}`}>{email}</a></TableCell>
+    <TableCell align="center"><a href={`tel:${tel}`}>{tel}</a></TableCell>
+    <TableCell align="center">{translateSubject(subject)}</TableCell>
+    <TableCell align="center">
       <Tooltip title="Részletek">
         <IconButton
           component={Link}

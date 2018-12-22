@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import {Link} from "react-router-dom"
 import {routes, toRoute} from "../../../utils"
-import {Button, Paper, Tooltip} from "@material-ui/core"
+import {Paper, Tooltip, Fab} from "@material-ui/core"
 import Edit from "@material-ui/icons/EditRounded"
 
 const GalleryItem = ({
@@ -46,14 +46,14 @@ const GalleryItem = ({
         }}
       />
       <Tooltip title="Szerkesztés">
-        <Button
+        <Fab
           component={Link}
-          mini
+          size="small"
           to={toRoute(path, key, routes.EDIT)}
-          variant="fab"
+          variant="round"
         >
           <Edit/>
-        </Button>
+        </Fab>
       </Tooltip>
     </Paper>
   </Tooltip>
