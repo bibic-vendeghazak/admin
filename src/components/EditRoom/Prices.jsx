@@ -225,10 +225,16 @@ class Price extends Component {
         content: "Biztosan törli ezt az árat az adatbázisból?",
         submitLabel: "Törlés"
       },
-      () => ROOMS_DB
-        .child(`${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}`)
-        .remove()
-        .then(this.handleCloseEdit),
+      async () => {
+        try {
+          await ROOMS_DB
+            .child(`${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}`)
+            .remove()
+          this.handleCloseEdit()
+        } catch(error) {
+          console.error()
+        }
+      },
       "Az ár törölve lett."
       )
     }

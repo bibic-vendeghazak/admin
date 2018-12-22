@@ -41,10 +41,17 @@ export default class Population extends Component {
       content: "Ha az új maximális fők száma nagyobb mint a korábbi, ez az ártáblázatban új opciók létrejöttéhez vezet. Ha kevesebb, a jelenlegi árak TÖRLŐDNEK az adatbázisból!",
       submitLabel: "Módósít"
     },
-    () => ROOMS_DB
-      .child(`${this.props.roomId-1}/prices/metadata/maxPeople`)
-      .set(parseInt(this.state.count, 10))
-      .then(this.handleCloseEdit),
+    async () => {
+      try {
+        await ROOMS_DB
+          .child(`${this.props.roomId-1}/prices/metadata/maxPeople`)
+          .set(parseInt(this.state.count, 10))
+
+        this.handleCloseEdit()
+      } catch (error) {
+        console.error(error)
+      }
+    },
     "Módosítva. Az ártáblázat ennek megfelelően hamarosan frissül."
     )
   }
