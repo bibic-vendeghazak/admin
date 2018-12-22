@@ -1,21 +1,17 @@
 import React, {Component} from 'react'
 import moment from "moment"
-import {Link} from "react-router-dom"
 import {Card, CardContent, Grid, Typography, Tooltip, CardActions, Button} from '@material-ui/core'
 import {MESSAGES_FS, TIMESTAMP} from "../../lib/firebase"
 import {withStore} from "../../db"
 
-import From from "@material-ui/icons/AccessTimeRounded"
 import MessageIcon from "@material-ui/icons/MessageRounded"
 import Tel from "@material-ui/icons/CallRounded"
 import Email from "@material-ui/icons/EmailRounded"
-import Adult from "@material-ui/icons/PeopleRounded"
 import Person from "@material-ui/icons/PersonRounded"
-import Service from "@material-ui/icons/RoomServiceRounded"
 import Subject from "@material-ui/icons/SubjectRounded"
-import {toRoute, routes} from '../../utils'
 
 import {Item} from "../../components/shared"
+import {translateSubject} from '../../utils/language'
 
 class Message extends Component {
   state = {
@@ -70,7 +66,7 @@ class Message extends Component {
   render() {
 
     const {
-      accepted, id, timestamp, lastHandledBy, name, email, tel, subject, from, service, peopleCount, message
+      accepted, id, timestamp, lastHandledBy, name, email, tel, subject, content
     } = this.state
 
     return (
@@ -104,36 +100,13 @@ class Message extends Component {
             />
             <Item
               icon={<Subject/>}
-              primary={subject}
-              secondary="rendezvény célja"
+              primary={translateSubject(subject)}
+              secondary="téma"
             />
             <Item
               icon={<MessageIcon/>}
-              primary={message}
+              primary={content}
               secondary="üzenet"
-            />
-            <Item
-              icon={<Service/>}
-              primary={service}
-              secondary="igényelt ellátás"
-            />
-            <Item
-              icon={<Adult/>}
-              primary={peopleCount}
-              secondary="fő"
-            />
-            <Item
-              icon={<From/>}
-              primary={
-                <Tooltip title="Ugrás a naptárra">
-                  <Link
-                    to={toRoute(routes.CALENDAR, moment(from.toDate()).format("YYYY/MM/DD"))}
-                  >
-                    {moment(from.toDate()).format("YYYY. MMMM DD, dddd")}
-                  </Link>
-                </Tooltip>
-              }
-              secondary="időpont"
             />
           </Grid>
         </CardContent>

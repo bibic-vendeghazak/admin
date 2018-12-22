@@ -9,7 +9,7 @@ import Message from './Message'
 
 class Messages extends Component {
   state = {
-    Messages: null,
+    messages: null,
     isFetched: false
   }
 
@@ -23,15 +23,15 @@ class Messages extends Component {
     MESSAGES_FS
       .get()
       .then(snap => {
-        const Messages = []
-        snap.forEach(Message => {
-          Messages.push({
-            id: Message.id,
-            ...Message.data()
+        const messages = []
+        snap.forEach(message => {
+          messages.push({
+            id: message.id,
+            ...message.data()
           })
         })
         this.setState({
-          Messages,
+          messages,
           isFetched: true
         })
       })
@@ -39,7 +39,7 @@ class Messages extends Component {
 
   render() {
     const {
-      Messages, isFetched
+      messages, isFetched
     } = this.state
     return (
       <>
@@ -49,10 +49,7 @@ class Messages extends Component {
           render={() =>
             <Paper>
               <MessagesTable
-                {...{
-                  Messages,
-                  isFetched
-                }}
+                {...{messages, isFetched}}
                 showDateFilter={false}
                 showRoomFilter={false}
               />

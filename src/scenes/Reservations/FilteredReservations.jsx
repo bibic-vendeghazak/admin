@@ -44,12 +44,14 @@ const FilteredReservations = ({
       .filter(filterByQuery(query))
       .sort(sortReservations(order, orderBy))
       .map(({
-        key, id, roomId, from, to, name, handled, email, tel, timestamp
+        key, id, roomId, from, to, name, handled, email, tel, timestamp, archived
       }) =>
         <TableRow
           hover
           key={key}
           onClick={() => history.push(toRoute(routes.RESERVATIONS, key))}
+          selected={archived}
+          title={archived ? "Archivált foglalás" : null}
         >
           <TableCell
             numeric

@@ -5,7 +5,7 @@ import FilteredMessages from './FilteredMessages'
 
 
 const MessagesTable = ({
-  Messages, isFetched, query
+  messages, isFetched, query
 }) =>
   <Table>
     <TableHead>
@@ -14,16 +14,14 @@ const MessagesTable = ({
         <TableCell numeric>név</TableCell>
         <TableCell numeric>e-mail</TableCell>
         <TableCell numeric>telefon</TableCell>
-        <TableCell numeric>rendezvény célja</TableCell>
-        <TableCell numeric>igényelt ellátás</TableCell>
-        <TableCell numeric>fő</TableCell>
+        <TableCell numeric>téma</TableCell>
         <TableCell></TableCell>
       </TableRow>
     </TableHead>
     <TableBody>
       {isFetched ?
         <FilteredMessages {...{
-          Messages,
+          messages,
           query
         }}
         />
