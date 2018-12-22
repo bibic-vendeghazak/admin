@@ -29,13 +29,11 @@ export const getPrice = ({
 
 export const handleSubmit = (reservation, roomLength, adminName, reservationId) => {
   reservation.from = reservation.from.toDate()
-  reservation.to= reservation.to.toDate()
+  reservation.to = reservation.to.toDate()
   reservation.timestamp = TIMESTAMP
   reservation.id = `${moment(reservation.from).format("YYYYMMDD")}-sz${reservation.roomId}`
   reservation.lastHandledBy = adminName
-
-  console.log(reservation)
-
+  reservation.archived = false
 
   const error = validateReservation({...reservation, roomLength})
 
