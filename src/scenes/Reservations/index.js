@@ -18,10 +18,10 @@ const Reservations = ({rooms}) =>
       render={() =>
         <>
           <Paper style={{paddingTop: 16}}>
-            <Tip>A foglalások sorbarendezhetőek az oszlopcímekre kattintva.</Tip>
-            <Tip>Az új foglalások mindig a lista tetején jelennek meg.</Tip>
             <ReservationsTable/>
           </Paper>
+          <Tip>A foglalások sorbarendezhetőek az oszlopcímekre kattintva.</Tip>
+          <Tip>Az új foglalások mindig a lista tetején jelennek meg.</Tip>
           <ExtendedFAB
             icon={<Bookmark/>}
             label="Új foglalás"
