@@ -10,7 +10,7 @@ const overlaps = require("./lib/reservations/overlaps")
 const reservations = require("./lib/reservations")
 const email = require("./lib/email")
 const prices = require("./lib/prices")
-const pictures = require("./lib/pictures")
+import * as feedbacks from "./lib/feedbacks"
 
 
 
@@ -44,7 +44,12 @@ exports.populatePrices = functions.region("europe-west1").database
 exports.generateThumbnail = functions.region("europe-west1").storage.object()
   .onFinalize(pictures.generateThumbnail)
 
+// Feedbacks handling ⭐⭐⭐⭐⭐
+// Cron job to check if feedback e-mails should be sent out. ⏰
+export const feedbackCron = functions.https
+  .onRequest(feedbacks.cron)
 
+export const {feedbackChanged} = feedbacks
 
 exports.deletePicture = functions.region("europe-west1").database
   .ref("galleries/{galleryId}/{pictureId}")
