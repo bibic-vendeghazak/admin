@@ -10,11 +10,11 @@ const MessagesTable = ({
   <Table>
     <TableHead>
       <TableRow>
-        <TableCell numeric padding="checkbox"></TableCell>
-        <TableCell numeric>név</TableCell>
-        <TableCell numeric>e-mail</TableCell>
-        <TableCell numeric>telefon</TableCell>
-        <TableCell numeric>téma</TableCell>
+        <TableCell align="center" padding="checkbox"></TableCell>
+        <TableCell align="center">név</TableCell>
+        <TableCell align="center">e-mail</TableCell>
+        <TableCell align="center">telefon</TableCell>
+        <TableCell align="center">téma</TableCell>
         <TableCell></TableCell>
       </TableRow>
     </TableHead>

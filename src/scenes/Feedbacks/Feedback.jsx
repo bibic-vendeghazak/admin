@@ -55,7 +55,7 @@ class Feedback extends Component {
               </Tooltip> : null
             }
           </TableCell>
-          <TableCell numeric padding="dense">
+          <TableCell align="center" padding="dense">
             <Background color={colors[`room${roomId}`]}>
               {roomId}
             </Background>
@@ -89,7 +89,7 @@ class Feedback extends Component {
           }
 
         </TableCell>
-        <TableCell numeric padding="dense">
+        <TableCell align="center" padding="dense">
           <Grid alignItems="center" container justify="flex-end" wrap="nowrap">
             <Hidden mdDown>
               <Tooltip title={showRatings ? "értékelések elrejtése" : "értékelések mutatása"}>
