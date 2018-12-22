@@ -118,7 +118,7 @@ const App = ({
             />
             <Route
               component={Messages}
-              path={routes.SPECIAL_REQUESTS}
+              path={routes.MESSAGES}
             />
             <Route
               component={Paragraphs}

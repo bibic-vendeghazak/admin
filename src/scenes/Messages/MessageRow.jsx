@@ -12,7 +12,7 @@ const MessageRow = ({
 }) =>
   <TableRow
     hover
-    onClick={() => history.push(toRoute(routes.SPECIAL_REQUESTS, id))}
+    onClick={() => history.push(toRoute(routes.MESSAGES, id))}
   >
     <TableCell numeric padding="checkbox">{!accepted &&
   <Tooltip title="Kezeletlen">
@@ -29,7 +29,7 @@ const MessageRow = ({
       <Tooltip title="Részletek">
         <IconButton
           component={Link}
-          to={toRoute(routes.SPECIAL_REQUESTS, id)}
+          to={toRoute(routes.MESSAGES, id)}
         >
           <Details/>
         </IconButton>

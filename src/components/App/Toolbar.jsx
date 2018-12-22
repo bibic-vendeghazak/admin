@@ -16,7 +16,7 @@ import Before from "@material-ui/icons/NavigateBeforeRounded"
 
 const {
   ROOMS, INTRO, CERTIFICATES,
-  SPECIAL_REQUESTS, CALENDAR, RESERVATIONS,
+  MESSAGES, CALENDAR, RESERVATIONS,
   FEEDBACKS, FOODS, EVENTS, SERVICES
 } = routes
 
@@ -43,9 +43,9 @@ export const Title = () =>
       <Route
         component={
           ({match: {params: {p1}}}) =>
-            p1 ? "Külön ajánlat" : "Külön ajánlatok"
+            p1 ? "Üzenet" : "Üzenetek"
         }
-        path={toRoute(SPECIAL_REQUESTS, ":p1?")}
+        path={toRoute(MESSAGES, ":p1?")}
       />
       <Route
         component={
@@ -79,7 +79,7 @@ export const Title = () =>
   </Typography>
 
 
-const pathsWithClose = [ROOMS, RESERVATIONS, SPECIAL_REQUESTS]
+const pathsWithClose = [ROOMS, RESERVATIONS, MESSAGES]
 
 export const RightAction = () =>
   <Switch>

@@ -45,7 +45,7 @@ class Messages extends Component {
       <>
         <Route
           exact
-          path={routes.SPECIAL_REQUESTS}
+          path={routes.MESSAGES}
           render={() =>
             <Paper>
               <MessagesTable
@@ -61,7 +61,7 @@ class Messages extends Component {
         />
         <Route
           component={Message}
-          path={toRoute(routes.SPECIAL_REQUESTS, ":messageId")}
+          path={toRoute(routes.MESSAGES, ":messageId")}
         />
 
       </>

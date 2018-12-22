@@ -126,9 +126,9 @@ const Sidebar = ({
               <SpecialReqests/>
             </Badge>
           }
-          to={routes.SPECIAL_REQUESTS}
+          to={routes.MESSAGES}
         >
-          Külön ajánlat
+          Üzenetek
         </DrawerItem>
         <DrawerItem
           {...{drawerItemStyle}}
