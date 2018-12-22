@@ -88,13 +88,13 @@ export default class Availability extends Component {
                 color="primary" onClick={this.handleCancelBlock}
                 size="small" variant="outlined"
               >
-                <Unlock/> {hu.rooms.editRoom.sections.availability.buttons.block}
+                <Unlock/> {hu.rooms.editRoom.sections.availability.buttons.unblock}
               </Button> :
               <Button
                 color="secondary" onClick={this.handleSubmitDate}
                 size="small" variant="contained"
               >
-                <Lock/> {hu.rooms.editRoom.sections.availability.buttons.unblock}
+                <Lock/> {hu.rooms.editRoom.sections.availability.buttons.block}
               </Button>
             }
           </Grid>
