@@ -1,6 +1,6 @@
-const generateURL = require("generate-google-calendar-url")
-const moment = require("../moment")
-const constants = require("../constants")
+import generateURL from "generate-google-calendar-url"
+import moment from "../moment"
+import * as constants from "../constants"
 
 
 export const toPrice = price => parseInt(price, 10)
@@ -17,7 +17,7 @@ export const translateSubject = subject => {
     subject = "Rendezvényterem"
     break
   case "special":
-    subject = "Külön ajánlat"
+    subject = "Üzenet"
     break
   case "fullHouse":
     subject = "Teljes ház"

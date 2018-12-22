@@ -1,6 +1,6 @@
-const fs = require("fs")
-const parse = require("./parse")
-const handlebars = require("handlebars")
+import fs from "fs"
+import { parseReservation } from "./parse"
+import handlebars from "handlebars"
 
 const readFile = (path, opts = "utf8") =>
   new Promise((res, rej) => {
@@ -28,4 +28,13 @@ export const toHTML = async (path, data) => {
  * @param {object} reservation object
  */
 export const reservationToHTML = async (path, reservation) =>
-  toHTML(path, parse.parseReservation(reservation))
+  toHTML(path, parseReservation(reservation))
+
+
+/**
+ * Turns feedback object into HTML string
+ * @param {string} path to the HTML template
+ * @param {object} feedback object
+ */
+export const feedbackToHTML = async (path, feedback) =>
+  toHTML(path, feedback)

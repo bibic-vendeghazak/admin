@@ -1,10 +1,10 @@
-const QRCode = require("qrcode")
-const ical = require("ical-generator")
-const moment = require("../moment")
-const constants = require("../constants")
+import QRCode from "qrcode"
+import ical from "ical-generator"
+import moment from "../moment"
+import { ADMIN_ROOT, ADDRESS, WEB, ADMIN_EMAIL, APP_NAME } from "../constants"
 
 export const getQRCode = reservationId =>
-  QRCode.toDataURL(`${constants.ADMIN_ROOT}/foglalasok/${reservationId}/ervenyesseg`)
+  QRCode.toDataURL(`${ADMIN_ROOT}/foglalasok/${reservationId}/ervenyesseg`)
 
 export const getIcalEvent = ({timestamp, id, roomId, address, email, tel, name, from, to, message, adults, children}) => {
   const cal = ical()
@@ -25,12 +25,12 @@ megjegyzés: ${message}
 
 Szeretettel várjuk!
 `,
-    location: constants.ADDRESS,
-    url: constants.WEB,
+    location: ADDRESS,
+    url: WEB,
     attendees: [{email, name}],
     organizer: {
-      email: constants.ADMIN_EMAIL,
-      name: constants.APP_NAME
+      email: ADMIN_EMAIL,
+      name: APP_NAME
     }
   })
 

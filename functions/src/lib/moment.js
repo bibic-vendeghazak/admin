@@ -1,7 +1,5 @@
 // Init moment.js
-const Moment = require("moment")
-const MomentRange = require("moment-range")
-const moment = MomentRange.extendMoment(Moment)
+import moment from "moment"
+import { extendMoment } from "moment-range"
 moment.locale("hu")
-
-module.exports = moment
+export default extendMoment(moment)

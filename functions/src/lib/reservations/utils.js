@@ -1,7 +1,7 @@
-const moment = require("../moment")
-const admin = require("firebase-admin")
+import moment from "../moment"
+import { database } from "../firebase"
 
-const reservationDatesRef = admin.database().ref("reservationDates")
+const reservationDatesRef = database.ref("reservationDates")
 
 
 /**
@@ -14,7 +14,7 @@ const reservationDatesRef = admin.database().ref("reservationDates")
  * @param {boolean} [compare=] has arrival, departure or roomId changed?
  * @returns {Promise}
  */
-module.exports.updateReservationDates = (from, to, roomId, reservationId, shouldDelete=false) => {
+export const updateReservationDates = (from, to, roomId, reservationId, shouldDelete=false) => {
   // convert from Firebase Timestamp
   from = moment(from.toDate())
   to = moment(to.toDate())
@@ -37,24 +37,13 @@ module.exports.updateReservationDates = (from, to, roomId, reservationId, should
   }))
 }
 
-module.exports.isEquivalent = (a, b) => {
-  const keys = Object.keys(a)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    if (a[key] !== b[key]) {
-      return false
-    }
-  }
-  return true
-}
-
 /**
  *  returns the difference of 2 objects
  * @param {object} o1 object to compare to
  * @param {object} o2 object to compare
  * @returns {object} the differnce
  */
-module.exports.diff = (o1, o2) => Object.keys(o2)
+export const diff = (o1, o2) => Object.keys(o2)
   .reduce((diff, key) => {
     if (o1[key] === o2[key]) return diff
     return {

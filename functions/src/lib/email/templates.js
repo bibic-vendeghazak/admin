@@ -1,111 +1,113 @@
-const constants = require("../constants")
-const utils = require("./utils")
+import { FOOTER } from "../constants"
+import { commonFields, parseReservation, translateSubject } from "./parse"
 import { feedbackToHTML, reservationToHTML } from "./utils"
 
-module.exports.adminText = reservation => {
-  const {name, email, lastHandledBy, timestamp} = parse.parseReservation(reservation)
+export const adminText = reservation => {
+  const {name, email, lastHandledBy, timestamp} = parseReservation(reservation)
   return `
 Név: ${name}
 E-mail cím: ${email}
-${parse.commonFields(reservation)}
+${commonFields(reservation)}
 Foglalást utoljára kezelte: ${lastHandledBy}"}
 Utoljára módosítva: ${timestamp}
 `
 }
 
-module.exports.createdUserText = ({name, ...reservation}) =>
+export const createdUserText = ({name, ...reservation}) =>
   `
 Tisztelt ${name}!
 
 Foglalási kérelmét az alábbi információkkal megkaptuk:
-${parse.commonFields(reservation)}
+${commonFields(reservation)}
 
 Mihamarabb értesítjük Önt a további teendőkről.
   
-${constants.FOOTER}`
+${FOOTER}`
 
-module.exports.acceptedUserText = ({name, lastHandledBy, ...reservation}) =>
+export const acceptedUserText = ({name, lastHandledBy, ...reservation}) =>
   `
 Tisztelt ${name}!
 
 Foglalási kérelmét jóváhagytuk:
-${parse.commonFields(reservation)}
+${commonFields(reservation)}
 A foglalást ${lastHandledBy} hagyta jóvá.
 
 Köszönjük!
   
-${constants.FOOTER}`
+${FOOTER}`
 
-module.exports.changedUserText = ({name, lastHandledBy, ...reservation}) =>
+export const changedUserText = ({name, lastHandledBy, ...reservation}) =>
   `
 Tisztelt ${name}!
 
 Foglalási kérelme módosult.
-${parse.commonFields(reservation)}
+${commonFields(reservation)}
 A módosítást ${lastHandledBy} hagyta jóvá.
 
 Köszönjük!
   
-${constants.FOOTER}`
-module.exports.changedFirstUserText = ({name, lastHandledBy, ...reservation}) =>
+${FOOTER}`
+export const changedFirstUserText = ({name, lastHandledBy, ...reservation}) =>
   `
 Tisztelt ${name}!
 
 Egyik adminunk felvett egy foglalást az Ön nevére.
-${parse.commonFields(reservation)}
+${commonFields(reservation)}
 A foglalást ${lastHandledBy} hagyta jóvá.
 
 Köszönjük!
   
-${constants.FOOTER}`
+${FOOTER}`
 
-module.exports.deletedUserText = ({name}) =>
+export const deletedUserText = ({name}) =>
   `
 Tisztelt ${name}!
 
 Foglalása törölve lett rendszerünkből.
 Sajnáljuk.
   
-${constants.FOOTER}`
+${FOOTER}`
 
 
-module.exports.rejectedUserText = ({name, ...reservation}) =>
+export const rejectedUserText = ({name, ...reservation}) =>
   `
 Tisztelt ${name}!
 
 Foglalása az alábbiak szerint módosul:
-${parse.commonFields(reservation)}
+${commonFields(reservation)}
   
-${constants.FOOTER}`
+${FOOTER}`
 
 
-module.exports.reservationHTML = (user, status, reservation) =>
-  utils.reservationToHTML(`./templates/${user}/${status}.min.html`, reservation)
+export const reservationHTML = async (user, status, reservation) =>
+  await reservationToHTML(`./templates/${user}/${status}.min.html`, reservation)
 
 
 // SPECIAL REQUESTS / MESSAGES ---------------------------------------------------
 
-module.exports.userMessage = ({name, tel, message, subject}) =>
+export const userMessage = ({name, tel, content, subject}) =>
   `
 Tisztelt ${name}!
 
 Üzenetét megkaptuk az alábbi adatokkal:
-Téma: ${parse.translateSubject(subject)}
+Téma: ${translateSubject(subject)}
 Telefonszám: ${tel}
-Tartalom: ${message}
+Tartalom:
+${content}
 
 Amint tudunk, válaszolunk Önnek. Amennyiben további információt szeretne megadni, úgy válaszolhat erre az e-mailre.
 
-${constants.FOOTER}
+${FOOTER}
 `
 
-module.exports.adminMessage = ({name, email, tel, message, subject}) =>
+export const adminMessage = ({name, email, tel, content, subject}) =>
   `
 ${name} új üzenetet küldött!
-Téma: ${parse.translateSubject(subject)}
+Téma: ${translateSubject(subject)}
 E-mail: ${email}
 Telefonszám: ${tel}
-Tartalom: ${message}
+Tartalom:
+${content}
 `
 
 

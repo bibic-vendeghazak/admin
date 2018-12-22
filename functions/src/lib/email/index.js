@@ -1,9 +1,11 @@
-const functions = require("firebase-functions")
-const nodemailer = require("nodemailer")
-const templates = require("./templates")
-const constants = require("../constants")
-const attachments = require("./attachments")
+import * as functions from "firebase-functions"
+import nodemailer from "nodemailer"
+import { ADMIN_EMAIL, ADMIN_RESERVATION_EMAIL, NO_REPLY } from "../constants"
+import { RESERVATIONS_FS } from "../firebase"
+import { getIcalEvent, getQRCode } from "./attachments"
 import { acceptedUserText, adminMessage, adminText, changedFirstUserText, changedUserText, createdUserText, deletedUserText, reservationHTML, userMessage, feedbackHTML } from "./templates"
+import { reservationToHTML } from "./utils"
+
 
 // Init email
 const {email: user, password: pass} = functions.config().gmail
@@ -19,62 +21,62 @@ const mailTransport = nodemailer.createTransport({
 const messages = {
   accepted: {
     admin: {
-      html: reservation => templates.reservationHTML("admin", "default", reservation),
+      html: reservation => reservationHTML("admin", "default", reservation),
       subject: "Foglalás jóváhagyva 🎉",
-      text: templates.adminText
+      text: adminText
     },
     user: {
-      html: reservation => templates.reservationHTML("user", "accepted", reservation),
-      text: templates.acceptedUserText,
+      html: reservation => reservationHTML("user", "accepted", reservation),
+      text: acceptedUserText,
       subject: "Foglalását jóváhagytuk 🎉"
     },
   },
   created: {
     admin: {
-      html: reservation => templates.reservationHTML("admin", "default", reservation),
+      html: reservation => reservationHTML("admin", "default", reservation),
       subject: "Új foglalás 🔔",
-      text: templates.adminText
+      text: adminText
     },
     user: {
       html: () => null,
-      text: templates.createdUserText,
+      text: createdUserText,
       subject: "Foglalása jóváhagyásra vár 🔔"
     },
   },
   changed: {
     admin: {
-      html: reservation => templates.reservationHTML("admin", "default", reservation),
+      html: reservation => reservationHTML("admin", "default", reservation),
       subject: "Foglalás módosítva ✍",
-      text: templates.adminText
+      text: adminText
     },
     user: {
       html: () => null,
       subject: "Foglalását módosítottuk ✍",
-      text: templates.changedUserText
+      text: changedUserText
     }
   },
   changedFirst: {
     admin: {
-      html: reservation => templates.reservationHTML("admin", "default", reservation),
+      html: reservation => reservationHTML("admin", "default", reservation),
       subject: "Foglalás módosítva ✍",
-      text: templates.adminText
+      text: adminText
     },
     user: {
-      html: reservation => templates.reservationHTML("user", "accepted", reservation),
+      html: reservation => reservationHTML("user", "accepted", reservation),
       subject: "Foglalás rögzítve ✍",
-      text: templates.changedFirstUserText
+      text: changedFirstUserText
     }
   },
   deleted: {
     admin: {
       html: () => null,
       subject: "Foglalás törölve ❌",
-      text: templates.adminText
+      text: adminText
     },
     user: {
       html: () => null,
       subject: "Foglalását töröltük ❌",
-      text: templates.deletedUserText
+      text: deletedUserText
     }
   }
 }
@@ -86,56 +88,55 @@ const messages = {
  * @param {string} type One of: created, accepted, deleted, rejected, changed, changedFirst
  * @param {string} target who will receive the e-mail
  */
-module.exports.sendReservationEmail = async (reservation, type, target) => {
+export const sendReservationEmail = async (reservation, type, target) => {
   const mail = await {
-    replyTo: constants.ADMIN_EMAIL,
-    from: constants.ADMIN_RESERVATION_EMAIL,
-    to: target === "admin" ? constants.NO_REPLY : reservation.email,
+    replyTo: ADMIN_EMAIL,
+    from: ADMIN_RESERVATION_EMAIL,
+    to: target === "admin" ? NO_REPLY : reservation.email,
     text: messages[type][target].text(reservation),
     subject: messages[type][target].subject,
   }
-  try {
-    mail.html = await messages[type][target].html(reservation)
 
-    if (["accepted", "changedFirst"].includes(type) && target === "user") {
-      const QRCode = await attachments.getQRCode(reservation.reservationId)
-      mail.icalEvent = attachments.getIcalEvent(reservation)
-      mail.attachments = [{
-        content: QRCode.split("base64,")[1],
-        encoding: "base64",
-        name: "qr.png",
-        cid: "qr-code-123" //same cid value as in the html img src
-      }]
-    }
+  mail.html = await messages[type][target].html(reservation)
 
-    await mailTransport.sendMail(mail)
-    console.log(`E-mail sent to ${target}`)
-  } catch (error) {console.error(error)}
+  if (["accepted", "changedFirst"].includes(type) && target === "user") {
+    const QRCode = await getQRCode(reservation.reservationId)
+    mail.icalEvent = getIcalEvent(reservation)
+    mail.attachments = [{
+      content: QRCode.split("base64,")[1],
+      encoding: "base64",
+      name: "qr.png",
+      cid: "qr-code-123" //same cid value as in the html img src
+    }]
+  }
+
+  await mailTransport.sendMail(mail)
+  return  console.log(`E-mail sent to ${target}`)
 }
 
 
-module.exports.sendMessageEmails = snap =>
+export const sendMessageEmails = async message =>
   Promise.all([
-    // To user
     {
-      replyTo: constants.ADMIN_EMAIL,
-      from: constants.ADMIN_RESERVATION_EMAIL,
-      to: snap.val().email,
-      text: templates.userMessage(snap.val(), FOOTER),
+      // To user
+      replyTo: ADMIN_EMAIL,
+      from: ADMIN_RESERVATION_EMAIL,
+      to: message.email,
+      text: userMessage(message),
       subject: "Üzenetét megkaptuk 👍"
     },
-    // To admin
     {
-      replyTo: snap.val().email,
-      from: snap.val().email,
-      text: templates.adminMessage(snap.val()),
-      to: constants.ADMIN_EMAIL,
+      // To admin
+      replyTo: message.email,
+      from: message.email,
+      text: adminMessage(message),
+      to: ADMIN_EMAIL,
       subject: "Új üzenet! 🔔"
     }
-  ].map(mail =>
-    mailTransport.sendMail(mail)
-      .then(() => console.log("Email sent to ", mail.to))
-  ))
+  ].map(target => mailTransport.sendMail(target)))
+    .then(() => console.log("Email sent"))
+
+
 export const sendFeedbackEmails = async emails =>
   emails.map(async (reservation) => {
     const mail = {

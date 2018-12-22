@@ -1,48 +1,48 @@
-const functions = require("firebase-functions")
-const admin = require("firebase-admin")
-admin.initializeApp()
-admin.firestore().settings({timestampsInSnapshots: true})
-
-
-// ---------------------------------------------------------------------------------------------------
+import {functions} from "./lib/firebase"
 // Imports from lib 📘
-const overlaps = require("./lib/reservations/overlaps")
-const reservations = require("./lib/reservations")
-const email = require("./lib/email")
-const prices = require("./lib/prices")
+import * as reservations from "./lib/reservations"
+import * as messages from "./lib/messages"
+import * as prices from "./lib/prices"
+import * as pictures from "./lib/pictures"
 import * as feedbacks from "./lib/feedbacks"
 
 
 
 // Reservation handling 🔖
-exports.reservationCreated = reservations.reservationCreated
-exports.reservationChanged = reservations.reservationChanged
-exports.reservationDeleted = reservations.reservationDeleted
+export const {reservationCreated, reservationChanged, reservationDeleted} = reservations
 
-exports.reservationExists = functions.region("europe-west1").https
+export const reservationExists = functions.https
   .onRequest(reservations.exists)
 
-// Return overlaps in a month 📅
-exports.getOverlaps = functions.region("europe-west1").https
-  .onRequest(overlaps.getOverlaps)
+export const getOverlaps = functions.https
+  .onRequest(reservations.overlaps)
 
 
-// REVIEW: Messages moved to Firestore
-exports.messageIncoming = functions.region("europe-west1").database
-  .ref("messages/{messageId}")
-  .onCreate(email.sendMessageEmails)
+
+// Message handling 📯
+export const {messageCreated} = messages
 
 
 // Room handling 🏘
-exports.populatePrices = functions.region("europe-west1").database
+export const populatePrices = functions.database
   .ref("rooms/{roomId}/prices/metadata")
-  .onUpdate(prices.populatePrices)
+  .onUpdate(prices.populate)
 
 
 
 // Picture handling 🍱
-exports.generateThumbnail = functions.region("europe-west1").storage.object()
+export const generateThumbnail = functions.storage.object()
   .onFinalize(pictures.generateThumbnail)
+
+export const deletePictures = functions.database
+  .ref("galleries/{galleryId}/{pictureId}")
+  .onDelete(pictures.deletePictures)
+
+export const deleteRoomPictures = functions.database
+  .ref("galleries/{galleryId}/{roomId}/{pictureId}")
+  .onDelete(pictures.deletePictures)
+
+
 
 // Feedbacks handling ⭐⭐⭐⭐⭐
 // Cron job to check if feedback e-mails should be sent out. ⏰
@@ -51,6 +51,4 @@ export const feedbackCron = functions.https
 
 export const {feedbackChanged} = feedbacks
 
-exports.deletePicture = functions.region("europe-west1").database
-  .ref("galleries/{galleryId}/{pictureId}")
-  .onDelete(pictures.deletePicture)
+
