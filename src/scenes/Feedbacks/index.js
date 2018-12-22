@@ -55,24 +55,21 @@ class Feedbacks extends Component {
       handledFeedbacks, unhandledFeedbacks, isLoading
     } = this.state
 
+
     return (
       <Grid container direction="column" spacing={16} style={{padding: 16}}>
-        <Grid item>
-          <Typography style={{margin: 16}} variant="h6">Statisztika</Typography>
-          <Stats
-            feedbacks={handledFeedbacks}
-            isLoading={isLoading}
-          />
-        </Grid>
+        {this.props.match.params.show &&
+          <Grid item>
+            <Typography style={{margin: 16}} variant="h6">Statisztika</Typography>
+            <Stats
+              feedbacks={handledFeedbacks}
+              isLoading={isLoading}
+            />
+          </Grid>
+        }
         <Grid item>
           <Typography style={{margin: 16}} variant="h6">Üzenetek (utolsó 100)</Typography>
           <Paper style={{paddingTop: 16}}>
-            <Tip>
-              A keresés mezővel kikereshetőek üzenetek, vagy kiszűrhető az összes visszajelzés ami 5-t kapott pl. a kávéra így: &quot;kávé:5&quot; (ugyanígy más értékelés is szűrhető)
-            </Tip>
-            <Tip>
-              A kezeletlen visszajelzések mindig a lista tetején jelennek meg
-            </Tip>
             <FeedbacksTable
               showDateFilter={false}
               {...{
@@ -81,6 +78,12 @@ class Feedbacks extends Component {
               }}
             />
           </Paper>
+          <Tip>
+              A keresés mezővel kikereshetőek üzenetek, vagy kiszűrhető az összes visszajelzés ami 5-t kapott pl. a kávéra így: &quot;kávé:5&quot; (ugyanígy más értékelés is szűrhető)
+          </Tip>
+          <Tip>
+              A kezeletlen visszajelzések mindig a lista tetején jelennek meg
+          </Tip>
         </Grid>
       </Grid>
 

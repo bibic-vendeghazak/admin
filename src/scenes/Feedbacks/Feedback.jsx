@@ -81,7 +81,7 @@ class Feedback extends Component {
                   </Grid>
                 )}
             </Grid> :
-            <Tooltip title={`Beküldve: ${moment(new Date(timestamp)).fromNow()}`}>
+            <Tooltip title={`Beküldve: ${moment(timestamp.toDate()).fromNow()}`}>
               <span
                 style={{maxWidth: "50vw"}}
               >{content || "Nincs üzenet"}</span>
