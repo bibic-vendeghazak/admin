@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer")
 const templates = require("./templates")
 const constants = require("../constants")
 const attachments = require("./attachments")
+import { acceptedUserText, adminMessage, adminText, changedFirstUserText, changedUserText, createdUserText, deletedUserText, reservationHTML, userMessage, feedbackHTML } from "./templates"
 
 // Init email
 const {email: user, password: pass} = functions.config().gmail
@@ -135,3 +136,16 @@ module.exports.sendMessageEmails = snap =>
     mailTransport.sendMail(mail)
       .then(() => console.log("Email sent to ", mail.to))
   ))
+export const sendFeedbackEmails = async emails =>
+  emails.map(async (reservation) => {
+    const mail = {
+      replyTo: ADMIN_EMAIL,
+      from: ADMIN_RESERVATION_EMAIL,
+      to: reservation.email,
+      subject: "Reméljük, hogy jól érezte magát! 👌"
+    }
+    mail.html = await feedbackHTML(reservation)
+    await mailTransport.sendMail(mail)
+      .then(() => RESERVATIONS_FS.doc(reservation.reservationId).update({archived: true}))
+    console.log(`Feedback sent, reservation ${reservation.reservationId} archived`)
+  })
