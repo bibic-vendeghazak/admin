@@ -33,26 +33,24 @@ export default class Availability extends Component {
   handleChangeInput = ({target: {value}}) => this.setState({value})
 
   handleCancelBlock = () => {
-    this.props.openDialog({
-      submitLabel: "Feloldás",
-      content: "A szoba újra foglalható lesz."
-    },
-    () => ROOMS_DB
-      .child(`${this.props.roomId}/unavailable`)
-      .remove(),
-    "Blokkolás feloldva. A szoba újra foglalható."
+    this.props.openDialog(
+      {
+        submitLabel: "Feloldás",
+        content: "A szoba újra foglalható lesz."
+      },
+      async () => await ROOMS_DB.child(`${this.props.roomId}/unavailable`).remove(),
+      "Blokkolás feloldva. A szoba újra foglalható."
     )
   }
 
   handleSubmitDate = () => {
-    this.props.openDialog({
-      submitLabel: "Blokkolás",
-      content: "A szoba foglalása blokkolva lesz az adott dátumig."
-    },
-    () => ROOMS_DB
-      .child(`${this.props.roomId}/unavailable`)
-      .set(this.state.value),
-    "A szoba blokkolva lett a megadott dátumig."
+    this.props.openDialog(
+      {
+        submitLabel: "Blokkolás",
+        content: "A szoba foglalása blokkolva lesz az adott dátumig."
+      },
+      async () => await ROOMS_DB.child(`${this.props.roomId}/unavailable`).set(this.state.value),
+      "A szoba blokkolva lett a megadott dátumig."
     )
   }
 

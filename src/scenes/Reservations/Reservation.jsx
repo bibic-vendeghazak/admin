@@ -72,10 +72,7 @@ class Reservation extends Component {
   handleDelete = () =>
     this.props.openDialog(
       {title: "Biztos törölni akarja ezt a foglalást?"},
-      () =>
-        RESERVATIONS_FS
-          .doc(this.props.match.params.reservationId)
-          .delete(),
+      async () => await RESERVATIONS_FS.doc(this.props.match.params.reservationId).delete(),
       "Foglalás törölve. A foglaló értesítve lett.",
       () => this.props.history.push(routes.RESERVATIONS)
     )

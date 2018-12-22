@@ -24,7 +24,7 @@ class Feedback extends Component {
 
     this.props.openDialog(
       {title: "Jóváhagyja ezt a visszajelzést?"},
-      () => FEEDBACKS_FS.doc(this.props.id).update({accepted: true}),
+      async () => await FEEDBACKS_FS.doc(this.props.id).update({accepted: true}),
       "Visszajelzés jóváhagyva"
     )
   }
@@ -32,7 +32,7 @@ class Feedback extends Component {
   handleDeleteFeedback = () => {
     this.props.openDialog(
       {title: "Törli ezt a visszajelzést?"},
-      () => FEEDBACKS_FS.doc(this.props.id).delete(),
+      async () => await FEEDBACKS_FS.doc(this.props.id).delete(),
       "Visszajelzés törölve"
     )
   }

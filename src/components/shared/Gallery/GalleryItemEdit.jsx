@@ -40,7 +40,7 @@ class GalleryItemEdit extends Component {
 
     this.props.openDialog(
       {title: "Biztos törli a képet?"},
-      () => DB.ref(toRoute("galleries", url, listItemId)).remove(),
+      async () => await DB.ref(toRoute("galleries", url, listItemId)).remove(),
       "A kép sikeresen törölve",
       this.handleClose
     )
@@ -57,12 +57,9 @@ class GalleryItemEdit extends Component {
 
       this.props.openDialog(
         {title: "Menti a változtatásokat?"},
-        () => DB
+        async () => await DB
           .ref(toRoute(folder, url, listItemId))
-          .update({
-            title,
-            desc
-          }),
+          .update({title, desc}),
         "Mentve", this.handleClose
       )
     }

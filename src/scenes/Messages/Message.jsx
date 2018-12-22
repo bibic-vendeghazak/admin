@@ -42,7 +42,7 @@ class Message extends Component {
   handleDelete = () =>
     this.props.openDialog(
       {title: "Biztosan törli ezt az egyedi foglalást"},
-      () => MESSAGES_FS.doc(this.state.id).delete(),
+      async () => await MESSAGES_FS.doc(this.state.id).delete(),
       "Sikeresen törölve.",
       this.props.history.goBack
     )
