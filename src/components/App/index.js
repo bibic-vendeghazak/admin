@@ -114,7 +114,7 @@ const App = ({
             />
             <Route
               component={Feedbacks}
-              path={routes.FEEDBACKS}
+              path={toRoute(routes.FEEDBACKS, ":show?")}
             />
             <Route
               component={Messages}
