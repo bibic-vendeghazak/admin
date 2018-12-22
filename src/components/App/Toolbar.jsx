@@ -7,7 +7,7 @@ import {moment} from "../../lib"
 import {routes, toRoute} from "../../utils"
 
 import {
-  Typography, IconButton, Tooltip
+  Typography, IconButton, Tooltip, Switch as Toggle, FormControlLabel
 } from "@material-ui/core"
 import Close from "@material-ui/icons/CloseRounded"
 import Today from "@material-ui/icons/TodayRounded"
@@ -129,6 +129,10 @@ export const RightAction = () =>
         )}}
       path={toRoute(CALENDAR, ":year", ":month", ":day?")}
     />
+    <Route
+      component={({match: {params: {show}}, history}) => <ToggleStats history={history} show={show}/>}
+      path={toRoute(FEEDBACKS, ":show?")}
+    />
     <Route component={() => ""}/>
   </Switch>
 
@@ -143,3 +147,23 @@ const CloseButton = ({to}) =>
     </IconButton>
   </Tooltip>
 
+
+const ToggleStats = ({history, show}) =>
+  <FormControlLabel
+    control={
+      <Toggle
+        checked={show}
+        onChange={() => history.push(toRoute(FEEDBACKS, show ? "" : "stat"))}
+      />
+    }
+    label={
+      <Typography
+        style={{color: "white"}}
+        variant="subtitle2"
+      >
+      Statisztika {show ? "elrejése": "mutatása"}
+      </Typography>
+    }
+    labelPlacement="start"
+    style={{color: "white"}}
+  />
