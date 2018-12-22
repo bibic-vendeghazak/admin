@@ -2,8 +2,7 @@
 <a href="https://bibicvendeghazak.hu"><img width=96 src="https://bibic-vendeghazak-web.firebaseapp.com/android-chrome-192x192.png" alt="Bíbic vendégházak logo"></a>
 </p>
 
-# Bíbic vendégházak - Admin dashboard 
-![Travis CI Status](https://img.shields.io/travis/bibic-vendeghazak/admin.svg?branch=develop) [![Coverage Status](https://img.shields.io/coveralls/bibic-vendeghazak/admin/develop.svg)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop)
+***Admin dashboard*** ![Travis CI Status](https://img.shields.io/travis/bibic-vendeghazak/admin.svg?branch=develop) [![Coverage Status](https://img.shields.io/coveralls/bibic-vendeghazak/admin/develop.svg)](https://coveralls.io/github/bibic-vendeghazak/admin?branch=develop) [![Greenkeeper badge](https://badges.greenkeeper.io/bibic-vendeghazak/admin.svg)](https://greenkeeper.io/)
 
 It is only available in Hungarian 🇭🇺 at the moment. A future release would add Internationalization 🌐
 
