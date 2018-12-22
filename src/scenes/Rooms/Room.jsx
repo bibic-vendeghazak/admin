@@ -11,7 +11,7 @@ export const Room = ({
   unavailable, booked, id, name, pictures
 }) => {
 
-  unavailable = moment(new Date(unavailable)).isAfter(TODAY, "day")
+  unavailable = unavailable ? moment(unavailable).isAfter(TODAY, "day") : false
 
   return (
     <Card style={{margin: 8}}>

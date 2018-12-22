@@ -59,8 +59,9 @@ export default class Availability extends Component {
   render() {
     const {value} = this.state
     let {unavailable} = this.state
-    unavailable = moment(unavailable)
+    unavailable = moment(unavailable || null)
     const isUnavailable = TODAY.isBefore(unavailable, "day")
+
     return (
       <Card>
         <CardContent>
