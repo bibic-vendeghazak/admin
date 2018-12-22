@@ -15,9 +15,6 @@ script:
 deploy:
   skip_cleanup: true
   provider: script
-  script: 
-    - firebase deploy --token $FIREBASE_TOKEN
-    - cd functions
-    - yarn deploy
+  script: firebase deploy --token $FIREBASE_TOKEN; cd functions; yarn deploy
   on:
     branch: master
