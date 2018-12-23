@@ -13,6 +13,6 @@ script:
 deploy:
   skip_cleanup: true
   provider: script
-  script: firebase deploy --token $FIREBASE_TOKEN
+  script: firebase use default; firebase deploy --token $FIREBASE_TOKEN
   on:
     branch: master
