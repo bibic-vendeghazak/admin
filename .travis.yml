@@ -7,15 +7,12 @@ cache:
 install:
   - yarn
   - yarn global add firebase-tools
-  - cd functions
-  - yarn
-  - cd ..
 script:
   - yarn build
   - yarn test:coverage
 deploy:
   skip_cleanup: true
   provider: script
-  script: firebase deploy --token $FIREBASE_TOKEN; cd functions; yarn deploy
+  script: firebase deploy --token $FIREBASE_TOKEN
   on:
     branch: master

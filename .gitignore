@@ -2,19 +2,13 @@
 node_modules
 
 # Own stuff
-rules
 main.css
 build
 .history
-functions/lib
-functions/index.js
 coverage
-*.min.html
 
 # misc
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
-
-service-account-credentials.json
