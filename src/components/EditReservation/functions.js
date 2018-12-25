@@ -13,7 +13,7 @@ export const getPrice = ({
 
     error = "Egyedi árazás szükséges"
     if(roomPrice.hasOwnProperty(adults)) {
-      const periodLength = moment(to.toDate()).diff(moment(from.toDate()), "days") + 1
+      const periodLength = moment(to).diff(moment(from), "days") + 1
       const tempPrice = roomPrice[adults]
       const childCount = children[1] ? children[1].count : 0
       if(tempPrice.hasOwnProperty(childCount)) {

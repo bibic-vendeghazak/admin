@@ -1,9 +1,8 @@
 import React, {Component} from "react"
-import {moment} from "../../lib"
 
 import {RESERVATIONS_FS} from "../../lib/firebase"
 
-import {Switch, Grid, TextField, FormControlLabel} from '@material-ui/core'
+import {Switch, Grid, FormControlLabel} from '@material-ui/core'
 
 
 import {Modal} from "../shared"
@@ -20,6 +19,7 @@ import RoomSelector from "./RoomSelector"
 import Tel from "./Tel"
 import Address from "./Address"
 import {getPrice, handleSubmit} from "./functions"
+import {DateField} from "./DateField"
 
 class EditReservation extends Component {
 
@@ -37,8 +37,8 @@ class EditReservation extends Component {
         {name: "0-6", count: 0},
         {name: "6-12", count: 0}
       ],
-      from: TODAY.clone().hours(14),
-      to: TOMORROW.clone().hours(10),
+      from: TODAY.clone().hours(14).toDate(),
+      to: TOMORROW.clone().hours(10).toDate(),
       handled: true,
       foodService: "breakfast",
       price: 1
@@ -68,20 +68,7 @@ class EditReservation extends Component {
     )
 
   handleDateChange = ({target: {name, value}}) => {
-    let from,to
-    switch (name) {
-    case "from":
-      from = moment(value).startOf("day").hours(14)
-      break
-    default:
-      to = moment(value).startOf("day").hours(10)
-    }
-    this.setState(({reservation}) => ({reservation: {
-      ...reservation,
-      from: from || reservation.from,
-      to: to || reservation.to
-    }}), this.updatePrice)
-  }
+    this.setState(({isDetailed}) => ({isDetailed: !isDetailed}))
 
 
   handleComplexityChange = () =>
@@ -139,27 +126,19 @@ class EditReservation extends Component {
       >
         <Grid container spacing={16}>
           <Grid item sm={6} xs={12}>
-            <TextField
-              fullWidth
-              label="Érkezés"
-              margin="normal"
-              name="from"
-              onChange={this.handleDateChange}
-              required
-              type="date"
-              value={moment(from.toDate()).format("YYYY-MM-DD")}
+            <DateField
+              from={from}
+              onChange={this.handleChange}
+              to={to}
+              type="from"
             />
           </Grid>
           <Grid item sm={6} xs={12}>
-            <TextField
-              fullWidth
-              label="Távozás"
-              margin="normal"
-              name="to"
-              onChange={this.handleDateChange}
-              required
-              type="date"
-              value={moment(to.toDate()).format("YYYY-MM-DD")}
+            <DateField
+              from={from}
+              onChange={this.handleChange}
+              to={to}
+              type="to"
             />
           </Grid>
           <Grid item xs={8}>
