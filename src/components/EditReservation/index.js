@@ -24,7 +24,7 @@ import {DateField} from "./DateField"
 class EditReservation extends Component {
 
   state = {
-    fullReservation: false,
+    isDetailed: false,
     reservation: {
       message: "🤖 admin által felvéve",
       name: "",
@@ -47,8 +47,8 @@ class EditReservation extends Component {
   }
 
   componentDidMount = async () => {
-    const {match: {params: {reservationId}}, fullReservation} = this.props
-    this.setState({fullReservation})
+    const {match: {params: {reservationId}}, isDetailed} = this.props
+    this.setState({isDetailed})
     try {
       const reservation = await RESERVATIONS_FS.doc(reservationId || "non-existent").get()
 
@@ -67,14 +67,8 @@ class EditReservation extends Component {
       () => shouldUpdatePrice && this.updatePrice()
     )
 
-  handleDateChange = ({target: {name, value}}) => {
+  handleDetailChange = () =>
     this.setState(({isDetailed}) => ({isDetailed: !isDetailed}))
-
-
-  handleComplexityChange = () =>
-    this.setState(
-      ({fullReservation}) => ({fullReservation: !fullReservation})
-    )
 
   updatePrice = () => {
     const {error, price} = getPrice(this.state.reservation, this.props.rooms)
@@ -86,7 +80,7 @@ class EditReservation extends Component {
 
   render() {
     const {
-      fullReservation, priceError, reservation: {
+      isDetailed, priceError, reservation: {
         name, tel, email,
         roomId, adults, children,
         from, to, message, address, price, foodService
@@ -100,7 +94,7 @@ class EditReservation extends Component {
 
     return (
       <Modal
-        onSubmit={() => handleSubmit({...this.state.reservation}, rooms.length ,profile.name, reservationId)}
+        onSubmit={() => handleSubmit({...this.state.reservation}, rooms.length , profile.name, reservationId)}
         {...{error, submitLabel, success, successPath, shouldPrompt, promptTitle}}
         title={
           <Grid
@@ -109,16 +103,16 @@ class EditReservation extends Component {
             justify="space-between"
           >
             {title}
-            {!this.props.fullReservation &&
+            {!this.props.isDetailed &&
               <FormControlLabel
                 control={
                   <Switch
-                    checked={fullReservation}
-                    onChange={this.handleComplexityChange}
+                    checked={isDetailed}
+                    onChange={this.handleDetailChange}
                     value="complexity-change"
                   />
                 }
-                label={fullReservation ? "Részletes" : "Egyszerű"}
+                label={isDetailed ? "Részletes" : "Egyszerű"}
               />
             }
           </Grid>
@@ -149,7 +143,7 @@ class EditReservation extends Component {
           </Grid>
         </Grid>
 
-        {fullReservation &&
+        {isDetailed &&
            <>
              <Grid container spacing={16}>
                <Grid item sm={6} xs={12}>

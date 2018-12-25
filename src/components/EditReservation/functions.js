@@ -1,5 +1,4 @@
 import {validateReservation} from "../../utils"
-import {RESERVATIONS_FS, TIMESTAMP} from "../../lib/firebase"
 import {moment} from "../../lib"
 
 
@@ -27,19 +26,33 @@ export const getPrice = ({
 }
 
 
-export const handleSubmit = (reservation, roomLength, adminName, reservationId) => {
-  reservation.from = reservation.from.toDate()
-  reservation.to = reservation.to.toDate()
-  reservation.timestamp = TIMESTAMP
-  reservation.id = `${moment(reservation.from).format("YYYYMMDD")}-sz${reservation.roomId}`
-  reservation.lastHandledBy = adminName
-  reservation.archived = false
+export const handleSubmit = async (
+  {from, to, roomId, ...rest},
+  roomLength, adminName, reservationId
+) => {
+  try {
+    const {RESERVATIONS_FS, TIMESTAMP} = await import("../../lib/firebase")
 
-  const error = validateReservation({...reservation, roomLength})
+    const updatedReservation = {
+      ...rest,
+      from: from.toDate(),
+      to: to.toDate(),
+      timestamp: TIMESTAMP,
+      id: `${moment(from).format("YYYYMMDD")}-sz${roomId}`,
+      lastHandledBy: adminName,
+      archived: false
+    }
 
-  return !error ?
-    reservationId ?
-      RESERVATIONS_FS.doc(reservationId).set(reservation) :
-      RESERVATIONS_FS.add(reservation) :
-    Promise.reject({code: "error", message: error})
+    const error = validateReservation({...updatedReservation, roomLength})
+
+    let result = RESERVATIONS_FS.add(updatedReservation)
+
+    if (reservationId)
+      result = RESERVATIONS_FS.doc(reservationId).set(updatedReservation)
+
+    return error ? Promise.reject({code: "error", message: error}) : result
+
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }
