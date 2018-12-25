@@ -7,7 +7,7 @@ const RoomSelector = ({rooms, value, onChange}) =>
     <Select
       input={<Input name="roomId"/>}
       name="roomId"
-      onChange={({target: {value}}) => onChange("roomId", value, false)}
+      onChange={({target: {value}}) => onChange("roomId", value, true)}
       required
       value={value || 1}
     >
