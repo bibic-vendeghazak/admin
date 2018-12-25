@@ -2,12 +2,12 @@
 import React from "react"
 import {Link} from "react-router-dom"
 
-import {Button} from "@material-ui/core"
+import {Fab} from "@material-ui/core"
 
 const ExtendedFAB = ({
   icon, label, ...props
 }) =>
-  <Button
+  <Fab
     color="secondary"
     component={Link}
     style={{
@@ -16,11 +16,11 @@ const ExtendedFAB = ({
       right: 16,
       zIndex: 1000
     }}
-    variant="extendedFab"
+    variant="extended"
     {...props}
   >
     {icon || null}
     {label || "Új"}
-  </Button>
+  </Fab>
 
 export default ExtendedFAB
