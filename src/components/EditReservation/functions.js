@@ -20,8 +20,14 @@ export const getPrice = ({
         error = null
       }
     }
-
+  } else {
+    error = "Hibás ártáblázat"
   }
+
+  if (price < 0) {
+    return ({error: "Negatív ár", price: 0})
+  }
+
   return ({error, price})
 }
 
