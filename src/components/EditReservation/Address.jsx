@@ -1,7 +1,7 @@
 import React from 'react'
 import {TextField} from '@material-ui/core'
 
-const Address = ({value, onChange}) =>
+export const Address = ({value, onChange}) =>
   <TextField
     autoComplete="address"
     fullWidth
