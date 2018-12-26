@@ -13,7 +13,8 @@ class Children extends Component {
   handleChildren = ({target: {value, name}}) => {
     const {values} = this.props
     const children = [...(values.length ? values : this.state.defaultValues)]
-    children[children.findIndex(({name: n}) => n === name)].count = parseInt(value, 10) || 0
+    value = parseInt(value, 10) || 0
+    children[children.findIndex(({name: n}) => n === name)].count = value < 0 ? 0 : value
     this.props.onChange("children", children, true)
   }
 
@@ -28,6 +29,7 @@ class Children extends Component {
             fullWidth
             id="children"
             label={`${name} éves`}
+            min={0}
             name={name}
             onChange={this.handleChildren}
             type="number"

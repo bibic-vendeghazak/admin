@@ -6,6 +6,7 @@ export const Adults = ({onChange, value}) =>
     InputProps={{endAdornment: <InputAdornment>fő</InputAdornment>}}
     fullWidth
     label="Felnőtt"
+    min={1}
     name="adults"
     onChange={({target: {value}}) => onChange("adults", (parseInt(value, 10) || 1), true)}
     type="number"
