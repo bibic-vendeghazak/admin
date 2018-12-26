@@ -220,7 +220,8 @@ describe("getPrice", () => {
 })
 
 
-describe("handleSubmit", () => {
+// REVIEW:
+describe.skip("handleSubmit", () => {
   const validReservation = {
     roomId: 1,
     roomLength: 6,
@@ -238,7 +239,6 @@ describe("handleSubmit", () => {
   }
 
 
-  // REVIEW:
   describe("👍 valid reservation", () => {
     it("new reservation", () => {
       expect(handleSubmit(validReservation, 6, "admin name", undefined))
@@ -251,7 +251,6 @@ describe("handleSubmit", () => {
     })
   })
 
-  // REVIEW:
   describe("👎 invalid reservation", () => {
     it("no reservation", () => {
       expect(handleSubmit(undefined, 6, "admin name", undefined))
