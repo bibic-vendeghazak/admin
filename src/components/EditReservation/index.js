@@ -2,9 +2,6 @@ import React, {Component} from "react"
 
 import {Grid} from '@material-ui/core'
 
-import {Switch, Grid, FormControlLabel} from '@material-ui/core'
-
-
 import {Modal} from "../shared"
 import {withStore} from "../../db"
 import Children from "./Children"
@@ -19,6 +16,7 @@ import Tel from "./Tel"
 import Address from "./Address"
 import {getPrice, handleSubmit} from "./functions"
 import {DateField} from "./DateField"
+import {ComplexitySwitch} from "./ComplexitySwitch"
 
 class EditReservation extends Component {
 
@@ -80,15 +78,9 @@ class EditReservation extends Component {
           >
             {title}
             {!this.props.isDetailed &&
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={isDetailed}
-                    onChange={this.handleDetailChange}
-                    value="complexity-change"
-                  />
-                }
-                label={isDetailed ? "Részletes" : "Egyszerű"}
+              <ComplexitySwitch
+                checked={isDetailed}
+                onChange={this.handleDetailChange}
               />
             }
           </Grid>
