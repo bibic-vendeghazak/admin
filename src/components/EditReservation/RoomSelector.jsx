@@ -12,7 +12,7 @@ const RoomSelector = ({rooms, value, onChange}) =>
       value={value || 1}
     >
       <MenuItem value={1}>Szoba 1</MenuItem>
-      {rooms.map(room => <MenuItem key={room.id} value={room.id}>Szoba {room.id}</MenuItem>)}
+      {rooms.slice(1).map(room => <MenuItem key={room.id} value={room.id}>Szoba {room.id}</MenuItem>)}
     </Select>
   </FormControl>
 

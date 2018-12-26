@@ -46,7 +46,7 @@ const Reservations = ({rooms}) =>
         <EditReservation
           {...props}
           error="A foglalást nem tudtuk frissíteni. Kérjük ellenőrizze az adatokat."
-          fullReservation
+          isDetailed
           promptTitle="Menti a változtatásokat?"
           shouldPrompt
           submitLabel="Mentés"

@@ -18,7 +18,7 @@ import {getPrice, handleSubmit} from "./functions"
 import {DateField} from "./DateField"
 import {ComplexitySwitch} from "./ComplexitySwitch"
 
-class EditReservation extends Component {
+export class EditReservation extends Component {
 
   state = {
     isDetailed: false,
@@ -107,7 +107,7 @@ class EditReservation extends Component {
             <Name onChange={this.handleChange} value={name}/>
           </Grid>
           <Grid container item justify="flex-end" style={{marginBottom: 10, alignSelf: "flex-end"}} xs={4}>
-            <RoomSelector onChange={this.handleChange} rooms={rooms.slice(1,6)} value={roomId}/>
+            <RoomSelector onChange={this.handleChange} rooms={rooms} value={roomId}/>
           </Grid>
         </Grid>
 
