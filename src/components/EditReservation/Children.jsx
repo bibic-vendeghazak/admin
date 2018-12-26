@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Grid, TextField, InputAdornment} from '@material-ui/core'
 
 
-class Children extends Component {
+export class Children extends Component {
   state = {
     defaultValues: [
       {name: "0-6", count: 0},

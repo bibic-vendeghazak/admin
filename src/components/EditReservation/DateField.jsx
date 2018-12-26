@@ -3,18 +3,18 @@ import {TextField} from "@material-ui/core"
 import moment from "../../lib/moment"
 
 export const DateField = ({from, to, type, onChange}) => {
-  const onDateChange = ({target: {name, value}}) => {
-    value = moment(value).startOf("day")
+  const onDateChange = ({target: {value}}) => {
+    value = moment(new Date(value))
     let newFrom, newTo
-    switch (name) {
+    switch (type) {
     case "from":
-      newFrom = value.clone().hours(14).toDate()
+      newFrom = value.clone().toDate()
       break
     default:
-      newTo = value.clone().hours(10).toDate()
+      newTo = value.clone().toDate()
     }
-    onChange("from", newFrom || from, true)
-    onChange("to", newTo || to, true)
+    onChange("from", moment(newFrom || from).startOf("day").hours(14).toDate(), true)
+    onChange("to", moment(newTo || to).startOf("day").hours(10).toDate(), true)
   }
 
   return (

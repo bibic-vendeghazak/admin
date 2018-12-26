@@ -4,7 +4,7 @@ import Autorenew from '@material-ui/icons/AutorenewRounded'
 import Error from "@material-ui/icons/Error"
 
 
-const Price = ({value, onChange, error}) => {
+export const Price = ({value, onChange, error}) => {
   const pricingNeeded = error && error.code === "CUSTOM_PRICING_NEEDED"
   return (
     <TextField
@@ -12,7 +12,7 @@ const Price = ({value, onChange, error}) => {
         endAdornment:
         <InputAdornment>
           {pricingNeeded ?
-            value === 0 ? <Error color="error"/> : null :
+            value === 0 && <Error color="error"/> :
             <Tooltip title="Automatikus árazás">
               <Autorenew color="disabled"/>
             </Tooltip>
