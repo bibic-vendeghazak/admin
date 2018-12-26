@@ -51,7 +51,7 @@ const Reservations = ({rooms}) =>
           shouldPrompt
           submitLabel="Mentés"
           success="Foglalás sikeresen frissítve!"
-          title="Foglalás részletei"
+          title="Foglalás szerkesztése"
         />
       }
     />

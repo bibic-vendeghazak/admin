@@ -147,7 +147,7 @@ class Stats extends Component {
         </Grid>
         <Grid container item justify="space-between">
           <Grid item>
-            <InputLabel htmlFor="intervals">Felbontás</InputLabel>
+            <InputLabel htmlFor="intervals" style={{marginLeft: 16}}>Felbontás</InputLabel>
             <Select
               inputProps={{id: "intervals"}}
               name="interval"
@@ -166,7 +166,7 @@ class Stats extends Component {
             <Select
               inputProps={{id: "rooms"}}
               onChange={this.handleRoomChange}
-              style={{margin: 8}}
+              style={{margin: "8px 16px"}}
               value={roomId}
             >
               {rooms.map(({id}) =>

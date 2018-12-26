@@ -57,7 +57,7 @@ class Feedbacks extends Component {
 
 
     return (
-      <Grid container direction="column" spacing={16} style={{padding: 16}}>
+      <Grid container direction="column" spacing={16}>
         {this.props.match.params.show &&
           <Grid item>
             <Typography style={{margin: 16}} variant="h6">Statisztika</Typography>
@@ -68,7 +68,6 @@ class Feedbacks extends Component {
           </Grid>
         }
         <Grid item>
-          <Typography style={{margin: 16}} variant="h6">Üzenetek (utolsó 100)</Typography>
           <Paper style={{paddingTop: 16}}>
             <FeedbacksTable
               showDateFilter={false}

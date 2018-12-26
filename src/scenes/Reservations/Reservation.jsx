@@ -132,6 +132,7 @@ class Reservation extends Component {
                   />
                   <Item
                     icon={<Message/>}
+                    md={6}
                     primary={message}
                     secondary="megjegyzés"
                   />
