@@ -23,24 +23,26 @@ export const valid = {
         ["0-6", "6-12"].includes(child.name) && child.count >= 0
     )),
   peopleCount: (adults, children, maxPeople) => adults + children.reduce((acc, {count}) => acc+count, 0) <= maxPeople,
-  foodService: service => ["breakfast", "halfBoard"].includes(service)
+  foodService: service => ["breakfast", "halfBoard"].includes(service),
+  archived: archived => typeof archived === "boolean"
 }
 
 
 export const validateReservation = ({
-  roomId, roomLength, name, email, tel, address, from, to, message, adults, children, maxPeople, foodService
+  roomId, roomLength, name, email, tel, address, from, to, message, adults, children, maxPeople, foodService, archived
 }) =>
-  !valid.roomId(roomId, roomLength) ? "Érvénytelen szobaszám" :
-    !valid.name(name) ? "Érvénytelen név" :
-      !valid.email(email) ? "Érvénytelen e-mail cím" :
-        !valid.tel(tel) ? "Érvénytelen telefonszám" :
-          !valid.address(address) ? "Érvénytelen lakcím" :
-            !valid.from(from) ? "Legkorábbi érkezés holnap" :
-              !valid.to(to) ? "Legkorábbi távozás holnapután" :
-                !valid.period(from, to) ? "A foglalás legalább egy éjszakát kell, hogy tartalmazzon" :
-                  !valid.message(message) ? "Érvénytelen üzenet" :
-                    !valid.adults(adults) ? "Érvénytelen felnőtt" :
-                      !valid.children(children) ? "Érvénytelen gyerek" :
-                        !valid.foodService(foodService) ? "Érvénytelen ellátás" :
+  !valid.archived(archived) ? "Archivált változó nincs definiálva" :
+    !valid.roomId(roomId, roomLength) ? "Érvénytelen szobaszám" :
+      !valid.name(name) ? "Érvénytelen név" :
+        !valid.email(email) ? "Érvénytelen e-mail cím" :
+          !valid.tel(tel) ? "Érvénytelen telefonszám" :
+            !valid.address(address) ? "Érvénytelen lakcím" :
+              !valid.from(from) ? "Legkorábbi érkezés holnap" :
+                !valid.to(to) ? "Legkorábbi távozás holnapután" :
+                  !valid.period(from, to) ? "A foglalás legalább egy éjszakát kell, hogy tartalmazzon" :
+                    !valid.message(message) ? "Érvénytelen üzenet" :
+                      !valid.adults(adults) ? "Érvénytelen felnőtt" :
+                        !valid.children(children) ? "Érvénytelen gyerek" :
+                          !valid.foodService(foodService) ? "Érvénytelen ellátás" :
                           // !valid.peopleCount(adults, children, maxPeople) ? "A személyek száma nem haladhatja meg a szoba kapacitását" :
-                          false
+                            false

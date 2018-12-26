@@ -33,6 +33,7 @@ export class EditReservation extends Component {
       }
       this.setState({isDetailed})
     } catch (error) {
+
       this.props.sendNotification(error)
     }
   }
@@ -68,7 +69,7 @@ export class EditReservation extends Component {
     } = this.props
     return (
       <Modal
-        onSubmit={() => handleSubmit({...this.props.reservation}, rooms.length , profile.name, reservationId)}
+        onSubmit={async () => await handleSubmit({...this.props.reservation}, rooms.length , profile.name, reservationId)}
         {...{error, submitLabel, success, successPath, shouldPrompt, promptTitle}}
         title={
           <Grid

@@ -43,30 +43,36 @@ export const getPrice = ({
 }
 
 
-export const handleSubmit = (reservation,
+export const handleSubmit = async (reservation,
   roomLength, adminName, reservationId
 ) => {
   try {
     const {from, roomId, ...rest} = reservation
+
     const updatedReservation = {
       ...rest,
       timestamp: TIMESTAMP,
       from,
       roomId,
       id: `${moment(from).format("YYYYMMDD")}-sz${roomId}`,
-      lastHandledBy: adminName,
-      archived: false
+      lastHandledBy: adminName
     }
 
     const error = validateReservation({...updatedReservation, roomLength})
 
-    return error ?
-      Promise.reject({code: "error", message: error}) :
-      reservationId ?
-        RESERVATIONS_FS.doc(reservationId).set(updatedReservation) :
-        RESERVATIONS_FS.add(updatedReservation)
+    let result
+    if(error) {
+      result = Promise.reject({code: "error", message: error})
+    } else if (reservationId) {
+      result = RESERVATIONS_FS.doc(reservationId).set(updatedReservation)
+    } else {
+      result = RESERVATIONS_FS.add(updatedReservation)
+    }
+
+    return await result
+
   } catch(error) {
-    return Promise.reject(error)
+    return await Promise.reject(error)
   }
 
 }

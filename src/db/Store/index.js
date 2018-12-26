@@ -79,7 +79,8 @@ export class Database extends Component {
       to: TOMORROW.clone().hours(10).toDate(),
       handled: true,
       foodService: "breakfast",
-      price: 1
+      price: 1,
+      archived: false
     },
     reservationQuery: [""],
     messageQuery: [""]
