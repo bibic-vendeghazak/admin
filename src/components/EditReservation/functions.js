@@ -1,5 +1,6 @@
 import {validateReservation} from "../../utils"
 import {moment} from "../../lib"
+import {RESERVATIONS_FS, TIMESTAMP} from "../../lib/firebase"
 
 export const getPrice = ({
   from, to, roomId, adults, children, foodService
@@ -42,18 +43,16 @@ export const getPrice = ({
 }
 
 
-export const handleSubmit = async (
-  {from, to, roomId, ...rest},
+export const handleSubmit = (reservation,
   roomLength, adminName, reservationId
 ) => {
   try {
-    const {RESERVATIONS_FS, TIMESTAMP} = await import("../../lib/firebase")
-
+    const {from, roomId, ...rest} = reservation
     const updatedReservation = {
       ...rest,
-      from: from.toDate(),
-      to: to.toDate(),
       timestamp: TIMESTAMP,
+      from,
+      roomId,
       id: `${moment(from).format("YYYYMMDD")}-sz${roomId}`,
       lastHandledBy: adminName,
       archived: false
@@ -61,14 +60,13 @@ export const handleSubmit = async (
 
     const error = validateReservation({...updatedReservation, roomLength})
 
-    let result = RESERVATIONS_FS.add(updatedReservation)
-
-    if (reservationId)
-      result = RESERVATIONS_FS.doc(reservationId).set(updatedReservation)
-
-    return error ? Promise.reject({code: "error", message: error}) : result
-
-  } catch (error) {
+    return error ?
+      Promise.reject({code: "error", message: error}) :
+      reservationId ?
+        RESERVATIONS_FS.doc(reservationId).set(updatedReservation) :
+        RESERVATIONS_FS.add(updatedReservation)
+  } catch(error) {
     return Promise.reject(error)
   }
+
 }
