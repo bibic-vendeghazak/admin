@@ -104,6 +104,7 @@ describe("validateReservation", () => {
     message: "Lorem ipsum dolor sit amet,lorem ipsum dolor sit amet,lorem ipsum dolor sit amet,lorem ipsum dolor sit amet.",
     adults: 1,
     children: [],
+    archived: false,
     // NOTE: Add test
     foodService: "breakfast",
     maxPeople: 3

@@ -2,7 +2,7 @@ import {ComplexitySwitch} from "../ComplexitySwitch"
 
 describe("CopmlexitySwitch component", () => {
   const props = {
-    isDetailed: false,
+    checked: false,
     onChange: jest.fn()
   }
   const wrapper = shallow(<ComplexitySwitch {...props}/>)
@@ -13,7 +13,7 @@ describe("CopmlexitySwitch component", () => {
 
   it("correct label shown", () => {
     expect(wrapper.prop("label")).toBe("Egyszerű")
-    wrapper.setProps({isDetailed: true})
+    wrapper.setProps({checked: true})
     expect(wrapper.prop("label")).toBe("Részletes")
   })
 })

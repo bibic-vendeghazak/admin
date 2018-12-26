@@ -4,12 +4,23 @@ import {TODAY, TOMORROW} from "../../../lib/moment"
 describe("getPrice", () => {
 
   const validReservation = {
-    from: TODAY,
-    to: TOMORROW,
+    message: "🤖 admin által felvéve",
+    name: "",
     roomId: 1,
+    tel: "000-000-000",
+    email: "email@email.hu",
+    address: "lakcím",
     adults: 1,
-    children: [{count: 0}, {count: 0}],
-    foodService: "breakfast"
+    children: [
+      {name: "0-6", count: 0},
+      {name: "6-12", count: 0}
+    ],
+    from: TODAY.clone().hours(14).toDate(),
+    to: TOMORROW.clone().hours(10).toDate(),
+    handled: true,
+    foodService: "breakfast",
+    price: 1,
+    archived: false
   }
 
   const validRooms = [
@@ -222,7 +233,8 @@ describe("handleSubmit", () => {
     message: "Lorem ipsum dolor sit amet,lorem ipsum dolor sit amet,lorem ipsum dolor sit amet,lorem ipsum dolor sit amet.",
     adults: 1,
     children: [],
-    foodService: "breakfast"
+    foodService: "breakfast",
+    archived: false
   }
 
 
