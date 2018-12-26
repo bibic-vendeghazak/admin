@@ -143,8 +143,8 @@ class Reservation extends Component {
                     <Item
                       icon={<From/>}
                       primary={
-                        <Link to={toRoute(routes.CALENDAR, moment(from.toDate()).format("YYYY/MM/DD"))}>
-                          {moment(from.toDate()).format("MMM. D.")}
+                        <Link to={toRoute(routes.CALENDAR, moment(from).format("YYYY/MM/DD"))}>
+                          {moment(from).format("MMM. D.")}
                         </Link>
                       }
                       secondary="érkezés"
@@ -154,8 +154,8 @@ class Reservation extends Component {
                     <Item
                       icon={<To/>}
                       primary={
-                        <Link to={toRoute(routes.CALENDAR, moment(to.toDate()).format("YYYY/MM/DD"))}>
-                          {moment(to.toDate()).format("MMM. D.")}
+                        <Link to={toRoute(routes.CALENDAR, moment(to).format("YYYY/MM/DD"))}>
+                          {moment(to).format("MMM. D.")}
                         </Link>
                       }
                       secondary="távozás"

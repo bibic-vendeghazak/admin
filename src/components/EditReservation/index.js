@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 
-import {RESERVATIONS_FS} from "../../lib/firebase"
+import {Grid} from '@material-ui/core'
 
 import {Switch, Grid, FormControlLabel} from '@material-ui/core'
 
@@ -13,7 +13,6 @@ import Price from "./Price"
 import FoodService from "./FoodService"
 import Message from "./Message"
 import Email from "./Email"
-import {TODAY, TOMORROW} from "../../lib/moment"
 import Name from "./Name"
 import RoomSelector from "./RoomSelector"
 import Tel from "./Tel"
@@ -25,76 +24,53 @@ class EditReservation extends Component {
 
   state = {
     isDetailed: false,
-    reservation: {
-      message: "🤖 admin által felvéve",
-      name: "",
-      roomId: 1,
-      tel: "000-000-000",
-      email: "email@email.hu",
-      address: "lakcím",
-      adults: 1,
-      children: [
-        {name: "0-6", count: 0},
-        {name: "6-12", count: 0}
-      ],
-      from: TODAY.clone().hours(14).toDate(),
-      to: TOMORROW.clone().hours(10).toDate(),
-      handled: true,
-      foodService: "breakfast",
-      price: 1
-    },
     priceError: null
   }
 
   componentDidMount = async () => {
-    const {match: {params: {reservationId}}, isDetailed} = this.props
-    this.setState({isDetailed})
     try {
-      const reservation = await RESERVATIONS_FS.doc(reservationId || "non-existent").get()
-
-      if (reservation.exists) {
-        this.setState({reservation: reservation.data()})
+      const {isDetailed, match: {params: {reservationId}}} = this.props
+      if (this.props.reservationId !== reservationId) {
+        await this.props.fetchReservation(reservationId)
       }
-
+      this.setState({isDetailed})
     } catch (error) {
       this.props.sendNotification(error)
     }
-
   }
 
-  handleChange = (name, value, shouldUpdatePrice) =>
-    this.setState(({reservation}) => ({reservation: {...reservation, [name]: value}}),
-      () => shouldUpdatePrice && this.updatePrice()
-    )
+  handleChange = (name, value, shouldUpdatePrice) => {
+    this.props.updateReservation(name, value)
+    shouldUpdatePrice && this.updatePrice()
+  }
 
   handleDetailChange = () =>
     this.setState(({isDetailed}) => ({isDetailed: !isDetailed}))
 
   updatePrice = () => {
-    const {error, price} = getPrice(this.state.reservation, this.props.rooms)
-    this.setState(({reservation}) => ({
-      priceError: error,
-      reservation: {...reservation, price}})
-    )
+    const {reservation, rooms} = this.props
+    const {error, price} = getPrice(reservation, rooms)
+    this.props.updateReservation("price", price)
+    this.setState({priceError: error})
   }
 
   render() {
     const {
-      isDetailed, priceError, reservation: {
-        name, tel, email,
-        roomId, adults, children,
-        from, to, message, address, price, foodService
-      }
+      isDetailed, priceError
     } = this.state
     const {
       match: {params: {reservationId}},
       error, submitLabel, success, successPath,
-      title, shouldPrompt, promptTitle, rooms, profile
+      title, shouldPrompt, promptTitle, rooms, profile,
+      reservation: {
+        name, tel, email,
+        roomId, adults, children,
+        from, to, message, address, price, foodService
+      }
     } = this.props
-
     return (
       <Modal
-        onSubmit={() => handleSubmit({...this.state.reservation}, rooms.length , profile.name, reservationId)}
+        onSubmit={() => handleSubmit({...this.props.reservation}, rooms.length , profile.name, reservationId)}
         {...{error, submitLabel, success, successPath, shouldPrompt, promptTitle}}
         title={
           <Grid

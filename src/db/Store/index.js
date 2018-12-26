@@ -141,6 +141,28 @@ export class Database extends Component {
     })
   }
 
+  handleReservationUpdate = (name, value) =>
+    this.setState(({reservation}) => ({reservation: {...reservation, [name]: value}}))
+
+  handleReservationFetch = async reservationId => {
+
+    try {
+      let reservation = await RESERVATIONS_FS.doc(reservationId || "non-existent").get()
+      if (reservation.exists) {
+        reservation = reservation.data()
+        const {from, to} = reservation
+        this.setState({
+          reservationId,
+          reservation: {
+            ...reservation,
+            from: from.toDate(),
+            to: to.toDate()
+          }})
+      }
+    } catch (error) {
+      this.handleSendNotification(error)
+    }
+  }
 
   handleSendNotification = ({code, message}) =>
     this.setState(state => ({...state,
@@ -213,6 +235,8 @@ export class Database extends Component {
           closeDialog: this.handleCloseDialog,
           handleLogout: this.handleLogout,
           handleDrawerToggle: this.handleDrawerToggle,
+          updateReservation: this.handleReservationUpdate,
+          fetchReservation: this.handleReservationFetch,
           search: this.handleSearch,
           ...this.state
         }}
