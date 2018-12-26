@@ -1,34 +1,44 @@
 import {validateReservation} from "../../utils"
 import {moment} from "../../lib"
 
-
 export const getPrice = ({
   from, to, roomId, adults, children, foodService
 }, rooms) => {
+
   let price = 0
-  let error
-  if (rooms.length) {
-    const roomPrice = rooms[roomId-1].prices.table[foodService]
+  let error = {code: "WRONG_PRICE_TABLE", message: "Hibás ártáblázat"}
 
-    error = "Egyedi árazás szükséges"
-    if(roomPrice.hasOwnProperty(adults)) {
-      const periodLength = moment(to).diff(moment(from), "days") + 1
-      const tempPrice = roomPrice[adults]
-      const childCount = children[1] ? children[1].count : 0
-      if(tempPrice.hasOwnProperty(childCount)) {
-        price = tempPrice[childCount].price * periodLength
-        error = null
-      }
+  try {
+    const {prices} = rooms[roomId-1]
+    const {maxPeople} = prices.metadata
+    const priceTable = prices.table[foodService]
+
+    if (!priceTable || typeof maxPeople !== "number") return
+
+    error = {code: "CUSTOM_PRICING_NEEDED", message: "Egyedi árazás szükséges"}
+    // Check if there is enough place for the amount of adults
+    const tempPrice = priceTable[adults]
+
+    const freeChildCount = children[0].count
+    const childCount = children[1].count
+
+    // Check if there is enough place including the children
+    if ((adults + freeChildCount + childCount) <= maxPeople) {
+
+      const periodLength = moment.range(from, to).snapTo("day").diff("day")
+
+      price = tempPrice[childCount].price * periodLength
+      error = null
+
+      if (periodLength <= 0)
+        error = {code: "INVALID_PRICE", message: "Érvénytelen ár (az érkezés/távozás jól lett kitöltve?)"}
+
     }
-  } else {
-    error = "Hibás ártáblázat"
+
+  } finally {
+    return ({error, price})
   }
 
-  if (price < 0) {
-    return ({error: "Negatív ár", price: 0})
-  }
-
-  return ({error, price})
 }
 
 
