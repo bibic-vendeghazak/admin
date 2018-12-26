@@ -2,10 +2,11 @@ import React from 'react'
 import {Table, TableHead, TableBody, TableRow, TableCell} from '@material-ui/core'
 import {withToolbar, EmptyTableBody, Loading} from "../../components/shared"
 import FilteredMessages from './FilteredMessages'
+import {withStore} from '../../db'
 
 
 const MessagesTable = ({
-  messages, isFetched, query
+  messages, isFetched, messageQuery
 }) =>
   <Table>
     <TableHead>
@@ -22,7 +23,7 @@ const MessagesTable = ({
       {isFetched ?
         <FilteredMessages {...{
           messages,
-          query
+          query: messageQuery
         }}
         />
         : <EmptyTableBody title={<Loading/>}/>
@@ -30,4 +31,4 @@ const MessagesTable = ({
     </TableBody>
   </Table>
 
-export default withToolbar(MessagesTable)
+export default withStore(withToolbar(MessagesTable))

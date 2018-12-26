@@ -91,7 +91,7 @@ class ReservationsTable extends Component {
       handledReservations, unhandledReservations
     } = this.state
     const {
-      query, filteredRooms
+      reservationQuery, filteredRooms
     } = this.props
     return(
       <Table>
@@ -107,7 +107,7 @@ class ReservationsTable extends Component {
             (handledReservations && unhandledReservations && !isLoading) ?
               <FilteredReservations
                 {...{
-                  query,
+                  query: reservationQuery,
                   order,
                   orderBy,
                   handledReservations,

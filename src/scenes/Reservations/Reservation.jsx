@@ -28,27 +28,15 @@ import {withStore} from "../../db"
 
 class Reservation extends Component {
 
-  state = {
-    email: "",
-    name: "",
-    tel: "",
-    message: "",
-    handled: false,
-    from:  moment(),
-    to: moment(),
-    roomId: null,
-    adults: 1,
-    children: [],
-    timestamp: moment(),
-    price: 1,
-    address: "",
-    lastHandledBy: ""
-  }
-
-  componentDidMount() {
-    RESERVATIONS_FS
-      .doc(this.props.match.params.reservationId)
-      .onSnapshot(snap => this.setState(snap.data()))
+  componentDidMount = async () => {
+    const {match:{params: reservationId}} = this.props
+    try {
+      if (reservationId !== this.props.reservationId) {
+        await this.props.fetchReservation(this.props.match.params.reservationId)
+      }
+    } catch (error) {
+      this.props.sendNotification(error)
+    }
   }
 
 
@@ -79,10 +67,10 @@ class Reservation extends Component {
 
 
   render() {
-    const {
+    const {reservation: {
       email, name, tel, message, handled, from, to, roomId, adults, children,
       price, address, timestamp, lastHandledBy, id, foodService
-    } = this.state
+    }} = this.props
     const {reservationId} = this.props.match.params
     return (
       <div

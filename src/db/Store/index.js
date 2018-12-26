@@ -12,7 +12,7 @@ import {
   MESSAGES_FS
 } from "../../lib/firebase"
 import {routes} from "../../utils"
-import {TODAY} from "../../lib/moment"
+import {TODAY, TOMORROW} from "../../lib/moment"
 
 
 const initialDialog = {
@@ -62,7 +62,27 @@ export class Database extends Component {
     roomPictures: [],
     unhandledReservationCount: 0,
     unhandledFeedbackCount: 0,
-    unhandledMessageCount: 0
+    unhandledMessageCount: 0,
+    reservation: {
+      message: "🤖 admin által felvéve",
+      name: "",
+      roomId: 1,
+      tel: "000-000-000",
+      email: "email@email.hu",
+      address: "lakcím",
+      adults: 1,
+      children: [
+        {name: "0-6", count: 0},
+        {name: "6-12", count: 0}
+      ],
+      from: TODAY.clone().hours(14).toDate(),
+      to: TOMORROW.clone().hours(10).toDate(),
+      handled: true,
+      foodService: "breakfast",
+      price: 1
+    },
+    reservationQuery: [""],
+    messageQuery: [""]
   }
 
 
@@ -180,6 +200,8 @@ export class Database extends Component {
   handleCloseDialog = () =>
     this.setState(state => ({...state, dialog: initialDialog}))
 
+  handleSearch = (name, value) =>
+    this.setState({[name]: value.toLowerCase().split(" ")})
 
   render() {
     return (
@@ -191,6 +213,7 @@ export class Database extends Component {
           closeDialog: this.handleCloseDialog,
           handleLogout: this.handleLogout,
           handleDrawerToggle: this.handleDrawerToggle,
+          search: this.handleSearch,
           ...this.state
         }}
       >

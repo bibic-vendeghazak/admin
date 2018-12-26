@@ -3,7 +3,6 @@ import moment from "moment"
 
 import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from "@material-ui/core"
 
-import Search from "@material-ui/icons/SearchRounded"
 import Calendar from "@material-ui/icons/EventRounded"
 
 
@@ -11,7 +10,6 @@ const withToolbar = WrappedComponent =>
   class extends Component {
 
     static defaultProps = {
-      showQueryFilter: true,
       showDateFilter: true,
       showRoomFilter: true
     }
@@ -19,12 +17,8 @@ const withToolbar = WrappedComponent =>
     state = {
       from: moment().add(-1, "week").startOf("day"),
       to: moment().add(2, "months"),
-      query: [""],
       filteredRooms: []
     }
-
-    handleSearch = ({target: {value}}) =>
-      this.setState({query: value.toLowerCase().split(" ")})
 
     handleDate = ({target: {
       name, value
@@ -43,7 +37,7 @@ const withToolbar = WrappedComponent =>
 
     render() {
       const {
-        from, to, query, filteredRooms
+        from, to, filteredRooms
       } = this.state
       const {
         showQueryFilter, showDateFilter, showRoomFilter, rooms, ...props
@@ -53,25 +47,14 @@ const withToolbar = WrappedComponent =>
           <>
             <Grid
               container
-              style={{padding: "16px 16px 0 16px"}}
+              style={{padding: "0 16px"}}
             >
-              {showQueryFilter &&
-                <TextField
-                  InputProps={{endAdornment: <InputAdornment><Search color="disabled"/></InputAdornment>}}
-                  fullWidth
-                  label="Keresés"
-                  name="query"
-                  onChange={this.handleSearch}
-                  value={query}
-                />
-              }
               <Grid
                 alignItems="center"
                 container
                 item
                 justify="space-between"
-                spacing={16}
-                style={{margin: "16px 0"}}
+                spacing={8}
               >
                 {showDateFilter &&
                   <>
@@ -81,7 +64,7 @@ const withToolbar = WrappedComponent =>
                       md={12}
                     >
                       <Typography variant="subtitle1">
-                          Dátum szűrése
+                        Dátum szűrése
                       </Typography>
                     </Grid>
                     <Grid

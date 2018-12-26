@@ -9,10 +9,13 @@ import {routes, toRoute} from "../../utils"
 import {
   Typography, IconButton, Tooltip, Switch as Toggle, FormControlLabel
 } from "@material-ui/core"
+
+
 import Close from "@material-ui/icons/CloseRounded"
 import Today from "@material-ui/icons/TodayRounded"
 import Next from "@material-ui/icons/NavigateNext"
 import Before from "@material-ui/icons/NavigateBeforeRounded"
+import Search from "./Search"
 
 const {
   ROOMS, INTRO, CERTIFICATES,
@@ -59,7 +62,7 @@ export const Title = () =>
         path={toRoute(RESERVATIONS, ":p1?")}
       />
       <Route
-        component={() => "Statisztika / Üzenetek"}
+        component={() => "Statisztika / Visszajelzések (utolsó 100)"}
         path={FEEDBACKS}
       />
       <Route
@@ -90,6 +93,8 @@ export const RightAction = () =>
         path={toRoute(path, ":parameter")}
       />
     )}
+    <Route component={Search} path={routes.RESERVATIONS}/>
+    <Route component={Search} path={routes.MESSAGES}/>
     <Route
       component={({match: {params: {
         year, month, day
@@ -167,3 +172,4 @@ const ToggleStats = ({history, show}) =>
     labelPlacement="start"
     style={{color: "white"}}
   />
+
