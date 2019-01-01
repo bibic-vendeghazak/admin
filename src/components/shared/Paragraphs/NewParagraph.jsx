@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import {Button} from "@material-ui/core"
+import {Fab, Grid} from "@material-ui/core"
 import Add from "@material-ui/icons/ShortTextRounded"
 import {DB} from "../../../lib/firebase"
 import {withStore} from "../../../db"
@@ -21,33 +21,22 @@ const NewParagraph = ({
       }))
       .catch(sendNotification)
 
-  let style
-
-  if (relativeFAB) {
-    style ={
-      position: "relative",
-      left: "calc(100% - 16px)",
-      transform: "translateX(-100%)",
-      bottom: -8
-    }
-  } else {
-    style={
-      position: "fixed",
-      right: 32,
-      bottom: 32
-    }
-  }
-
   return (
-    <Button
-      color="secondary"
-      onClick={handleCreateNewParagraph}
-      style={style}
-      variant="extendedFab"
-    >
-      <Add/>
-      <span style={{marginLeft: 8}}>Új bekezdés</span>
-    </Button>
+    <Grid container justify="flex-end" style={{paddingTop: 8}}>
+      <Fab
+        color="secondary"
+        onClick={handleCreateNewParagraph}
+        style={relativeFAB ? null : {
+          position: "fixed",
+          right: 32,
+          bottom: 32
+        }}
+        variant="extended"
+      >
+        <Add/>
+        <span style={{marginLeft: 8}}>Új bekezdés</span>
+      </Fab>
+    </Grid>
 
   )
 }
