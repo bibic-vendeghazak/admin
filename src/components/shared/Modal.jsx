@@ -23,16 +23,19 @@ class Modal extends Component {
 
   handleClose = () => {
     const {
-      history, successPath
+      history, successPath, afterClose
     } = this.props
+
     history.push(successPath ||
       history.location.pathname
         .split("/")
         .slice(0, -1)
         .join("/"))
+
+    afterClose && afterClose()
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const {
       shouldPrompt, openDialog, promptTitle,
       remainOpen, sendNotification, onSubmit, success
@@ -42,18 +45,20 @@ class Modal extends Component {
       openDialog(
         {title: promptTitle || "Biztos benne?"},
         onSubmit,
-        success, () => !remainOpen && this.handleClose()
+        success,
+        () => !remainOpen && this.handleClose()
       )
     } else {
-      onSubmit()
-        .then(() => {
-          !remainOpen && this.handleClose()
-          sendNotification({
-            code: "success",
-            message: success
-          })
+      try {
+        await onSubmit()
+        !remainOpen && this.handleClose()
+        sendNotification({
+          code: "success",
+          message: success
         })
-        .catch(sendNotification)
+      } catch (error) {
+        sendNotification(error)
+      }
     }
   }
 

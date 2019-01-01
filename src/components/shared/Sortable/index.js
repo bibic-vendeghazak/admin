@@ -5,7 +5,7 @@ import {arrayMove} from "react-sortable-hoc"
 import {DB} from "../../../lib/firebase"
 import {toRoute, routes} from "../../../utils"
 
-import {Loading, Tip} from ".."
+import {Loading} from ".."
 import Sort from "./Sort"
 import {Grid} from "@material-ui/core"
 
@@ -15,7 +15,7 @@ const orderList = (a, b) => a[1].order - b[1].order
 
 class Sortable extends Component {
   state = {
-    list: null,
+    list: [],
     isEmpty: false
   }
 
@@ -48,7 +48,8 @@ class Sortable extends Component {
       })
   }
 
-  handleSort = ({
+
+  handleSort = async ({
     oldIndex, newIndex
   }) => {
     const {list} = this.state
@@ -57,20 +58,21 @@ class Sortable extends Component {
       const {
         folder, match: {url}, sendNotification
       } = this.props
-      Promise.all(
-        newList.map(([itemId], index) =>
-          DB.ref(toRoute(folder, url, itemId))
-            .update({order: index})
-            .catch(sendNotification)
+      try {
+        await Promise.all(
+          newList.map(([itemId], index) =>
+            DB.ref(toRoute(folder, url, itemId))
+              .update({order: index})
+              .catch(sendNotification)
+          )
         )
-      )
-        .then(() => {
-          sendNotification({
-            code: "success",
-            message: "Sorrend mentve."
-          })
+        sendNotification({
+          code: "success",
+          message: "Sorrend mentve."
         })
-        .catch(sendNotification)
+      } catch (error) {
+        sendNotification(error)
+      }
     }
   }
 
@@ -80,9 +82,7 @@ class Sortable extends Component {
     } = this.state
     const {
       history,
-      match: {
-        path, url
-      },
+      match: {path, url},
       actionComponent,
       editItemComponent,
       sortableItemComponent,
@@ -90,71 +90,65 @@ class Sortable extends Component {
       hasText,
       axis,
       useDragHandle,
-      relativeFAB,
+      fabOffsetY,
       containerProps,
       itemProps,
       prefix
     } = this.props
 
     return (
-      <>
-        <Grid style={{padding: 8}}>
-          <Route
-            exact
-            path={toRoute(path, ":listItemId", prefix ? routes[prefix] : routes.EDIT)}
-            render={props =>
-              <WrappedComponent
-                Component={editItemComponent}
-                url={url}
-                {...{
-                  hasText,
-                  folder,
-                  path,
-                  ...props
-                }}
-              />
-            }
-          />
-          <Route
-            path={url}
-            render={() =>
-              list ?
-                <Sort
-                  axis={axis || "xy"}
-                  component={sortableItemComponent}
-                  containerProps={{
-                    container: true,
-                    spacing: 16,
-                    ...containerProps
-                  }}
-                  distance={48}
-                  helperClass="sort-helper"
-                  itemProps={itemProps}
-                  items={list}
-                  onSortEnd={this.handleSort}
-                  path={url}
-                  useDragHandle={useDragHandle}
-                  useWindowAsScrollContainer
-                /> :
-                <Loading isEmpty={isEmpty}/>
-            }
-          />
-          <Grid>
+      <Grid style={{padding: 8}}>
+        <Route
+          exact
+          path={toRoute(path, ":listItemId", prefix ? routes[prefix] : routes.EDIT)}
+          render={props =>
             <WrappedComponent
-              path={url}
+              Component={editItemComponent}
               {...{
-                history,
-                relativeFAB
+                url,
+                hasText,
+                folder,
+                path,
+                ...props
               }}
-              Component={actionComponent}
             />
-          </Grid>
+          }
+        />
+        <Route
+          path={url}
+          render={() =>
+            list ?
+              <Sort
+                axis={axis || "xy"}
+                component={sortableItemComponent}
+                containerProps={{
+                  container: true,
+                  spacing: 16,
+                  ...containerProps
+                }}
+                distance={48}
+                helperClass="sort-helper"
+                itemProps={itemProps}
+                items={list}
+                onSortEnd={this.handleSort}
+                path={url}
+                useDragHandle={useDragHandle}
+                useWindowAsScrollContainer
+              /> :
+              <Loading isEmpty={isEmpty}/>
+          }
+        />
+        <Grid>
+          <WrappedComponent
+            path={url}
+            {...{
+              history,
+              fabOffsetY
+            }}
+            Component={actionComponent}
+          />
         </Grid>
-        <Tip>
-          A sorrendet &quot;fogd és vidd&quot; módszerrel lehet változtatni.
-          A változtatások automatikusan mentésre kerülnek.
-        </Tip>
-      </>
+      </Grid>
     )
   }
 }

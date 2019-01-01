@@ -10,6 +10,7 @@ import Validity from "./Validity"
 import ReservationsTable from "./ReservationsTable"
 import EditReservation from "../../components/EditReservation"
 
+
 const Reservations = ({rooms}) =>
   <div>
     <Route
@@ -60,10 +61,7 @@ const Reservations = ({rooms}) =>
       path={toRoute(routes.RESERVATIONS, routes.NEW)}
       render={props =>
         <EditReservation
-          {...{
-            rooms,
-            ...props
-          }}
+          {...{rooms, ...props}}
           error="Sikertelen foglalás! Kérjük ellenőrizze az adatokat."
           promptTitle="Biztosan felveszi ezt a foglalást?"
           shouldPrompt

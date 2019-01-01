@@ -17,20 +17,16 @@ class GalleryItemEdit extends Component {
     SIZE_640: null
   }
 
-  componentDidMount() {
-    const {
-      url,
-      folder, match: {params: {listItemId}}
-    } = this.props
-    console.log(toRoute(folder, url, listItemId))
-    DB
-      .ref(toRoute(folder, url, listItemId))
-      .once("value", snap => {
-        if (snap.exists()) {
-          this.setState(snap.val())
-        }
-      })
-      .catch(this.props.sendNotification)
+  async componentDidMount() {
+    const {url, folder, match: {params: {listItemId}}} = this.props
+
+    const item = await (
+      await DB
+        .ref(toRoute(folder, url, listItemId))
+        .once("value")
+    ).val()
+
+    if (item) this.setState(item)
   }
 
   handleDeleteGalleryItem = () => {
@@ -40,7 +36,7 @@ class GalleryItemEdit extends Component {
 
     this.props.openDialog(
       {title: "Biztos törli a képet?"},
-      async () => await DB.ref(toRoute("galleries", url, listItemId)).remove(),
+      async () => await DB.ref(toRoute("galleries", url.replace("/", ""), listItemId)).remove(),
       "A kép sikeresen törölve",
       this.handleClose
     )
@@ -64,56 +60,57 @@ class GalleryItemEdit extends Component {
       )
     }
 
-  handleClose = () => {
-    this.props.history.goBack()
-  }
+  handleClose = () => this.props.history.goBack()
 
-  handleTextChange = ({target: {
-    name, value
-  }}) => this.setState({[name]: value})
+  handleTextChange = ({target: {name, value}}) => this.setState({[name]: value})
 
   render() {
-    const {
-      title, desc, SIZE_640
-    } = this.state
+    const {title, desc, SIZE_640} = this.state
 
     const {hasText} = this.props
     return (
       <Dialog
+        fullWidth
+        maxWidth="sm"
         onClose={this.handleClose}
         open
       >
-        {hasText &&
-          <DialogTitle>Kép szerkesztése</DialogTitle>
-        }
+        {hasText && <DialogTitle>Kép szerkesztése</DialogTitle>}
         <DialogContent>
-          {SIZE_640 ?
-            <img
-              alt={title}
-              src={SIZE_640}
-              width={hasText ? 120 : 240}
-            /> : <Loading/>
-          }
-          {
-            hasText &&
-            <Grid container>
+
+          <Grid alignItems="center" container justify="center">
+            <Grid item sm={hasText? 4 : 12}>
+              {SIZE_640 ?
+                <img
+                  alt={title}
+                  src={SIZE_640}
+                  width="100%"
+                /> : <Loading/>
+              }
+            </Grid>
+            {
+              hasText &&
+            <Grid container item sm={8} style={{padding: 8}}>
               <TextField
                 fullWidth
-                label="Kép címe"
+                label="Cím"
+                multiline
                 name="title"
                 onChange={this.handleTextChange}
                 value={title}
               />
               <TextField
                 fullWidth
-                label="Kép leírása"
+                label="Leírás"
                 multiline
                 name="desc"
                 onChange={this.handleTextChange}
+                style={{marginTop: 16}}
                 value={desc}
               />
             </Grid>
-          }
+            }
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Grid
@@ -127,7 +124,7 @@ class GalleryItemEdit extends Component {
                 variant="text"
               >
                 <Delete/>
-                  Kép törlése
+                  Törlés
               </Button>
             }
             <Grid item>

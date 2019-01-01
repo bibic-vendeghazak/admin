@@ -27,22 +27,13 @@ const GalleryItem = ({
     >
       <img
         alt={fileName}
-        height="100%"
         src={SIZE_360}
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
+          objectFit: "cover",
+          width: 140,
+          height: 140,
           pointerEvents: "none"
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%"
         }}
       />
       <Tooltip title="Szerkesztés">

@@ -93,12 +93,12 @@ class TextParagraph extends Component {
       <Card
         {...props}
         style={{
-          margin: "8px 16px",
+          margin: "0 16px 8px",
           ...style
         }}
       >
         <CardContent>
-          <CardHeader action={<DragHandle/>}/>
+          <CardHeader action={<DragHandle/>} style={{paddingTop: 4}}/>
           {isEditing ?
             <TextField
               autoFocus

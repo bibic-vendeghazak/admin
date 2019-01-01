@@ -14,97 +14,83 @@ import {withStore} from "../../../db"
 class UploadPictures extends Component {
 
   state = {
-    finished: {},
-    filesToUpload: [],
-    finishedCount: 0
-  }
-
-  componentDidUpdate() {
-    const {
-      filesToUpload, finishedCount
-    } = this.state
-    if (filesToUpload.length !== 0 && filesToUpload.length === finishedCount) {
-      this.setState(() => ({
-        finishedCount: 0,
-        filesToUpload: [],
-        finished: {}
-      }), this.handleClose)
-    }
-  }
-
-
-  handleDelete = name =>
-    this.setState(({filesToUpload}) =>
-      ({filesToUpload: filesToUpload
-        .filter(({file: {name: fileName}}) => name !== fileName)})
-    )
-
-  handleChange = ({target: {files}}) =>
-    Object.values(files).forEach(file => {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        this.setState(({filesToUpload}) =>
-          ({filesToUpload: filesToUpload.concat({
-            file,
-            src: reader.result
-          })})
-        )
-      }
-      reader.readAsDataURL(file)
-    })
-
-  handleUpload = () =>
-    Promise.all(
-      this.state.filesToUpload.map(({file}) =>
-        FileStore
-          .ref(toRoute("galleries", this.props.path, file.name))
-          .put(file)
-          .on("state_changed", ({bytesTransferred}) => {
-            this.setState(({finished}) => ({finished: {
-              ...finished,
-              [file.name] : bytesTransferred
-            }}))
-          }, () => {
-            this.props.sendNotification({
-              code: "error",
-              message: `Sikertelen feltöltés. ${file.name} nem lett feltöltve.`
-            })
-          }, () => {
-            this.props.sendNotification({
-              code: "success",
-              message: `${file.name} néhány másodperc múlva megjelenik a galériában.`
-            })
-            this.setState(({finishedCount}) =>
-              ({finishedCount: finishedCount+1})
-            )
-          }
-          )
-      ))
-
-
-  handleClose = () => this.props.history.goBack()
-
-
-  render() {
-    const {filesToUpload} = this.state
-    const {
-      path, relativeFAB
-    } = this.props
-    let {finished} = this.state
-    finished = Object.values(finished).reduce((acc, size) => acc+size, 0)
-    const remaining = filesToUpload.reduce((acc, {file: {size}}) => acc+size, 0)
-    const progress = Math.round(100 * finished/remaining) || 0
-
-
-    const style = relativeFAB ? {
-      position: "relative",
-      zIndex: 1000
-    } : {
+    bytesUploaded: 0,
+    bytesToUpload: 0,
+    files: [],
+    style: {
       position: "fixed",
       right: 32,
       bottom: 32,
       zIndex: 1000
     }
+  }
+
+  componentDidMount() {
+    const {fabOffsetY} = this.props
+    if (fabOffsetY) {
+      this.setState(({style}) => ({style: {...style, bottom: 32 - fabOffsetY}}))
+    }
+  }
+
+
+  handleDelete = fileName =>
+    this.setState(({files}) =>
+      ({files: files.filter(({file: {name}}) => name !== fileName)})
+    )
+
+  handleChange = ({target: {files}}) => {
+    Object.values(files).forEach(file => {
+      const reader = new FileReader()
+      reader.onloadend = () =>
+        this.setState(({files, bytesToUpload}) => ({
+          files: [...files, {file, src: reader.result}],
+          bytesToUpload: bytesToUpload + file.size
+        }))
+      reader.readAsDataURL(file)
+    })
+  }
+
+  handleUpload = () => {
+    const {sendNotification, path} = this.props
+    this.state.files.forEach(({file}) =>
+      FileStore
+        .ref(toRoute("galleries", path, file.name))
+        .put(file)
+        .on("state_changed", ({bytesTransferred}) => {
+          this.setState(({bytesUploaded}) => ({bytesUploaded: bytesUploaded + bytesTransferred}))
+        }, () => {
+          sendNotification({
+            code: "error",
+            message: `Sikertelen feltöltés. ${file.name} nem lett feltöltve.`
+          })
+        }, () => {
+          sendNotification({
+            code: "success",
+            message: `${file.name} néhány másodperc múlva megjelenik a galériában.`
+          }, 8000)
+          this.reset()
+        }
+        )
+    )
+  }
+
+  handleClose = () => {
+    const {history, path} = this.props
+    history.push(path)
+  }
+
+
+  reset = () => {
+    this.handleClose()
+    this.setState({files: [], bytesToUpload: 0, bytesUploaded: 0})
+  }
+
+  render() {
+    const {files, style, bytesToUpload, bytesUploaded} = this.state
+    const {path} = this.props
+
+    const progress = Math.round(100 * bytesUploaded/bytesToUpload) || 0
+
 
     return (
       <Grid
@@ -118,6 +104,7 @@ class UploadPictures extends Component {
           path={toRoute(path, routes.UPLOAD)}
           render={() =>
             <Modal
+              afterClose={this.reset}
               error="Hiba. A képeket nem sikerült feltölteni."
               fullWidth
               onSubmit={this.handleUpload}
@@ -163,7 +150,7 @@ class UploadPictures extends Component {
                   <GridList
                     cols={3}
                   >
-                    {filesToUpload.map(({
+                    {files.map(({
                       file: {name}, src
                     }) =>
                       <GridListTile

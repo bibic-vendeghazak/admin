@@ -9,10 +9,10 @@ import {Background} from "../shared"
 
 
 const Notification = ({
-  snackbar: {
+  notification: {
     open, message: {
       message, code
-    }
+    }, duration
   },
   closeNotification
 }) => {
@@ -24,7 +24,7 @@ const Notification = ({
           {isSuccess ? <Done/> : <Error/>}
         </Background>
       }
-      autoHideDuration={5000}
+      autoHideDuration={duration || 5000}
       onClose={closeNotification}
       open={open}
       {...{

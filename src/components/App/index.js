@@ -23,36 +23,6 @@ import {Title, RightAction} from "./Toolbar"
 import Dialog from "./Dialog"
 import Notification from "./Notification"
 
-const drawerWidth = 240
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    minHeight: "100vh",
-    zIndex: 1,
-    overflow: "hidden",
-    position: "relative",
-    display: "flex",
-    width: "100%"
-  },
-  appBar: {
-    position: "fixed",
-    marginLeft: drawerWidth,
-    backgroundColor: theme.palette.primary.dark,
-    [theme.breakpoints.up("md")]: {width: `calc(100% - ${drawerWidth}px)`}
-  },
-  navIconHide: {[theme.breakpoints.up("md")]: {display: "none"}},
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    backgroundColor: theme.palette.primary.main,
-    width: drawerWidth
-  },
-  content: {
-    flexGrow: 1,
-    [theme.breakpoints.up("md")]: {marginLeft: drawerWidth},
-    backgroundColor: colors.grey
-  }
-})
 
 const App = ({
   isLoggedIn, handleDrawerToggle, mobileOpen,
@@ -129,18 +99,18 @@ const App = ({
               path={toRoute(routes.ROOMS, ":roomId?")}
             />
             <Route
-              component={props =>
+              path={routes.CERTIFICATES}
+              render={props =>
                 <div
                   style={{
                     maxWidth: 540,
                     margin: "0 auto"
                   }}
                 >
-                  <Paragraphs relativeFAB {...props}/>
-                  <Gallery hasText={false} relativeFAB {...props}/>
+                  <Paragraphs {...props}/>
+                  <Gallery fabOffsetY={-64} hasText={false} {...props}/>
                 </div>
               }
-              path={routes.CERTIFICATES}
             />
             <Route
               component={Gallery}
@@ -173,4 +143,33 @@ const App = ({
   </div>
 
 
-export default withStyles(styles, {withTheme: true})(withStore(App))
+const drawerWidth = 240
+
+export default withStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    minHeight: "100vh",
+    zIndex: 1,
+    overflow: "hidden",
+    position: "relative",
+    display: "flex",
+    width: "100%"
+  },
+  appBar: {
+    position: "fixed",
+    marginLeft: drawerWidth,
+    backgroundColor: theme.palette.primary.dark,
+    [theme.breakpoints.up("md")]: {width: `calc(100% - ${drawerWidth}px)`}
+  },
+  navIconHide: {[theme.breakpoints.up("md")]: {display: "none"}},
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    backgroundColor: theme.palette.primary.main,
+    width: drawerWidth
+  },
+  content: {
+    flexGrow: 1,
+    [theme.breakpoints.up("md")]: {marginLeft: drawerWidth},
+    backgroundColor: colors.grey
+  }
+}), {withTheme: true})(withStore(App))
