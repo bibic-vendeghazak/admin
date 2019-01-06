@@ -13,7 +13,8 @@ script:
 deploy:
   skip_cleanup: true
   provider: script
-  script: firebase deploy -P $TRAVIS_BRANCH --token $FIREBASE_TOKEN
+  script: firebase deploy -P default --token $FIREBASE_TOKEN
+  # script: firebase deploy -P $TRAVIS_BRANCH --token $FIREBASE_TOKEN
   on:
     all_branches: true
     condition: $TRAVIS_BRANCH =~ ^develop|master$
