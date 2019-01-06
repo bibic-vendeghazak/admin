@@ -28,7 +28,8 @@ const routes = {
   UPLOAD: "feltoltes",
   HANDLED: "kezelt",
   READ: "olvasott",
-  UNREAD: "olvasatlan"
+  UNREAD: "olvasatlan",
+  DELETE: "torol"
 }
 
 /**

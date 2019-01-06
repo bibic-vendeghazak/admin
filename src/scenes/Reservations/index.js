@@ -9,6 +9,7 @@ import Bookmark from '@material-ui/icons/BookmarkBorderRounded'
 import Validity from "./Validity"
 import ReservationsTable from "./ReservationsTable"
 import EditReservation from "../../components/EditReservation"
+import {DeleteReservation} from "../../components/DeleteReservation"
 
 
 const Reservations = ({rooms}) =>
@@ -53,6 +54,22 @@ const Reservations = ({rooms}) =>
           submitLabel="Mentés"
           success="Foglalás sikeresen frissítve!"
           title="Foglalás szerkesztése"
+        />
+      }
+    />
+    <Route
+      exact
+      path={toRoute(routes.RESERVATIONS, ":reservationId", routes.DELETE)}
+      render={props =>
+        <DeleteReservation
+          {...props}
+          error="A foglalást nem sikerült törölni."
+          promptTitle="Biztos törölni akarja ezt a foglalást?"
+          shouldPrompt
+          submitLabel="Törlés"
+          success="Foglalás törölve. A foglaló értesítve lesz."
+          successPath={routes.RESERVATIONS}
+          title="Foglalás törlése"
         />
       }
     />
