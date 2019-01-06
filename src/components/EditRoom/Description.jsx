@@ -34,14 +34,13 @@ export default class Description extends Component {
 
   handleSubmitDescription = () => {
     ROOMS_DB
-      .child(`${this.props.roomId-1}/description`)
+      .child(`${this.props.roomId}/description`)
       .set(this.state.description).then(() => this.handleCloseEdit())
       .then(() => this.props.sendNotification({
         code: "success",
         message: "A leírás sikeresen frissítve lett."
       }))
       .catch(this.props.sendNotification)
-
   }
 
 

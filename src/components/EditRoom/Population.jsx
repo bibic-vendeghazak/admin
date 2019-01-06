@@ -44,7 +44,7 @@ export default class Population extends Component {
     async () => {
       try {
         await ROOMS_DB
-          .child(`${this.props.roomId-1}/prices/metadata/maxPeople`)
+          .child(`${this.props.roomId}/prices/metadata/maxPeople`)
           .set(parseInt(this.state.count, 10))
 
         this.handleCloseEdit()

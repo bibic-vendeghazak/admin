@@ -200,44 +200,41 @@ class Price extends Component {
   handleOpenEdit = () => this.setState({isEditing: true})
 
 
-  handleSave = () => {
+  handleSave = async () => {
     const {
       roomId, priceType, adultCount, childCount
     } = this.props
-    ROOMS_DB.child(`${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}/price`)
-      .set(parseInt(this.state.price, 10) || 0)
-      .then(() => {
-        this.handleCloseEdit()
-        this.props.sendNotification({
-          code: "success",
-          message: "Ár frissítve."
-        })})
-      .catch(this.props.sendNotification)
+
+    try {
+      await ROOMS_DB.child(`${roomId}/prices/table/${priceType}/${adultCount}/${childCount}/price`)
+        .set(parseInt(this.state.price, 10) || 0)
+
+      this.props.sendNotification({
+        code: "success",
+        message: "Ár frissítve."
+      })
+      this.handleCloseEdit()
+    } catch (error) {
+      this.props.sendNotification(error)
+    }
   }
 
-    handleDelete = () => {
-      const {
-        roomId, priceType, adultCount, childCount
-      } = this.props
+  handleDelete = () => {
+    const {
+      roomId, priceType, adultCount, childCount
+    } = this.props
 
-      this.props.openDialog({
-        title: "Ár törlése",
-        content: "Biztosan törli ezt az árat az adatbázisból?",
-        submitLabel: "Törlés"
-      },
-      async () => {
-        try {
-          await ROOMS_DB
-            .child(`${roomId-1}/prices/table/${priceType}/${adultCount}/${childCount}`)
-            .remove()
-          this.handleCloseEdit()
-        } catch(error) {
-          console.error()
-        }
-      },
-      "Az ár törölve lett."
-      )
-    }
+    this.props.openDialog({
+      title: "Ár törlése",
+      content: "Biztosan törli ezt az árat az adatbázisból?",
+      submitLabel: "Törlés"
+    },
+    () => ROOMS_DB
+      .child(`${roomId}/prices/table/${priceType}/${adultCount}/${childCount}`)
+      .remove(),
+    "Az ár törölve lett.", this.handleCloseEdit
+    )
+  }
 
 
   handlePriceChange = ({target: {value: price}}) => {
