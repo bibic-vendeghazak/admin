@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar"
 import NoMatch from "./NoMatch"
 import Login from "../Auth/Login"
 import {
-  Reservations, Calendar, Rooms, Messages, Feedbacks
+  Reservations, Calendar, Rooms, Messages, Feedbacks, Settings
 } from "../../scenes"
 
 import {routes, toRoute, colors} from "../../utils"
@@ -22,7 +22,6 @@ import {
 import {Title, RightAction} from "./Toolbar"
 import Dialog from "./Dialog"
 import Notification from "./Notification"
-
 
 const App = ({
   isLoggedIn, handleDrawerToggle, mobileOpen,
@@ -101,15 +100,15 @@ const App = ({
             <Route
               path={routes.CERTIFICATES}
               render={props =>
-                <div
-                  style={{
-                    maxWidth: 540,
-                    margin: "0 auto"
-                  }}
-                >
+                <>
                   <Paragraphs {...props}/>
-                  <Gallery fabOffsetY={-64} hasText={false} {...props}/>
-                </div>
+                  <Gallery
+                    fabProps={{
+                      offsetY: -64
+                    }}
+                    hasText={false} {...props}
+                  />
+                </>
               }
             />
             <Route
@@ -119,11 +118,11 @@ const App = ({
             <Route
               component={props =>
                 <>
-                  <Gallery {...props}/>
                   <Tip>
                     Az első három kép fel lesz tüntetve a főoldalon a
                     Szolgáltatásaink szekció alatt.
                   </Tip>
+                  <Gallery {...props}/>
                 </>
               }
               path={routes.SERVICES}
@@ -131,6 +130,10 @@ const App = ({
             <Route
               component={Gallery}
               path={routes.FOODS}
+            />
+            <Route
+              component={Settings}
+              path={routes.SETTINGS}
             />
             <Route component={NoMatch}/>
           </Switch>
