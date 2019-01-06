@@ -7,8 +7,8 @@ import {Paper} from "@material-ui/core"
 import {Tip} from ".."
 
 const Gallery = props =>
-  <>
-    <Paper style={{padding: "8px 16px"}}>
+  <div style={{maxWidth: 4*140+5*16, margin: "16px auto"}}>
+    <Paper style={{padding: 16}}>
       <Sortable
         actionComponent={Upload}
         editItemComponent={GalleryItemEdit}
@@ -22,6 +22,6 @@ const Gallery = props =>
       A sorrendet &quot;fogd és vidd&quot; módszerrel lehet változtatni.
       A változtatások automatikusan mentésre kerülnek.
     </Tip>
-  </>
+  </div>
 
 export default Gallery

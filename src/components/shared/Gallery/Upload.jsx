@@ -26,10 +26,18 @@ class UploadPictures extends Component {
   }
 
   componentDidMount() {
-    const {fabOffsetY} = this.props
-    if (fabOffsetY) {
-      this.setState(({style}) => ({style: {...style, bottom: 32 - fabOffsetY}}))
+    const style = {...this.state.style}
+    const {fabPosition, offsetY} = this.props
+
+    if (fabPosition === "left") {
+      delete style.right
+      style.left = 240 + 32
     }
+    if (offsetY) {
+      style.bottom -= offsetY
+    }
+
+    this.setState({style})
   }
 
 

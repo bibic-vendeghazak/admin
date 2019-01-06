@@ -90,14 +90,14 @@ class Sortable extends Component {
       hasText,
       axis,
       useDragHandle,
-      fabOffsetY,
+      fabProps,
       containerProps,
       itemProps,
       prefix
     } = this.props
 
     return (
-      <Grid style={{padding: 8}}>
+      <Grid>
         <Route
           exact
           path={toRoute(path, ":listItemId", prefix ? routes[prefix] : routes.EDIT)}
@@ -143,7 +143,7 @@ class Sortable extends Component {
             path={url}
             {...{
               history,
-              fabOffsetY
+              ...fabProps
             }}
             Component={actionComponent}
           />
