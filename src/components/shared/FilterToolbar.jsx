@@ -1,13 +1,14 @@
 import React, {Component} from "react"
 import moment from "moment"
-
+import {withRouter} from "react-router-dom"
 import {Grid, TextField, InputAdornment, Typography, Chip, Avatar, Hidden} from "@material-ui/core"
 
 import Calendar from "@material-ui/icons/EventRounded"
+import {getQueryType} from "../../db/Store/search"
 
 
 const withToolbar = WrappedComponent =>
-  class extends Component {
+  withRouter(class extends Component {
 
     static defaultProps = {
       showDateFilter: true,
@@ -15,33 +16,41 @@ const withToolbar = WrappedComponent =>
     }
 
     state = {
-      from: moment().add(-1, "week").startOf("day"),
-      to: moment().add(2, "months"),
-      filteredRooms: []
+      queryType : "reservationsFilters"
     }
 
-    handleDate = ({target: {
-      name, value
-    }}) => {
-      this.setState({[name]: value === "" ? null : value})
+    componentDidMount() {
+      this.setState({queryType: getQueryType(this.props.match.path)})
     }
 
-    handleRoom = (roomId, roomsLength) =>
-      this.setState(({filteredRooms}) =>
-        ({filteredRooms: (filteredRooms.length ?
-          filteredRooms :
-          Array(roomsLength)
-            .fill(true))
-          .map((e, i) => i === roomId ? !e : e)})
-      )
+    // NOTE: Can be used to show all rooms
+    handleResetRooms = () => {
+      this.props.changeRoom(this.state.queryType, [])
+    }
+
+    handleDate = ({target: {name, value}}) =>
+      this.props.changeReservationsFilter(name, value === "" ? null : value)
+
+    handleRoom = (roomId, roomsLength) => {
+
+      const queryType = getQueryType(this.props.match.path)
+      let filteredRooms = [...this.props[queryType].filteredRooms]
+      filteredRooms = (filteredRooms.length ?
+        filteredRooms :
+        Array(roomsLength)
+          .fill(true))
+        .map((e, i) => i === roomId ? !e : e)
+
+      this.props.changeRoom(queryType, filteredRooms)
+    }
+
 
     render() {
       const {
-        from, to, filteredRooms
-      } = this.state
-      const {
         showQueryFilter, showDateFilter, showRoomFilter, rooms, ...props
       } = this.props
+      const {from, to} = this.props.reservationsFilters
+      const {filteredRooms} = this.props[this.state.queryType]
       return (
         <>
           <>
@@ -58,11 +67,7 @@ const withToolbar = WrappedComponent =>
               >
                 {showDateFilter &&
                   <>
-                    <Grid
-                      item
-                      lg={3}
-                      md={12}
-                    >
+                    <Grid item lg={3} md={12}>
                       <Typography variant="subtitle1">
                         Dátum szűrése
                       </Typography>
@@ -74,11 +79,7 @@ const withToolbar = WrappedComponent =>
                       lg={9}
                       spacing={16}
                     >
-                      <Grid
-                        item
-                        md={6}
-                        xs={12}
-                      >
+                      <Grid item md={6} xs={12}>
                         <TextField
                           InputProps={{
                             startAdornment: <InputAdornment position="start"><Calendar color="disabled"/></InputAdornment>,
@@ -91,11 +92,7 @@ const withToolbar = WrappedComponent =>
                           value={moment(from).format("YYYY-MM-DD")}
                         />
                       </Grid>
-                      <Grid
-                        item
-                        md={6}
-                        xs={12}
-                      >
+                      <Grid item md={6} xs={12}>
                         <TextField
                           InputProps={{
                             startAdornment: <InputAdornment position="start"><Calendar color="disabled"/></InputAdornment>,
@@ -119,16 +116,13 @@ const withToolbar = WrappedComponent =>
                     justify="space-between"
                     xs={12}
                   >
-                    <Grid
-                      item
-                      md={3}
-                      xs={12}
-                    >
+                    <Grid item md={3} xs={12}>
                       <Typography variant="subtitle1">
                         Szoba szűrése
                       </Typography>
                     </Grid>
                     <Grid
+                      alignItems="center"
                       container
                       item
                       justify="flex-end"
@@ -148,7 +142,7 @@ const withToolbar = WrappedComponent =>
                             label={<Hidden mdDown>Szoba</Hidden>}
                             name="roomId"
                             onClick={() => this.handleRoom(i, rooms.length)}
-                            style={{margin: "0 4px"}}
+                            style={{margin: 2}}
                           />
                         )
                       }
@@ -158,16 +152,11 @@ const withToolbar = WrappedComponent =>
               </Grid>
             </Grid>
           </>
-          <WrappedComponent
-            {...{
-              ...props,
-              ...this.state
-            }}
-          />
+          <WrappedComponent {...props}/>
         </>
       )
     }
-  }
+  })
 
 
 export default withToolbar

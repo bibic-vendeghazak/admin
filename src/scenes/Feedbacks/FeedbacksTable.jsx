@@ -7,8 +7,7 @@ import {withStore} from "../../db"
 
 const FeedbacksTable = ({
   unhandledFeedbacks,
-  handledFeedbacks, query,
-  filteredRooms
+  handledFeedbacks, feedbacksFilters
 }) =>
   <Table>
     <TableHead>
@@ -24,9 +23,9 @@ const FeedbacksTable = ({
     <TableBody>
       {unhandledFeedbacks && handledFeedbacks ?
         <FilteredFeedbacks
+          filteredRooms={feedbacksFilters.filteredRooms}
+          query={feedbacksFilters.query}
           {...{
-            query,
-            filteredRooms,
             unhandledFeedbacks,
             handledFeedbacks
           }}

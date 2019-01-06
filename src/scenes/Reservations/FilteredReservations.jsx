@@ -20,9 +20,7 @@ const sortReservations = (order, orderBy) => (a, b) =>
   order === 'desc' ? (b[orderBy] > a[orderBy]) - (b[orderBy] < a[orderBy]) :
     (a[orderBy] > b[orderBy]) - (a[orderBy] < b[orderBy])
 
-const filterByQuery = query => ({
-  name, message, id
-}) => query
+const filterByQuery = query => ({name, message, id}) => query
   .some(word => [name, message, id].join(" ")
     .toLowerCase()
     .includes(word)
@@ -43,12 +41,19 @@ const FilteredReservations = ({
       .filter(filterByRoom(filteredRooms))
       .filter(filterByQuery(query))
       .sort(sortReservations(order, orderBy))
+      .flatMap(reservation => {
+        if (reservation.roomId === "all") {
+          // REVIEW: Use rooms length
+          return Array(6).fill(null).map((_e, index) => ({...reservation, roomId: index + 1}))
+        }
+        return reservation
+      })
       .map(({
         key, id, roomId, from, to, name, handled, email, tel, timestamp, archived
       }) =>
         <TableRow
           hover
-          key={key}
+          key={key+roomId}
           onClick={() => history.push(toRoute(routes.RESERVATIONS, key))}
           selected={archived}
           title={archived ? "Archivált foglalás" : null}
@@ -83,11 +88,16 @@ const FilteredReservations = ({
             <TableCell
               align="center"
               padding="none"
-            ><a href={`mailto:${email}`}>{email}</a></TableCell>
+            >
+              {email !== "email@email.hu" ? <a href={`mailto:${email}`}>{email}</a> : "-"}
+            </TableCell>
+
             <TableCell
               align="center"
               padding="none"
-            ><a href={`tel:${tel}`}>{tel}</a></TableCell>
+            >
+              {tel !== "000-000-000" ? <a href={`tel:${tel}`}>{tel}</a> : "-"}
+            </TableCell>
           </Hidden>
           <Hidden smDown>
             <TableCell align="center">{from && moment(from.toDate()).format("YYYY MMM. DD.")}</TableCell>

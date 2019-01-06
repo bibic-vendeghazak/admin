@@ -27,18 +27,15 @@ class ReservationsTable extends Component {
   }
 
 
-  componentDidUpdate = ({
-    from, to
-  }) => {
-    if (from !== this.props.from || to !== this.props.to) {
-      this.getReservations()
-    }
+  componentDidUpdate = ({reservationsFilters: {from, to}}) => {
+
+    const {reservationsFilters} = this.props
+
+    if (from !== reservationsFilters.from || to !== reservationsFilters.to) this.getReservations()
   }
 
   getReservations = () => {
-    const {
-      from, to, sendNotification
-    } = this.props
+    const {reservationsFilters: {from, to}, sendNotification} = this.props
 
     this.setState({isLoading: true})
     Promise.all([
@@ -91,8 +88,9 @@ class ReservationsTable extends Component {
       handledReservations, unhandledReservations
     } = this.state
     const {
-      reservationQuery, filteredRooms
+      reservationsFilters
     } = this.props
+
     return(
       <Table>
         <TableHead
@@ -107,12 +105,12 @@ class ReservationsTable extends Component {
             (handledReservations && unhandledReservations && !isLoading) ?
               <FilteredReservations
                 {...{
-                  query: reservationQuery,
+                  query: reservationsFilters.query,
+                  filteredRooms: reservationsFilters.filteredRooms,
                   order,
                   orderBy,
                   handledReservations,
-                  unhandledReservations,
-                  filteredRooms
+                  unhandledReservations
                 }}
               /> :
               <EmptyTableBody title={<Loading/>}/>

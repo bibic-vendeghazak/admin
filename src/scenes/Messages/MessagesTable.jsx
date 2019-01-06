@@ -6,7 +6,7 @@ import {withStore} from '../../db'
 
 
 const MessagesTable = ({
-  messages, isFetched, messageQuery
+  messages, isFetched, messagesFilters
 }) =>
   <Table>
     <TableHead>
@@ -23,7 +23,7 @@ const MessagesTable = ({
       {isFetched ?
         <FilteredMessages {...{
           messages,
-          query: messageQuery
+          query: messagesFilters.query
         }}
         />
         : <EmptyTableBody title={<Loading/>}/>

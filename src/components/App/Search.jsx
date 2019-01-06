@@ -1,53 +1,33 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {withStyles, TextField, InputAdornment} from '@material-ui/core'
 import {withStore} from '../../db'
-import {routes, colors} from '../../utils'
+import {colors} from '../../utils'
 import SearchRounded from "@material-ui/icons/SearchRounded"
+import Close from "@material-ui/icons/CloseRounded"
+import {getQueryType} from '../../db/Store/search'
 
-class Search extends Component {
-  state = {
-    queryType: ""
-  }
-
-  componentDidMount() {
-    const queryType = this.props.match.path
-      .includes(routes.RESERVATIONS) ? "reservationQuery" : "messageQuery"
-    this.setState({queryType})
-  }
-
-  componentDidUpdate({match: {path: prevPath}}) {
-    const {match: {path}} = this.props
-    if (prevPath !== path) {
-      const queryType = path.includes(routes.RESERVATIONS) ? "reservationQuery" : "messageQuery"
-      this.props.search(queryType, "")
-      this.setState({queryType})
-    }
-  }
-
-
-  componentWillUnmount() {
-    this.props.search(this.state.queryType, "")
-  }
-
-  render() {
-    const {queryType} = this.state
-    const {reservationQuery, messageQuery, search, classes} = this.props
-    const value = (queryType === "reservationQuery" ? reservationQuery : messageQuery).join(" ")
-
-    return(
-      <TextField
-        InputProps={{
-          classes: {root: classes.root},
-          endAdornment: <InputAdornment><SearchRounded/></InputAdornment>
-        }}
-        name="query"
-        onChange={({target: {value}}) => search(queryType, value)}
-        placeholder="Keresés"
-        value={value}
-      />
-    )
-  }
+const Search = ({search, classes, ...props}) => {
+  const queryType = getQueryType(props.match.path)
+  const value = props[queryType] ? props[queryType].query.join(" ") : ""
+  return (
+    <TextField
+      InputProps={{
+        classes: {root: classes.root},
+        endAdornment: <InputAdornment>{
+          value ?
+            <Close onClick={() => search(queryType, "")} style={{cursor: "pointer"}}/> :
+            <SearchRounded/>
+        }
+        </InputAdornment>
+      }}
+      name="query"
+      onChange={({target: {value}}) => search(queryType, value)}
+      placeholder="Keresés"
+      value={value}
+    />
+  )
 }
+
 
 export default withStore(withStyles(theme => ({
   root: {

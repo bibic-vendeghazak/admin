@@ -11,7 +11,7 @@ import {logout, getAdmin, profile} from "./auth"
 import {fetchFeedbackCount} from "./feedbacks"
 import {fetchMessageCount} from "./messages"
 import {subscribeToGalleries} from "./gallery"
-import {search} from "./search"
+import * as search from "./search"
 import {toggleDrawer} from "./drawer"
 
 
@@ -50,8 +50,10 @@ export class Database extends Component {
     unhandledFeedbackCount: 0,
     unhandledMessageCount: 0,
     reservation,
-    reservationQuery: [""],
-    messageQuery: [""]
+    queryType: "reservationsFilters",
+    messagesFilters: {query: [""]},
+    feedbacksFilters: {query: [""], filteredRooms: []},
+    reservationsFilters: reservation.reservationsFilters
   }
 
   async componentDidMount() {
@@ -101,6 +103,7 @@ export class Database extends Component {
 
   // Reservations
   fetchReservation = fetchReservation.bind(this)
+  changeReservationsFilter = reservation.changeFilter.bind(this)
 
   fetchReservationCount = fetchReservationCount.bind(this)
 
@@ -134,8 +137,9 @@ export class Database extends Component {
 
 
   // Search
-  search = search.bind(this)
+  search = search.search.bind(this)
 
+  changeRoom = search.changeRoom.bind(this)
 
   render() {
     return (
@@ -149,6 +153,8 @@ export class Database extends Component {
           handleDrawerToggle: this.toggleDrawer,
           updateReservation: this.updateReservation,
           fetchReservation: this.fetchReservation,
+          changeReservationsFilter: this.changeReservationsFilter,
+          changeRoom: this.changeRoom,
           search: this.search,
           ...this.state
         }}

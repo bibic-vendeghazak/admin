@@ -21,6 +21,12 @@ export const reservation = {
   archived: false
 }
 
+export const reservationsFilters = {
+  from: TODAY.clone().add(-1, "week"),
+  to: TODAY.clone().add(2, "months"),
+  filteredRooms: [],
+  query: [""]
+}
 
 /**
  * Fetch a reservation.
@@ -68,4 +74,18 @@ export function fetchReservationCount() {
   } catch (error) {
     this.handleSendNotification(error)
   }
+}
+
+/**
+ * Updates the reservation filter values
+ * @param {string} name
+ * @param {object} value
+ */
+export function changeFilter(name, value) {
+  this.setState(({reservationsFilters}) => ({
+    reservationsFilters: {
+      ...reservationsFilters,
+      [name]: value
+    }
+  }))
 }
