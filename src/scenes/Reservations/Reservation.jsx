@@ -23,7 +23,7 @@ import {Tip, Background, Item} from "../../components/shared"
 
 import {RESERVATIONS_FS, TIMESTAMP} from "../../lib/firebase"
 import {routes, colors, toRoute} from "../../utils"
-import {Card, Button, CardActions, Hidden, Divider, CardContent, Typography, Grid, Tooltip} from "@material-ui/core"
+import {Card, Button, CardActions, Hidden, Divider, CardContent, Typography, Grid, Tooltip, CardHeader} from "@material-ui/core"
 import {StoreContext} from "../../db/Store"
 
 class Reservation extends Component {
@@ -69,9 +69,18 @@ class Reservation extends Component {
     const {reservationId} = this.props.match.params
     return (
       <div
-        style={{margin: 32}}
+        style={{margin: 16}}
       >
         <Card>
+          {message.includes("admin által felvéve") ?
+            <CardHeader
+              style={{
+                backgroundColor: colors.yellow
+              }}
+              subheader="Érvényes e-mail cím hiányában a felhasználó nem kap értesítést"
+              title="ADMIN ÁLTAL FELVÉVE"
+            />
+            : null}
           <CardContent>
             <Grid
               container
@@ -112,17 +121,25 @@ class Reservation extends Component {
                   />
                   <Item
                     icon={<Email/>}
-                    primary={<a href={`mailto:${email}?subject=Foglalás #${id}&body=Tisztelt ${name}!`}>{email}</a>}
+                    primary={
+                      email !== "email@email.hu" ?
+                        <a href={`mailto:${email}?subject=Foglalás #${id}&body=Tisztelt ${name}!`}>{email}</a> :
+                        "-"
+                    }
                     secondary="e-mail"
                   />
                   <Item
                     icon={<Tel/>}
-                    primary={<a href={`tel:${tel}`}>{tel}</a>}
+                    primary={
+                      tel !== "000-000-000" ?
+                        <a href={`tel:${tel}`}>{tel}</a> :
+                        "-"
+                    }
                     secondary="telefonszám"
                   />
                   <Item
                     icon={<Address/>}
-                    primary={address}
+                    primary={address !== "lakcím" ? address : "-"}
                     secondary="lakcím"
                   />
                   <Item

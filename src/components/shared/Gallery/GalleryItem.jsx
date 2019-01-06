@@ -7,7 +7,7 @@ import Edit from "@material-ui/icons/EditRounded"
 
 const GalleryItem = ({
   item: {
-    key, fileName, SIZE_360, title
+    key, fileName, SIZE_640, title
   }, path
 }) =>
   <Tooltip title={title || fileName}>
@@ -27,7 +27,7 @@ const GalleryItem = ({
     >
       <img
         alt={fileName}
-        src={SIZE_360}
+        src={SIZE_640}
         style={{
           position: "absolute",
           objectFit: "cover",
@@ -54,7 +54,7 @@ GalleryItem.propTypes = {
   item: PropTypes.shape({
     key: PropTypes.string,
     fileName: PropTypes.string,
-    SIZE_360: PropTypes.string,
+    SIZE_640: PropTypes.string,
     title: PropTypes.string
   }),
   path: PropTypes.string

@@ -5,17 +5,13 @@ import NewParagraph from "./NewParagraph"
 import Tip from "../Tip"
 
 const Paragraphs = props =>
-  <>
+  <div style={{maxWidth: 4*140+5*16, margin: "16px auto 0"}}>
     <Sortable
       actionComponent={NewParagraph}
       axis="y"
       containerProps={{direction: "column"}}
       editItemComponent={Paragraph}
       folder="paragraphs"
-      itemProps={{style: {
-        margin: "0 auto",
-        maxWidth: 540
-      }}}
       sortableItemComponent={Paragraph}
       useDragHandle
       {...props}
@@ -24,7 +20,7 @@ const Paragraphs = props =>
       A sorrendet &quot;fogd és vidd&quot; módszerrel lehet változtatni.
       A változtatások automatikusan mentésre kerülnek.
     </Tip>
-  </>
+  </div>
 
 export default Paragraphs
 
