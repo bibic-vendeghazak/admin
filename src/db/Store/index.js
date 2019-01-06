@@ -14,6 +14,7 @@ import {toggleDrawer} from "./drawer"
 
 
 const Store = React.createContext()
+export {Store as StoreContext}
 
 /**
  * Makes the Store values available

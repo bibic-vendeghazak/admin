@@ -24,26 +24,28 @@ import {Tip, Background, Item} from "../../components/shared"
 import {RESERVATIONS_FS, TIMESTAMP} from "../../lib/firebase"
 import {routes, colors, toRoute} from "../../utils"
 import {Card, Button, CardActions, Hidden, Divider, CardContent, Typography, Grid, Tooltip} from "@material-ui/core"
-import {withStore} from "../../db"
+import {StoreContext} from "../../db/Store"
 
 class Reservation extends Component {
 
+  static contextType = StoreContext
+
   componentDidMount = async () => {
-    const {match:{params: reservationId}} = this.props
+    const {sendNotification, fetchReservation} = this.context
     try {
-      if (reservationId !== this.props.reservationId) {
-        await this.props.fetchReservation(this.props.match.params.reservationId)
-      }
+      await fetchReservation(this.props.match.params.reservationId)
     } catch (error) {
-      this.props.sendNotification(error)
+      sendNotification(error)
     }
   }
 
+  componentWillUnmount() {
+    this.context.resetReservation()
+  }
 
   handleAccept = () => {
-    const {
-      openDialog, profile, history, match
-    } = this.props
+    const {history, match} = this.props
+    const {profile, openDialog} = this.context
     openDialog(
       {title: "Biztos jóváhagyja ezt a foglalást?"},
       () => RESERVATIONS_FS.doc(match.params.reservationId)
@@ -58,12 +60,12 @@ class Reservation extends Component {
   }
 
 
-
   render() {
     const {reservation: {
       email, name, tel, message, handled, from, to, roomId, adults, children,
       price, address, timestamp, lastHandledBy, id, foodService
-    }} = this.props
+    }} = this.context
+
     const {reservationId} = this.props.match.params
     return (
       <div
@@ -282,4 +284,4 @@ class Reservation extends Component {
 }
 
 
-export default withStore(Reservation)
+export default Reservation

@@ -3,7 +3,6 @@ import React, {Component} from "react"
 import {Grid} from '@material-ui/core'
 
 import {Modal} from "../shared"
-import {withStore} from "../../db"
 import Children from "./Children"
 import Adults from "./Adults"
 import Price from "./Price"
@@ -17,8 +16,11 @@ import Address from "./Address"
 import {getPrice, handleSubmit} from "./functions"
 import {DateField} from "./DateField"
 import {ComplexitySwitch} from "./ComplexitySwitch"
+import {StoreContext} from "../../db/Store"
 
 export class EditReservation extends Component {
+
+  static contextType = StoreContext
 
   state = {
     isDetailed: false,
@@ -28,28 +30,27 @@ export class EditReservation extends Component {
   componentDidMount = async () => {
     try {
       const {isDetailed, match: {params: {reservationId}}} = this.props
-      if (this.props.reservationId !== reservationId) {
-        await this.props.fetchReservation(reservationId)
-      }
+      await this.context.fetchReservation(reservationId)
+      this.updatePrice()
       this.setState({isDetailed})
     } catch (error) {
-
-      this.props.sendNotification(error)
+      this.context.sendNotification(error)
     }
   }
 
   handleChange = (name, value, shouldUpdatePrice) => {
-    this.props.updateReservation(name, value)
-    shouldUpdatePrice && this.updatePrice()
+    this.context.updateReservation(name, value, () => {
+      shouldUpdatePrice && this.updatePrice()
+    })
   }
 
   handleDetailChange = () =>
     this.setState(({isDetailed}) => ({isDetailed: !isDetailed}))
 
   updatePrice = () => {
-    const {reservation, rooms} = this.props
+    const {reservation, rooms} = this.context
     const {error, price} = getPrice(reservation, rooms)
-    this.props.updateReservation("price", price)
+    this.context.updateReservation("price", price)
     this.setState({priceError: error})
   }
 
@@ -60,16 +61,17 @@ export class EditReservation extends Component {
     const {
       match: {params: {reservationId}},
       error, submitLabel, success, successPath,
-      title, shouldPrompt, promptTitle, rooms, profile,
+      title, shouldPrompt, promptTitle
+    } = this.props
+    const {rooms, profile,
       reservation: {
         name, tel, email,
         roomId, adults, children,
         from, to, message, address, price, foodService
-      }
-    } = this.props
+      }} = this.context
     return (
       <Modal
-        onSubmit={async () => await handleSubmit({...this.props.reservation}, rooms.length , profile.name, reservationId)}
+        onSubmit={async () => await handleSubmit({...this.context.reservation}, rooms.length , profile.name, reservationId)}
         {...{error, submitLabel, success, successPath, shouldPrompt, promptTitle}}
         title={
           <Grid
@@ -154,4 +156,4 @@ export class EditReservation extends Component {
   }
 }
 
-export default withStore(EditReservation)
+export default EditReservation
