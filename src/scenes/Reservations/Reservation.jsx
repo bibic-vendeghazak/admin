@@ -262,7 +262,8 @@ class Reservation extends Component {
             </Button>
             <Button
               color="secondary"
-              onClick={this.handleDelete}
+              component={Link}
+              to={toRoute(routes.RESERVATIONS, reservationId, routes.DELETE)}
               variant="contained"
             >
               <Delete/>
