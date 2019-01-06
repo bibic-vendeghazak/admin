@@ -24,7 +24,8 @@ export const valid = {
     )),
   peopleCount: (adults, children, maxPeople) => adults + children.reduce((acc, {count}) => acc+count, 0) <= maxPeople,
   foodService: service => ["breakfast", "halfBoard"].includes(service),
-  archived: archived => typeof archived === "boolean"
+  archived: archived => typeof archived === "boolean",
+  deleteReason: deleteReason => typeof deleteReason === "string" && deleteReason.length
 }
 
 
