@@ -17,7 +17,8 @@ import {
   ListItemText,
   ListSubheader,
   Tooltip,
-  withStyles
+  withStyles,
+  Typography
 } from "@material-ui/core"
 
 
@@ -59,7 +60,8 @@ const Sidebar = ({
   handleDrawerToggle,
   unhandledReservationCount, unhandledFeedbackCount,
   unhandledMessageCount,
-  profile: {name, src}
+  profile: {name, src},
+  lastSignInTime
 }) => {
   const drawerItemStyle={
     primary,
@@ -81,6 +83,11 @@ const Sidebar = ({
           />
         </Tooltip>
         <Logout/>
+        <Tooltip title={moment(lastSignInTime).format("LLL")}>
+          <Typography style={{fontSize: 12, fontStyle: "italic", marginTop: 8, color: "white"}}>
+            Utolsó bejelentkezés: {moment(lastSignInTime).fromNow()}
+          </Typography>
+        </Tooltip>
       </Grid>
       <Divider className={divider}/>
       <DrawerItem

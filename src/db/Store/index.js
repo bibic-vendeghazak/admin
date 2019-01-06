@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import PropTypes from "prop-types"
-import {AUTH} from "../../lib/firebase"
+import {AUTH, ADMINS} from "../../lib/firebase"
 import {sendNotification, closeNotification, notification} from "./notification"
 import {
   reservation, fetchReservation, updateReservation, fetchReservationCount
@@ -40,6 +40,7 @@ export class Database extends Component {
 
   state = {
     isLoggedIn: false,
+    lastSignInTime: null,
     mobileOpen: false,
     profile,
     notification,
@@ -60,6 +61,12 @@ export class Database extends Component {
     try {
       AUTH.onAuthStateChanged(async user => {
         if (user) {
+
+          const lastSignInTime = await (await ADMINS.child(user.uid).child("lastSignInTime").once("value")).val()
+          this.setState({lastSignInTime})
+
+          const newLastSignInTime = user.metadata.lastSignInTime
+          await ADMINS.child(user.uid).child("lastSignInTime").set(newLastSignInTime)
 
           // Counts
           this.fetchReservationCount()
