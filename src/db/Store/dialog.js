@@ -26,8 +26,8 @@ export function openDialog(newDialog, submit, success, handleClose) {
     acceptDialog: async () => {
       try {
         handleClose && handleClose()
-        this.sendNotification({code: "success", message: success})
         await submit()
+        this.sendNotification({code: "success", message: success})
       } catch (error) {
         this.sendNotification(error)
       } finally {

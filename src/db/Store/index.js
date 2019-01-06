@@ -2,9 +2,7 @@ import React, {Component} from "react"
 import PropTypes from "prop-types"
 import {AUTH, ADMINS} from "../../lib/firebase"
 import {sendNotification, closeNotification, notification} from "./notification"
-import {
-  reservation, fetchReservation, updateReservation, fetchReservationCount
-} from "./reservations"
+import * as reservation from "./reservations"
 import {openDialog, closeDialog, dialog} from "./dialog"
 import {subscribeToRooms, subscribeToRoomServices} from "./rooms"
 import {logout, getAdmin, profile} from "./auth"
@@ -50,7 +48,7 @@ export class Database extends Component {
     unhandledReservationCount: 0,
     unhandledFeedbackCount: 0,
     unhandledMessageCount: 0,
-    reservation,
+    reservation: reservation.reservation,
     queryType: "reservationsFilters",
     messagesFilters: {query: [""]},
     feedbacksFilters: {query: [""], filteredRooms: []},
@@ -109,12 +107,16 @@ export class Database extends Component {
 
 
   // Reservations
-  fetchReservation = fetchReservation.bind(this)
+
   changeReservationsFilter = reservation.changeFilter.bind(this)
 
-  fetchReservationCount = fetchReservationCount.bind(this)
+  fetchReservation = reservation.fetch.bind(this)
 
-  updateReservation = updateReservation.bind(this)
+  fetchReservationCount = reservation.fetchCount.bind(this)
+
+  updateReservation = reservation.update.bind(this)
+
+  resetReservation = reservation.reset.bind(this)
 
 
   // Rooms
@@ -159,6 +161,7 @@ export class Database extends Component {
           handleLogout: this.logout,
           handleDrawerToggle: this.toggleDrawer,
           updateReservation: this.updateReservation,
+          resetReservation: this.resetReservation,
           fetchReservation: this.fetchReservation,
           changeReservationsFilter: this.changeReservationsFilter,
           changeRoom: this.changeRoom,

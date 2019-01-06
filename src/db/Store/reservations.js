@@ -32,7 +32,7 @@ export const reservationsFilters = {
  * Fetch a reservation.
  * @param {string} reservationId the id of the reservation to be fetched
  */
-export async function fetchReservation(reservationId) {
+export async function fetch(reservationId) {
   try {
     let reservation = await RESERVATIONS_FS.doc(reservationId || "non-existent").get()
     if (reservation.exists) {
@@ -57,15 +57,20 @@ export async function fetchReservation(reservationId) {
  * (Either creating, or editing one.)
  * @param {string} name name of the field
  * @param {object} value value of the field
+ * @param {function} [callback]
  */
-export function updateReservation(name, value) {
-  this.setState(({reservation}) => ({reservation: {...reservation, [name]: value}}))
+export function update(name, value, callback) {
+  this.setState(({reservation}) => ({reservation: {...reservation, [name]: value}}), callback)
+}
+
+export function reset() {
+  this.setState({reservation, reservationId: ""})
 }
 
 /**
  * Fetch how many unhandled reservations there are.
  */
-export function fetchReservationCount() {
+export function fetchCount() {
   try {
     RESERVATIONS_FS.where("handled", "==", false)
       .onSnapshot(snap =>

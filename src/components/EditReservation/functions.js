@@ -42,10 +42,14 @@ export const getPrice = ({
 
 }
 
-
-export const handleSubmit = async (reservation,
-  roomLength, adminName, reservationId
-) => {
+/**
+ * Submits the reservation (either edit or create)
+ * @param {object} reservation The reservation to be submitted
+ * @param {number} roomLength Number of rooms in the database.
+ * @param {string} adminName Name of the logged in admin.
+ * @param {string} [reservationId] the id of the reservation, if edited, not created.
+ */
+export async function handleSubmit(reservation, roomLength, adminName, reservationId){
   try {
     const {from, roomId, ...rest} = reservation
 
@@ -61,7 +65,7 @@ export const handleSubmit = async (reservation,
     const error = validateReservation({...updatedReservation, roomLength})
 
     let result
-    if(error) {
+    if (error) {
       result = Promise.reject({code: "error", message: error})
     } else if (reservationId) {
       result = RESERVATIONS_FS.doc(reservationId).set(updatedReservation)
