@@ -1,7 +1,7 @@
 
 const routes = {
-  WEB: "https://bibic-vendeghazak-web.firebaseapp.com",
-  ROOT: "https://bibic-vendeghazak-api.firebaseapp.com",
+  WEB: process.env.REACT_APP_WEBSITE_URL,
+  ROOT: process.env.REACT_APP_ADMIN_DASHBOARD_URL,
   INSTAGRAM: "https://www.instagram.com/explore/tags/bibicvendeghaz",
   YOUTUBE: "https://youtube.com/bibic-vendeghazak",
   MESSENGER: "https://www.messenger.com/t/200199203718517",
