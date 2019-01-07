@@ -25,7 +25,7 @@
     "test:watch": "react-scripts test --coverage --coverageReporters html --watch",
     "test:coverage": "react-scripts test --coverage --coverageReporters text-lcov | npx coveralls && rm -rf coverage",
     "build": "react-scripts build",
-    "deploy": "yarn build && firebase deploy",
+    "deploy": "yarn build && firebase deploy"
   },
   "devDependencies": {
     "enzyme": "^3.8.0",
