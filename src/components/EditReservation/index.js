@@ -13,10 +13,11 @@ import Name from "./Name"
 import RoomSelector from "./RoomSelector"
 import Tel from "./Tel"
 import Address from "./Address"
-import {getPrice, handleSubmit} from "./functions"
+import {getPrice} from "./functions"
 import {DateField} from "./DateField"
 import {ComplexitySwitch} from "./ComplexitySwitch"
 import {StoreContext} from "../../db/Store"
+import {handleSubmit} from "../../db/Store/reservations"
 
 export class EditReservation extends Component {
 

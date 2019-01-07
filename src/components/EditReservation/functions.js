@@ -1,6 +1,4 @@
-import {validateReservation} from "../../utils"
 import {moment} from "../../lib"
-import {RESERVATIONS_FS, TIMESTAMP} from "../../lib/firebase"
 
 export const getPrice = ({
   from, to, roomId, adults, children, foodService
@@ -42,41 +40,3 @@ export const getPrice = ({
 
 }
 
-/**
- * Submits the reservation (either edit or create)
- * @param {object} reservation The reservation to be submitted
- * @param {number} roomLength Number of rooms in the database.
- * @param {string} adminName Name of the logged in admin.
- * @param {string} [reservationId] the id of the reservation, if edited, not created.
- */
-export async function handleSubmit(reservation, roomLength, adminName, reservationId){
-  try {
-    const {from, roomId, ...rest} = reservation
-
-    const updatedReservation = {
-      ...rest,
-      timestamp: TIMESTAMP,
-      from,
-      roomId,
-      id: `${moment(from).format("YYYYMMDD")}-sz${roomId}`,
-      lastHandledBy: adminName
-    }
-
-    const error = validateReservation({...updatedReservation, roomLength})
-
-    let result
-    if (error) {
-      result = Promise.reject({code: "error", message: error})
-    } else if (reservationId) {
-      result = RESERVATIONS_FS.doc(reservationId).set(updatedReservation)
-    } else {
-      result = RESERVATIONS_FS.add(updatedReservation)
-    }
-
-    return await result
-
-  } catch(error) {
-    return await Promise.reject(error)
-  }
-
-}

@@ -1,10 +1,11 @@
-import {RESERVATIONS_FS} from "../../lib/firebase"
-import {TODAY, TOMORROW} from "../../lib/moment"
+import {RESERVATIONS_FS, TIMESTAMP} from "../../lib/firebase"
+import moment, {TODAY, TOMORROW} from "../../lib/moment"
+import {validateReservation} from "../../utils"
 
 export const reservation = {
   message: "🤖 admin által felvéve",
   name: "",
-  roomId: 1,
+  roomId: [1],
   tel: "000-000-000",
   email: "email@email.hu",
   address: "lakcím",
@@ -93,4 +94,45 @@ export function changeFilter(name, value) {
       [name]: value
     }
   }))
+}
+
+/**
+ * Submits the reservation (either edit or create)
+ * @param {object} reservation The reservation to be submitted
+ * @param {number} roomLength Number of rooms in the database.
+ * @param {string} adminName Name of the logged in admin.
+ * @param {string} [reservationId] the id of the reservation, if edited, not created.
+ */
+export async function handleSubmit(reservation, roomLength, adminName, reservationId){
+  try {
+    const {from, roomId, ...rest} = reservation
+
+    const updatedReservation = {
+      ...rest,
+      timestamp: TIMESTAMP,
+      from,
+      roomId,
+      id: `${moment(from).format("YYYYMMDD")}-sz${roomId.join("-")}`,
+      lastHandledBy: adminName
+    }
+
+    const error = validateReservation({...updatedReservation, roomLength})
+
+    console.log(updatedReservation)
+    
+    if (error) {
+      return Promise.reject({code: "error", message: error})
+    } else if (reservationId) {
+      await RESERVATIONS_FS.doc(reservationId).set(updatedReservation)
+    } else {
+      await RESERVATIONS_FS.add(updatedReservation)
+    }
+
+    return Promise.resolve(true)
+
+  } catch(error) {
+    console.log(error)
+
+    return await Promise.reject(error)
+  }
 }
