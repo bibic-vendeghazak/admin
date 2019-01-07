@@ -13,6 +13,7 @@ const Background = ({
       borderRadius: "50%",
       width: 28,
       height: 28,
+      margin: 2,
       position: "relative",
       backgroundColor: color,
       color: "white"

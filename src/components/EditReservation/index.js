@@ -106,10 +106,10 @@ export class EditReservation extends Component {
               type="to"
             />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={7}>
             <Name onChange={this.handleChange} value={name}/>
           </Grid>
-          <Grid container item justify="flex-end" style={{marginBottom: 10, alignSelf: "flex-end"}} xs={4}>
+          <Grid container item justify="flex-end" style={{marginBottom: 10, alignSelf: "flex-end"}} xs={5}>
             <RoomSelector onChange={this.handleChange} rooms={rooms} value={roomId}/>
           </Grid>
         </Grid>
