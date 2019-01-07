@@ -79,9 +79,11 @@ const FilteredReservations = ({
               align="center"
               padding="checkbox"
             >
-              <Background color={colors[`room${roomId}`]}>
-                {roomId}
-              </Background>
+              {(Array.isArray(roomId) ? roomId : [roomId]).map(roomId =>
+                <Background color={colors[`room${roomId}`]} key={roomId}>
+                  {roomId}
+                </Background>
+              )}
             </TableCell>
           </Hidden>
           <Hidden mdDown>

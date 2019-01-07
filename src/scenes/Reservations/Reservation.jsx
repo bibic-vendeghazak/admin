@@ -197,22 +197,6 @@ class Reservation extends Component {
                       secondary="gyerek"
                     />
                   </Tooltip>
-                  <Tooltip title="Ugrás a szobához">
-                    <Item
-                      icon={<Home/>}
-                      primary={
-                        <Link
-                          style={{textDecoration:"none"}}
-                          to={toRoute(routes.ROOMS, roomId)}
-                        >
-                          <Background color={colors[`room${roomId}`]}>
-                            {roomId}
-                          </Background>
-                        </Link>
-                      }
-                      secondary="szoba"
-                    />
-                  </Tooltip>
                   <Item
                     icon={<Service/>}
                     primary={foodService === "breakfast" ? "reggeli" : "félpanzió" }
@@ -229,6 +213,27 @@ class Reservation extends Component {
                       }) : "Nincs megadva"}
                     secondary="fizetni"
                   />
+                  <Tooltip title="Ugrás a szobához">
+                    <Item
+                      icon={<Home/>}
+                      md={5}
+                      primary={
+                        <>
+                         {(Array.isArray(roomId) ? roomId : [roomId]).map(roomId =>
+                           <Link
+                             style={{textDecoration:"none"}}
+                             to={toRoute(routes.ROOMS, roomId)}
+                           >
+                             <Background color={colors[`room${roomId}`]} key={roomId}>
+                               {roomId}
+                             </Background>
+                           </Link>
+                         )}
+                        </>
+                      }
+                      secondary="szoba"
+                    />
+                  </Tooltip>
                 </Grid>
               </Grid>
               <Grid

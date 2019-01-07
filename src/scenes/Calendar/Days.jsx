@@ -12,22 +12,19 @@ const Days = ({
   const days = []
   for (let day = from + 1; day <= to; day++) {
     const dayReservations = {}
-    Object.entries(reservations).forEach(([
-      key, {
-        from, to, roomId
-      }
-    ]) => {
+    Object.entries(reservations).forEach(([key, {from, to, roomId}]) => {
       const currentDay = currentDate.clone().date(day)
       const dayFrom = moment(from.seconds*1000 || from).startOf("day")
       const dayTo = moment(to.seconds*1000 || to).endOf("day")
       const dateRange = moment.range(dayFrom, dayTo)
       if (dateRange.contains(currentDay)) {
-        const reservation = dayReservations[key] = {roomId}
-        Object.assign(
-          reservation,
-          {from: currentDay.isSame(dayFrom, "day"),
-            to: currentDay.isSame(dayTo, "day")}
-        )
+        roomId.forEach(r => {
+          dayReservations[key+r] = {
+            roomId: r,
+            from: currentDay.isSame(dayFrom, "day"),
+            to: currentDay.isSame(dayTo, "day")
+          }
+        })
       }
     })
 

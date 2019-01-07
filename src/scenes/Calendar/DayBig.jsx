@@ -96,7 +96,17 @@ export default class DayBig extends Component {
 
 
   render() {
-    const {reservations, noReservation} = this.state
+    const {noReservation} = this.state
+    let {reservations} = this.state
+
+    reservations = reservations.reduce((acc, reservation) => {
+      if (acc.findIndex(e => e.key === reservation.key) === -1) {
+        return [...acc, reservation]
+      } else {
+        return acc
+      }
+    }, [])
+
     return (
       <>
         <Card>
