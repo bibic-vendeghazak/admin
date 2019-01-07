@@ -6,7 +6,9 @@ const telRe = new RegExp(/^\+?[0-9-\s]+/)
 const addressRe = new RegExp(/[\s.\-,/áéíóöőúüűÁÉÍÓÖŐÚÜŰa-zA-Z0-9]+/)
 
 export const valid = {
-  roomId: (roomId=0, roomsLength) => (0 < roomId) && (roomId <= roomsLength),
+  roomId: (roomId=0, roomsLength) =>
+    roomId.every(e => parseInt(e, 10) <= roomsLength) ||
+    ((0 < roomId) && (roomId <= roomsLength)),
   name: name => nameRe.test(name),
   email: email => emailRe.test(email),
   tel: tel => telRe.test(tel),
