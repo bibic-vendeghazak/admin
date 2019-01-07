@@ -5,7 +5,7 @@ export const ComplexitySwitch = ({checked, onChange}) =>
   <FormControlLabel
     control={
       <Switch
-        checked={checked}
+        checked={checked || false}
         onChange={onChange}
         value="complexity-change"
       />

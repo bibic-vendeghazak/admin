@@ -1,8 +1,8 @@
-import {FEEDBACKS_FS} from "../../lib/firebase"
+import {MESSAGES_FS} from "../../lib/firebase"
 
-export function fetchMessageCount() {
+export async function fetchMessageCount() {
   try {
-    FEEDBACKS_FS.where("handled", "==", false)
+    MESSAGES_FS.where("accepted", "==", false)
       .onSnapshot(snap =>
         this.setState({unhandledMessageCount: snap.size})
       )

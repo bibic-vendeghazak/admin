@@ -25,6 +25,7 @@ export class DeleteReservation extends Component {
         })
       }
       await RESERVATIONS_FS.doc(reservationId).delete()
+      return Promise.resolve(true)
     } catch (error) {
       this.props.sendNotification(error)
     }
