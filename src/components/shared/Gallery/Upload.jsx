@@ -10,6 +10,7 @@ import {Grid, Tooltip, GridList, GridListTile, GridListTileBar, IconButton, Line
 import Upload from "@material-ui/icons/CloudUploadRounded"
 import Cancel from "@material-ui/icons/CloseRounded"
 import {withStore} from "../../../db"
+import moment from "../../../lib/moment"
 
 class UploadPictures extends Component {
 
@@ -60,7 +61,9 @@ class UploadPictures extends Component {
 
   handleUpload = () => {
     const {sendNotification, path} = this.props
-    this.state.files.forEach(({file}) =>
+    this.state.files.forEach(({file}) => {
+      const fileName = file.name
+      file.name = `${moment().format("YYYYMMDDhhmmss")}_${file.name.replace(/[\s:áéíóöőúüű|&;$%@"<>()+,]/g, "")}`
       FileStore
         .ref(toRoute("galleries", path, file.name))
         .put(file)
@@ -69,17 +72,17 @@ class UploadPictures extends Component {
         }, () => {
           sendNotification({
             code: "error",
-            message: `Sikertelen feltöltés. ${file.name} nem lett feltöltve.`
+            message: `Sikertelen feltöltés. ${fileName} nem lett feltöltve.`
           })
         }, () => {
           sendNotification({
             code: "success",
-            message: `${file.name} néhány másodperc múlva megjelenik a galériában.`
+            message: `${fileName} néhány másodperc múlva megjelenik a galériában.`
           }, 8000)
           this.reset()
         }
         )
-    )
+    })
   }
 
   handleClose = () => {
