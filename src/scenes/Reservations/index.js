@@ -84,6 +84,7 @@ const Reservations = ({rooms}) =>
           shouldPrompt
           submitLabel="Felvétel"
           success="Foglalás sikeresen felvéve!"
+          successPath={routes.RESERVATIONS}
           title="Foglalás felvétele"
         />
       }
