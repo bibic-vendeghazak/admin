@@ -7,7 +7,13 @@ export const getPrice = ({
   let price = 0
   let error = {code: "WRONG_PRICE_TABLE", message: "Hibás ártáblázat"}
 
+  if (roomId.length !== 1) {
+    error = {code: "CUSTOM_PRICING_NEEDED", message: "Egyedi árazás szükséges"}
+    return ({error, price})
+  }
+
   try {
+    roomId = roomId[0]
     const {prices} = rooms[roomId-1]
     const {maxPeople} = prices.metadata
     const priceTable = prices.table[foodService]
