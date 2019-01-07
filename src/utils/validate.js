@@ -27,12 +27,13 @@ export const valid = {
   peopleCount: (adults, children, maxPeople) => adults + children.reduce((acc, {count}) => acc+count, 0) <= maxPeople,
   foodService: service => ["breakfast", "halfBoard"].includes(service),
   archived: archived => typeof archived === "boolean",
-  deleteReason: deleteReason => typeof deleteReason === "string" && deleteReason.length
+  deleteReason: deleteReason => typeof deleteReason === "string" && deleteReason.length,
+  price: price => typeof price === "number" && price !== 0
 }
 
 
 export const validateReservation = ({
-  roomId, roomLength, name, email, tel, address, from, to, message, adults, children, maxPeople, foodService, archived
+  roomId, roomLength, name, email, tel, address, from, to, message, adults, children, foodService, archived, price
 }) =>
   !valid.archived(archived) ? "Archivált változó nincs definiálva" :
     !valid.roomId(roomId, roomLength) ? "Érvénytelen szobaszám" :
@@ -47,5 +48,5 @@ export const validateReservation = ({
                       !valid.adults(adults) ? "Érvénytelen felnőtt" :
                         !valid.children(children) ? "Érvénytelen gyerek" :
                           !valid.foodService(foodService) ? "Érvénytelen ellátás" :
-                          // !valid.peopleCount(adults, children, maxPeople) ? "A személyek száma nem haladhatja meg a szoba kapacitását" :
-                            false
+                            !valid.price(price) ? "Egyedi árazás szükséges" :
+                              false
