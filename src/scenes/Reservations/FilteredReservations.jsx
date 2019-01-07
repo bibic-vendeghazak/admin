@@ -27,7 +27,7 @@ const filterByQuery = query => ({name, message, id}) => query
   )
 
 const filterByRoom = filteredRooms => ({roomId}) =>
-  filteredRooms.length ? filteredRooms[roomId-1] : true
+  !filteredRooms.length || roomId.some(r => filteredRooms[r-1])
 
 const FilteredReservations = ({
   order, orderBy,
@@ -41,19 +41,12 @@ const FilteredReservations = ({
       .filter(filterByRoom(filteredRooms))
       .filter(filterByQuery(query))
       .sort(sortReservations(order, orderBy))
-      .flatMap(reservation => {
-        if (reservation.roomId === "all") {
-          // REVIEW: Use rooms length
-          return Array(6).fill(null).map((_e, index) => ({...reservation, roomId: index + 1}))
-        }
-        return reservation
-      })
       .map(({
         key, id, roomId, from, to, name, handled, email, tel, timestamp, archived
       }) =>
         <TableRow
           hover
-          key={key+roomId}
+          key={key+roomId.toString()}
           onClick={() => history.push(toRoute(routes.RESERVATIONS, key))}
           selected={archived}
           title={archived ? "Archivált foglalás" : null}
