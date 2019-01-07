@@ -1,12 +1,11 @@
 import React, {Component} from "react"
 import {withRouter} from "react-router-dom"
 import PropTypes from "prop-types"
-
-
 import {Dialog, Button, DialogActions, DialogTitle, DialogContent} from "@material-ui/core"
 import {withStore} from "../../db"
 
 class Modal extends Component {
+
 
   state = {fullScreen: true}
 
@@ -22,9 +21,7 @@ class Modal extends Component {
   handleResize = () => this.setState({fullScreen: window.innerWidth <= 540})
 
   handleClose = () => {
-    const {
-      history, successPath, afterClose
-    } = this.props
+    const {history, successPath, afterClose} = this.props
 
     history.push(successPath ||
       history.location.pathname
@@ -36,10 +33,7 @@ class Modal extends Component {
   }
 
   handleSubmit = async () => {
-    const {
-      shouldPrompt, openDialog, promptTitle,
-      remainOpen, sendNotification, onSubmit, success
-    } = this.props
+    const {openDialog, sendNotification, shouldPrompt, promptTitle, remainOpen, onSubmit, success} = this.props
 
     if (shouldPrompt) {
       openDialog(
@@ -51,11 +45,8 @@ class Modal extends Component {
     } else {
       try {
         await onSubmit()
-        !remainOpen && this.handleClose()
-        sendNotification({
-          code: "success",
-          message: success
-        })
+        sendNotification({code: "success", message: success})
+        this.handleClose()
       } catch (error) {
         sendNotification(error)
       }
@@ -63,10 +54,7 @@ class Modal extends Component {
   }
 
   render() {
-    const {
-      cancelLabel, submitLabel, onSubmitDisabled, children,
-      title, style
-    } = this.props
+    const {cancelLabel, submitLabel, onSubmitDisabled, children, title, style} = this.props
 
     return (
       <Dialog
