@@ -56,9 +56,14 @@ class Feedback extends Component {
             }
           </TableCell>
           <TableCell align="center" padding="dense">
-            <Background color={colors[`room${roomId}`]}>
-              {roomId}
-            </Background>
+            {roomId.map(roomId =>
+              <Background
+                key={roomId}
+                color={colors[`room${roomId}`]}
+              >
+                {roomId}
+              </Background>
+            )}
           </TableCell>
         </Hidden>
         <TableCell padding="dense">
