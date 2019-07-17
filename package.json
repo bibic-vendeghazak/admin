@@ -16,7 +16,7 @@
     "react-scripts": "2.1.2",
     "react-sortable-hoc": "^1.0.0",
     "recharts": "^1.4.2",
-    "typeface-roboto": "0.0.54"
+    "typeface-roboto": "0.0.75"
   },
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
